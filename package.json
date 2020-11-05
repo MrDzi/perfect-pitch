@@ -1,0 +1,19 @@
+{
+  "name": "pitch-practice-tool",
+  "version": "1.0.0",
+  "description": "Tool to practice singing in pitch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrDzi/pitch-practice-tool.git"
+  },
+  "author": "Dejan Hadziomerovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrDzi/pitch-practice-tool/issues"
+  },
+  "homepage": "https://github.com/MrDzi/pitch-practice-tool#readme"
+}
