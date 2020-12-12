@@ -7,7 +7,7 @@ module.exports = {
   entry: path.resolve(__dirname, "src", "client", "index.tsx"),
   devServer: {
     contentBase: path.join(__dirname, "dist"),
-    publicPath: "/dist",
+    // publicPath: "/dist",
     open: true,
     hot: true,
     proxy: {
