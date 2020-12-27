@@ -8,15 +8,16 @@ const HEIGHT = 500;
 const Home = (): ReactElement => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [note, playRandomNote] = usePlayer();
-  const [finalData, setTargetNote, points] = useDetectPitch();
+  const [noteData, playRandomNote] = usePlayer();
+  const [startPitchDetection, finalNote, points] = useDetectPitch();
 
   useEffect(() => {
-    if (note) {
-      console.log("from home tone index", note);
-      setTargetNote(note);
+    console.log("NOTE DATA::: ", noteData);
+    if (noteData.note && noteData.played) {
+      console.log("from home tone index", noteData.note);
+      startPitchDetection(noteData.note);
     }
-  }, [note]);
+  }, [noteData]);
 
   console.log("from HOME", points);
 

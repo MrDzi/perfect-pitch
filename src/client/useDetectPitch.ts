@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
-import { Note, NOTES } from "./constants";
+import { useState, useEffect, useRef } from "react";
+import { getNoteFrequency, Note, NOTES } from "./constants";
+import { noteFromPitch, autoCorrelate, centsOffFromPitch } from "./helpers";
 
 interface ToneData {
-  pitch: number;
   note: Note;
   detune: number;
+  pitch?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,123 +24,45 @@ const createContextFromStream = (stream: any) => {
   };
 };
 
-const noteFromPitch = (frequency: number): number => {
-  const noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
-  return Math.round(noteNum) + 69;
-};
-
-const frequencyFromNoteNumber = (note: number) => {
-  return 440 * Math.pow(2, (note - 69) / 12);
-};
-
-const centsOffFromPitch = (frequency: number, note: number) => {
-  return Math.floor((1200 * Math.log(frequency / frequencyFromNoteNumber(note))) / Math.log(2));
-};
-
-const autoCorrelate = (buf: Float32Array, sampleRate: number) => {
-  // console.log("from autoCorrelate");
-  let SIZE = buf.length;
-  let rms = 0;
-
-  for (let i = 0; i < SIZE; i++) {
-    rms += buf[i] * buf[i];
-  }
-  rms = Math.sqrt(rms / SIZE);
-  if (rms < 0.01) {
-    // not enough signal
-    return -1;
-  }
-
-  let r1 = 0;
-  let r2 = SIZE - 1;
-  const thres = 0.2;
-  for (let i = 0; i < SIZE / 2; i++) {
-    if (Math.abs(buf[i]) < thres) {
-      r1 = i;
-      break;
-    }
-  }
-  for (let i = 1; i < SIZE / 2; i++) {
-    if (Math.abs(buf[SIZE - i]) < thres) {
-      r2 = SIZE - i;
-      break;
-    }
-  }
-
-  buf = buf.slice(r1, r2);
-  SIZE = buf.length;
-
-  const c = new Array(SIZE).fill(0);
-  for (let i = 0; i < SIZE; i++) {
-    for (let j = 0; j < SIZE - i; j++) {
-      c[i] = c[i] + buf[j] * buf[j + i];
-    }
-  }
-
-  let d = 0;
-  while (c[d] > c[d + 1]) {
-    d++;
-  }
-  let maxval = -1;
-  let maxpos = -1;
-  for (let i = d; i < SIZE; i++) {
-    if (c[i] > maxval) {
-      maxval = c[i];
-      maxpos = i;
-    }
-  }
-  let T0 = maxpos;
-
-  const x1 = c[T0 - 1];
-  const x2 = c[T0];
-  const x3 = c[T0 + 1];
-  const a = (x1 + x3 - 2 * x2) / 2;
-  const b = (x3 - x1) / 2;
-
-  if (a) {
-    T0 = T0 - b / (2 * a);
-  }
-
-  return sampleRate / T0;
-};
-
-const getPointsWon = (targetNote: Note | null, data: ToneData): number => {
-  if (targetNote === data.note) {
-    return data.detune > 25 ? 50 : 100;
+const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
+  if (note && targetNote === note && detune) {
+    return detune > 25 ? 50 : 100;
   }
   return 0;
 };
 
 const getAverageToneData = (data: ToneData[]) => {
   const toneOccurences: { [key: string]: number } = {};
-  let mostFrequentTone = data[0].note;
+  let mostFrequentNote = data[0].note;
   let maxCount = 1;
   let detuneSum = 0;
-  let pitchSum = 0;
-  data.forEach((d) => {
-    if (!toneOccurences[d.note]) {
-      toneOccurences[d.note] = 1;
-    } else {
-      toneOccurences[d.note] = toneOccurences[d.note] + 1;
+  data.forEach((d, index) => {
+    if (index > 10) {
+      if (!toneOccurences[d.note]) {
+        toneOccurences[d.note] = 1;
+      } else {
+        toneOccurences[d.note] = toneOccurences[d.note] + 1;
+      }
+      if (toneOccurences[d.note] > maxCount) {
+        maxCount = toneOccurences[d.note];
+        mostFrequentNote = d.note;
+      }
+      detuneSum += d.detune;
     }
-    if (toneOccurences[d.note] > maxCount) {
-      maxCount = toneOccurences[d.note];
-      mostFrequentTone = d.note;
-    }
-    detuneSum += Math.abs(d.detune);
-    pitchSum += d.pitch;
   });
   return {
-    note: mostFrequentTone,
-    detune: Math.floor(detuneSum / data.length),
-    pitch: Math.floor(pitchSum / data.length),
+    note: mostFrequentNote,
+    detune: detuneSum / data.length,
   };
 };
 
-const useDetectPitch = (): [number | null, Dispatch<SetStateAction<Note>>, number[]] => {
-  const [targetNote, setTargetNote] = useState<Note | null>(null);
-  const [finalData, setFinalData] = useState<number | null>(null);
-  const [points, setPoints] = useState<number[]>([]);
+const useDetectPitch = (): [(targetNote: Note | null) => void, Note | null, number] => {
+  const [status, setStatus] = useState<{ started: boolean; targetNote: Note | null }>({
+    started: false,
+    targetNote: null,
+  });
+  const [finalNote, setFinalNote] = useState<Note | null>(null);
+  const [points, setPoints] = useState<number>(0);
   const silentFrameCount = useRef<number>(0);
   const nonSilentFrameCount = useRef<number>(0);
   const tonesData = useRef<ToneData[]>([]);
@@ -160,38 +83,38 @@ const useDetectPitch = (): [number | null, Dispatch<SetStateAction<Note>>, numbe
       if (pitch === -1) {
         console.log("pitch -1", silentFrameCount.current);
         silentFrameCount.current = silentFrameCount.current + 1;
-        if (silentFrameCount.current > 90 && nonSilentFrameCount.current > 60 && requestRef.current) {
+        if (silentFrameCount.current > 60 && nonSilentFrameCount.current > 60 && requestRef.current) {
           console.log("cancel!!!", requestRef.current);
           window.cancelAnimationFrame(requestRef.current);
           silentFrameCount.current = 0;
-          // const f = tonesData.current.reduce((acc, data) => {
-          //   return acc + data.pitch;
-          // }, 0);
-          // setFinalData(f / tonesData.current.length);
-          // console.log("setFinalData", f / tonesData.current.length, tonesData.current);
-
-          console.log("end", length);
-          // const lastTonesData = tonesData.current.slice(length - 60);
           const averageToneData = getAverageToneData(tonesData.current);
-          console.log("AVERAGE: ", averageToneData);
-          const pointsWon = getPointsWon(targetNote, averageToneData);
-          setPoints((currentPoints) => [...currentPoints, pointsWon]);
+          console.log("AVERAGE: ", averageToneData, status.targetNote, tonesData.current);
+          setFinalNote(averageToneData.note);
+          setStatus({
+            started: false,
+            targetNote: null,
+          });
+          if (status.targetNote) {
+            const pointsWon = getPointsWon(status.targetNote, averageToneData.note, averageToneData.detune);
+            setPoints(pointsWon);
+          }
           return;
         }
       } else {
         console.log("pitch NOT -1");
         // console.log("pitch", Math.round(pitch));
         const noteNum = noteFromPitch(pitch);
+        const targetNoteNum = noteFromPitch(getNoteFrequency(status.targetNote!));
         // console.log("note", noteFromPitch(pitch), NOTES[noteNum % 12]);
-        const detune = centsOffFromPitch(pitch, noteNum);
+        const detune = centsOffFromPitch(pitch, targetNoteNum);
         // console.log("detune", Math.abs(detune));
         silentFrameCount.current = 0;
         nonSilentFrameCount.current = nonSilentFrameCount.current + 1;
         console.log("non silent", nonSilentFrameCount.current);
         tonesData.current.push({
-          pitch,
           note: NOTES[noteNum % 12],
           detune,
+          pitch,
         });
       }
 
@@ -202,7 +125,7 @@ const useDetectPitch = (): [number | null, Dispatch<SetStateAction<Note>>, numbe
   };
 
   useEffect(() => {
-    if (!targetNote) {
+    if (!status.started) {
       if (requestRef.current) {
         console.log("useEffect stop");
         window.cancelAnimationFrame(requestRef.current);
@@ -222,9 +145,17 @@ const useDetectPitch = (): [number | null, Dispatch<SetStateAction<Note>>, numbe
         window.cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [targetNote]);
+  }, [status.started]);
 
-  return [finalData, setTargetNote, points];
+  const startPitchDetection = (targetNote: Note | null) => {
+    setPoints(0);
+    setStatus({
+      started: true,
+      targetNote,
+    });
+  };
+
+  return [startPitchDetection, finalNote, points];
 };
 
 export default useDetectPitch;

@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { NOTES, getNoteFrequency, Note } from "./constants";
 
+interface NoteData {
+  note: Note | null;
+  played: boolean;
+}
+
 const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
   const getNote = (): Note => {
     const index = Math.floor(Math.random() * notes.length);
@@ -18,27 +23,34 @@ const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTim
   oscNode.stop(currentTime + 1);
 };
 
-const usePlayer = (): [Note | null, () => void] => {
-  const [note, setNote] = useState<Note | null>(null);
+const usePlayer = (): [NoteData, () => void] => {
+  const [noteData, setNoteData] = useState<NoteData>({
+    note: null,
+    played: false,
+  });
   const ctx = useRef<AudioContext>(new AudioContext());
 
   useEffect(() => {
-    console.log("note!", note);
+    console.log("note!", noteData.note);
     let timeout: ReturnType<typeof setTimeout>;
     let oscNode: OscillatorNode;
     let gainNode: GainNode;
-    if (ctx.current && note !== null) {
+    if (ctx.current && noteData.note !== null) {
       oscNode = ctx.current.createOscillator();
-      oscNode.frequency.value = getNoteFrequency(note);
+      oscNode.frequency.value = getNoteFrequency(noteData.note);
       gainNode = ctx.current.createGain();
       oscNode.connect(gainNode);
       gainNode.connect(ctx.current.destination);
 
-      gainNode.gain.value = 0.2;
+      gainNode.gain.value = 0.15;
       oscNode.start(ctx.current.currentTime);
       // gainNode.gain.exponentialRampToValueAtTime(0.2, ctx.current.currentTime + 0.5);
       timeout = setTimeout(() => {
         stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
+        setNoteData({
+          note: noteData.note,
+          played: true,
+        });
       }, 1000);
 
       console.log("timeout: ", timeout);
@@ -51,14 +63,17 @@ const usePlayer = (): [Note | null, () => void] => {
         clearTimeout(timeout);
       }
     };
-  }, [note]);
+  }, [noteData.note]);
 
   const playRandomNote = () => {
-    const randomNote = getRandomNote(NOTES, note);
-    setNote(randomNote);
+    const randomNote = getRandomNote(NOTES, noteData.note);
+    setNoteData({
+      note: randomNote,
+      played: false,
+    });
   };
 
-  return [note, playRandomNote];
+  return [noteData, playRandomNote];
 };
 
 export default usePlayer;
