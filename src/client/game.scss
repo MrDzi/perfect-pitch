@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Playfair+Display:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap');
+
+:root {
+  --blue: #264653;
+  --green: #2A9D8F;
+  --orange: #F4A261;
+  --yellow: #E9C46A;
+  --purple: #5E4D6A;
+  --dark-purple: #564562;
+  --apricot: #EAAC8B;
+  --brick: #E56B6F;
+  --lila: #B56576;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--apricot);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Racing Sans One', cursive;
+}
+
+h1 {
+  font-size: 64px;
+  margin: 0;
+}
+
+#app {
+  height: 100%;
+}
+
+.full-size {
+  height: 100%;
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.wrapper {
+  background: var(--purple);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-left {
+  justify-content: flex-start;
+}
+
+.flex-right {
+  justify-content: flex-end;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.landing-content {
+  max-width: 550px;
+  text-align: center;
+  button {
+    margin-top: 50px;
+  }
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.game-header {
+  display: flex;
+  padding: 1em;
+  height: 125px;
+  > div {
+    flex: 1;
+  }
+}
+
+.game-visualization {
+  background: var(--dark-purple);
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.points {
+  font-family: 'Racing Sans One', cursive;
+  font-size: 48px;
+  line-height: 1;
+  margin-left: 0.1em;
+}
+
+.new-points {
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  transform: translateY(80px);
+  animation: fade-out 1s ease-in-out 1s;
+  animation-fill-mode: forwards;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.margin-bottom {
+  margin-bottom: 1em;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: translateY(80px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+.target {
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  width: 1px;
+  background: #4B3C55;
+  transition: background 0.25s ease-in-out; 
+}
+
+.line {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  background: var(--brick);
+  .pitch-indicator {
+    display: flex;
+    position: absolute;
+    left: calc(50% - 67px);
+    transition: transform 0.05s linear;
+    top: -41px;
+    transform: scaleX(2) scaleY(0);
+  }
+}
+
+button {
+  display: inline-block;
+  background: var(--dark-purple);
+  color: var(--apricot);
+  border: 2px solid var(--apricot);
+  box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.17);
+  padding: 1rem 4rem;
+  margin: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: "Racing Sans One", "cursive";
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}

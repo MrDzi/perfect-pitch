@@ -23,7 +23,7 @@ const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTim
   oscNode.stop(currentTime + 1);
 };
 
-const usePlayer = (): [NoteData, () => void] => {
+const usePlayer = (): [NoteData, () => void, () => void] => {
   const [noteData, setNoteData] = useState<NoteData>({
     note: null,
     played: false,
@@ -31,11 +31,10 @@ const usePlayer = (): [NoteData, () => void] => {
   const ctx = useRef<AudioContext>(new AudioContext());
 
   useEffect(() => {
-    console.log("note!", noteData.note);
     let timeout: ReturnType<typeof setTimeout>;
     let oscNode: OscillatorNode;
     let gainNode: GainNode;
-    if (ctx.current && noteData.note !== null) {
+    if (ctx.current && noteData.note !== null && !noteData.played) {
       oscNode = ctx.current.createOscillator();
       oscNode.frequency.value = getNoteFrequency(noteData.note);
       gainNode = ctx.current.createGain();
@@ -44,7 +43,6 @@ const usePlayer = (): [NoteData, () => void] => {
 
       gainNode.gain.value = 0.15;
       oscNode.start(ctx.current.currentTime);
-      // gainNode.gain.exponentialRampToValueAtTime(0.2, ctx.current.currentTime + 0.5);
       timeout = setTimeout(() => {
         stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
         setNoteData({
@@ -52,18 +50,15 @@ const usePlayer = (): [NoteData, () => void] => {
           played: true,
         });
       }, 1000);
-
-      console.log("timeout: ", timeout);
     }
 
     return () => {
-      console.log("clear timeout", timeout);
       if (timeout) {
         stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
         clearTimeout(timeout);
       }
     };
-  }, [noteData.note]);
+  }, [noteData]);
 
   const playRandomNote = () => {
     const randomNote = getRandomNote(NOTES, noteData.note);
@@ -73,7 +68,14 @@ const usePlayer = (): [NoteData, () => void] => {
     });
   };
 
-  return [noteData, playRandomNote];
+  const playLastNote = () => {
+    setNoteData({
+      note: noteData.note,
+      played: false,
+    });
+  };
+
+  return [noteData, playRandomNote, playLastNote];
 };
 
 export default usePlayer;

@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export const noteFromPitch = (frequency: number): number => {
   const noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
   return Math.round(noteNum) + 69;
@@ -9,31 +11,28 @@ export const frequencyFromNoteNumber = (note: number): number => {
 
 export const centsOffFromPitch = (frequency: number, noteNumber: number): number => {
   let min: number | null = null;
-  const numbers = [noteNumber - 24, noteNumber - 12, noteNumber, noteNumber + 12, noteNumber + 24];
-  numbers.forEach((num) => {
-    const detune = Math.abs(Math.floor((1200 * Math.log(frequency / frequencyFromNoteNumber(num))) / Math.log(2)));
-    console.log("detune from helpers: ", detune);
-    if (!min || min > detune) {
+  const noteNumbers = [noteNumber - 24, noteNumber - 12, noteNumber, noteNumber + 12, noteNumber + 24];
+  noteNumbers.forEach((num) => {
+    const detune = Math.floor((1200 * Math.log(frequency / frequencyFromNoteNumber(num))) / Math.log(2));
+    if (min === null || Math.abs(min) > Math.abs(detune)) {
       min = detune;
     }
   });
-  console.log("min detune: ", min);
-  return min || 0;
+  return min === null ? 0 : min;
 };
 
-export const autoCorrelate = (buf: Float32Array, sampleRate: number): number => {
-  // console.log("from autoCorrelate");
-  let SIZE = buf.length;
+export const getVolume = (buf: Float32Array): number => {
+  const SIZE = buf.length;
   let rms = 0;
 
   for (let i = 0; i < SIZE; i++) {
     rms += buf[i] * buf[i];
   }
-  rms = Math.sqrt(rms / SIZE);
-  if (rms < 0.01) {
-    // not enough signal
-    return -1;
-  }
+  return Math.sqrt(rms / SIZE);
+};
+
+export const autoCorrelate = (buf: Float32Array, sampleRate: number): number => {
+  let SIZE = buf.length;
 
   let r1 = 0;
   let r2 = SIZE - 1;
@@ -86,4 +85,16 @@ export const autoCorrelate = (buf: Float32Array, sampleRate: number): number => 
   }
 
   return sampleRate / T0;
+};
+
+export const getPitchIndicatorStyles = (
+  detune: number | null,
+  volume: number,
+  counter: number | null
+): CSSProperties => {
+  const vol = counter !== null && counter === 0 ? volume : 0;
+  if (detune === null) {
+    return { transform: `scaleX(1.7) scaleY(${vol}px)` };
+  }
+  return { transform: `translateX(${detune}px) scaleX(1.7) scaleY(${vol})` };
 };

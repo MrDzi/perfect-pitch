@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import Home from "./home";
-import "./style.scss";
+import Game from "./game";
 
 const app = () => {
-  // useEffect(() => {
-  //   fetch("/api/test").then((response: any) => {
-  //     console.log("from frontend", response);
-  //   });
-  // }, []);
-  return <Home />;
+  useEffect(() => {
+    fetch("/api/test").then((response) => {
+      console.log("from frontend", response);
+    });
+  }, []);
+  return <Game />;
 };
 
 const App = React.createElement(app);
