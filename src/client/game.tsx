@@ -41,7 +41,7 @@ const Game = (): ReactElement => {
       return;
     }
     setTimeout(() => {
-      if (counter === 2 && points) {
+      if (counter === 2 && numOfTonesPlayed && points) {
         setTotalPoints((p) => p + points);
       }
       if (counter === 1) {
@@ -110,7 +110,7 @@ const Game = (): ReactElement => {
                     <span className="points">{totalPoints}</span>
                   </div>
                 )}
-                {counter && points ? <div className="points new-points">{`+${points}`}</div> : null}
+                {counter && points && numOfTonesPlayed ? <div className="points new-points">{`+${points}`}</div> : null}
               </div>
             </div>
           </div>
