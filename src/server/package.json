@@ -1,0 +1,18 @@
+{
+  "name": "hit-that-tone",
+  "version": "1.0.0",
+  "description": "An API for the Perfect Pitch web app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dejan Hadziomerovic",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}
