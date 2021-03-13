@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { NOTES, getNoteFrequency, Note } from "./constants";
+import { NOTES, getNoteFrequency, Note } from "../constants";
 
 interface NoteData {
   note: Note | null;

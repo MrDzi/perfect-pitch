@@ -1,6 +1,6 @@
 import React, { useState, ReactElement, useEffect } from "react";
-import useDetectPitch from "./useDetectPitch";
-import usePlayer from "./usePlayer";
+import useDetectPitch from "./hooks/useDetectPitch";
+import usePlayer from "./hooks/usePlayer";
 import PitchIndicator from "./pitch-indicator";
 import { getPitchIndicatorStyles } from "./helpers";
 import "./game.scss";

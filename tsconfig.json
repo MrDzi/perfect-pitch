@@ -1,13 +1,13 @@
 {
-  "include": ["src/**/*"],
+  "include": ["**/*", "server", "client"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "target": "es5",
     "allowJs": true,
     "jsx": "react",
     "strictNullChecks": true

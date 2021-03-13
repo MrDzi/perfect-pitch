@@ -6,9 +6,9 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: path.resolve(__dirname, "src", "client", "index.tsx"),
+  entry: path.resolve(__dirname, "client", "index.tsx"),
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist-client"),
     filename: "bundle.js",
   },
   module: {
@@ -16,12 +16,12 @@ module.exports = {
       {
         test: /\.(tsx|ts)?$/,
         loader: "ts-loader",
-        include: path.resolve(__dirname, "src"),
+        include: path.resolve(__dirname, "client"),
         exclude: /node_modules/,
       },
       {
         test: /\.(jsx|js)$/,
-        include: path.resolve(__dirname, "src"),
+        include: path.resolve(__dirname, "client"),
         exclude: /node_modules/,
         use: [
           {
@@ -66,7 +66,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "client", "index.html"),
+      template: path.resolve(__dirname, "client", "index.html"),
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[chunkhash].css",
