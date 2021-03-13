@@ -19,27 +19,6 @@ module.exports = {
         include: path.resolve(__dirname, "server"),
         exclude: /node_modules/,
       },
-      {
-        test: /\.(jsx|js)$/,
-        include: path.resolve(__dirname, "server"),
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: [
-                [
-                  "@babel/preset-env",
-                  {
-                    targets: "defaults",
-                  },
-                ],
-              ],
-              plugins: ["@babel/plugin-proposal-class-properties"],
-            },
-          },
-        ],
-      },
     ],
   },
   plugins: [

@@ -3,7 +3,7 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

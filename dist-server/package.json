@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "An API for the Perfect Pitch web app",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
