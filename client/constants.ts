@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+export const baseURL = "https://hit-that-tone.herokuapp.com";
+
 export const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
 
 export type Note = typeof NOTES[number];
