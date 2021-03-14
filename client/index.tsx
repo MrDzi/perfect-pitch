@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import Game from "./game";
+import { baseURL } from "./constants";
 
 const app = () => {
   useEffect(() => {
-    fetch("/api/test").then((response) => {
+    fetch(`${baseURL}/api/test`).then((response) => {
       console.log("from frontend", response);
     });
   }, []);

@@ -8,14 +8,20 @@
             return e && e.__esModule ? e : { default: e };
           };
         Object.defineProperty(t, "__esModule", { value: !0 });
-        const o = s(r(127)).default(),
-          n = process.env.PORT || 3e3;
-        o.get("/api/test", (e, t) => {
+        const o = s(r(127)),
+          n = s(r(479)),
+          u = o.default();
+        u.use(n.default());
+        const i = process.env.PORT || 3e3;
+        u.get("/api/test", (e, t) => {
           t.send({ test: "test!" });
         }),
-          o.listen(n, () => {
+          u.listen(i, () => {
             console.log("listening on port 3000");
           });
+      },
+      479: (e) => {
+        e.exports = require("cors");
       },
       127: (e) => {
         e.exports = require("express");
