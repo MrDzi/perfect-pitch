@@ -1,14 +1,16 @@
-/* eslint-disable prettier/prettier */
-export const baseURL = "https://hit-that-tone.herokuapp.com";
+export const baseURL = process.env.NODE_ENV === "development" ? "" : "https://hit-that-tone.herokuapp.com";
+
+console.log("baseUrl: ", baseURL);
 
 export const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
 
 export type Note = typeof NOTES[number];
 
 export type NoteFrequencies = {
-  [key in Note]: number[]
+  [key in Note]: number[];
 };
 
+/* eslint-disable prettier/prettier */
 const NOTE_FREQUENCIES: NoteFrequencies = {
   "C": [261.63, 523.25],
   "C#": [277.18, 554.37],

@@ -17,7 +17,25 @@ module.exports = {
         test: /\.tsx?$/,
         loader: "ts-loader",
         include: path.resolve(__dirname, "server"),
-        exclude: /node_modules/,
+      },
+      {
+        test: /\.(jsx|js)$/,
+        include: path.resolve(__dirname, "server"),
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                [
+                  "@babel/preset-env",
+                  {
+                    modules: false,
+                  },
+                ],
+              ],
+            },
+          },
+        ],
       },
     ],
   },

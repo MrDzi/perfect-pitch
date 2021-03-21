@@ -1,17 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import Game from "./game";
-import { baseURL } from "./constants";
+import App from "./app";
 
-const app = () => {
-  useEffect(() => {
-    fetch(`${baseURL}/api/test`).then((response) => {
-      console.log("from frontend", response);
-    });
-  }, []);
-  return <Game />;
-};
-
-const App = React.createElement(app);
-
-ReactDOM.render(App, document.getElementById("app"));
+ReactDOM.render(React.createElement(App), document.getElementById("app"));

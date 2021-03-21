@@ -6,10 +6,10 @@ module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, "client", "index.tsx"),
   output: {
-    path: path.resolve(__dirname, "dist-client"),
+    path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    contentBase: path.join(__dirname, "dist-client"),
+    contentBase: path.join(__dirname, "dist"),
     open: true,
     hot: true,
     proxy: {

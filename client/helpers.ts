@@ -1,5 +1,3 @@
-import { CSSProperties } from "react";
-
 export const noteFromPitch = (frequency: number): number => {
   const noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
   return Math.round(noteNum) + 69;
@@ -85,16 +83,4 @@ export const autoCorrelate = (buf: Float32Array, sampleRate: number): number => 
   }
 
   return sampleRate / T0;
-};
-
-export const getPitchIndicatorStyles = (
-  detune: number | null,
-  volume: number,
-  counter: number | null
-): CSSProperties => {
-  const vol = counter !== null && counter === 0 ? volume : 0;
-  if (detune === null) {
-    return { transform: `scaleX(1.7) scaleY(${vol}px)` };
-  }
-  return { transform: `translateX(${detune}px) scaleX(1.7) scaleY(${vol})` };
 };

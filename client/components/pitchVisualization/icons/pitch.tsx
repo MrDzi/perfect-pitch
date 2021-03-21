@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 
 // const sharp = "M67,0 C73,23 96,42 134,42 C96,42 73,59 67,84 C60,59 36,42 0,42 C36,42 60,23 67,0 Z";
 
-const PitchIndicator = (): ReactElement => (
+const Pitch = (): ReactElement => (
   <svg width="134" height="84">
     <g>
       <path
@@ -13,4 +13,4 @@ const PitchIndicator = (): ReactElement => (
   </svg>
 );
 
-export default PitchIndicator;
+export default Pitch;
