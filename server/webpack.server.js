@@ -1,5 +1,4 @@
 const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
 const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
@@ -39,14 +38,6 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new CopyPlugin({
-      patterns: [{ from: path.resolve(__dirname, "server", "package.json") }],
-      options: {
-        concurrency: 100,
-      },
-    }),
-  ],
   resolve: {
     extensions: [".ts", ".js"],
   },
