@@ -5,12 +5,11 @@
   "private": true,
   "start": "node index.js",
   "scripts": {
-    "start": "node index.js",
-    "build:client": "webpack --config webpack.client.prod.js",
-    "build:server": "webpack --config webpack.server.js",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "webpack serve --config webpack.client.dev.js",
     "dev:server": "nodemon",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:client": "webpack --config webpack.client.prod.js",
+    "build:server": "webpack --config webpack.server.js",
     "lint": "eslint ** --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
   },
