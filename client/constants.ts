@@ -1,7 +1,5 @@
 export const baseURL = process.env.NODE_ENV === "development" ? "" : "https://hit-that-tone.herokuapp.com";
 
-console.log("baseUrl: ", baseURL);
-
 export const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
 
 export type Note = typeof NOTES[number];

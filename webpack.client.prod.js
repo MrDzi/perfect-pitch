@@ -72,6 +72,9 @@ module.exports = {
       filename: "[name].[chunkhash].css",
       chunkFilename: "[id].[chunkhash].css",
     }),
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify("https://hit-that-tone.herokuapp.com/"),
+    }),
   ],
 
   resolve: {

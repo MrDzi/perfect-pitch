@@ -84,6 +84,9 @@ module.exports = {
       template: path.resolve(__dirname, "client", "index.html"),
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify("null"),
+    }),
   ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],

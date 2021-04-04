@@ -11,7 +11,6 @@
     "client": "webpack serve --config webpack.client.dev.js",
     "server": "nodemon",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "concurrently \"npm run build:server\" \"npm run build:client\"",
     "lint": "eslint ** --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
   },
@@ -37,6 +36,13 @@
   },
   "engines": {
     "node": "14.x"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -81,11 +87,5 @@
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^2.5.2"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
   }
 }

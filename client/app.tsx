@@ -10,6 +10,9 @@ enum GameStatus {
   Ended,
 }
 
+// in production mode, API_URL will come from webpack
+declare const API_URL: string;
+
 const App = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
@@ -17,6 +20,13 @@ const App = (): ReactElement => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [noteData, playRandomNote, playLastNote] = usePlayer();
   const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
+
+  useEffect(() => {
+    const apiUrl = JSON.parse(API_URL);
+    fetch(`${apiUrl}/api/test`).then((res) => {
+      console.log("from server: ", res);
+    });
+  }, []);
 
   useEffect(() => {
     if (noteData.note) {
