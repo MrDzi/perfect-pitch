@@ -7,7 +7,7 @@ module.exports = {
   target: "node",
   entry: path.resolve(__dirname, "server", "index.ts"),
   output: {
-    path: path.resolve(__dirname, "dist-server"),
+    path: path.resolve(__dirname, "dist"),
     filename: "index.js",
   },
   externals: [nodeExternals()],
