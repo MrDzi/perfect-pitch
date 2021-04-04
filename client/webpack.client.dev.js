@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: "development",
-  entry: path.resolve(__dirname, "client", "index.tsx"),
+  entry: path.resolve(__dirname, "index.tsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
   },
@@ -23,12 +23,12 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: "ts-loader",
-        include: path.resolve(__dirname, "client"),
+        include: path.resolve(__dirname),
         exclude: /node_modules/,
       },
       {
         test: /\.(jsx|js)$/,
-        include: path.resolve(__dirname, "client"),
+        include: path.resolve(__dirname),
         exclude: /node_modules/,
         use: [
           {
@@ -81,7 +81,7 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "client", "index.html"),
+      template: path.resolve(__dirname, "index.html"),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({

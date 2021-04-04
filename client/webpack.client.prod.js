@@ -7,9 +7,9 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: path.resolve(__dirname, "client", "index.tsx"),
+  entry: path.resolve(__dirname, "index.tsx"),
   output: {
-    path: path.resolve(__dirname, "dist-client"),
+    path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
   module: {
@@ -17,12 +17,12 @@ module.exports = {
       {
         test: /\.(tsx|ts)?$/,
         loader: "ts-loader",
-        include: path.resolve(__dirname, "client"),
+        include: path.resolve(__dirname),
         exclude: /node_modules/,
       },
       {
         test: /\.(jsx|js)$/,
-        include: path.resolve(__dirname, "client"),
+        include: path.resolve(__dirname),
         exclude: /node_modules/,
         use: [
           {
@@ -67,14 +67,14 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "client", "index.html"),
+      template: path.resolve(__dirname, "index.html"),
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[chunkhash].css",
       chunkFilename: "[id].[chunkhash].css",
     }),
     new webpack.DefinePlugin({
-      API_URL: process.env.API_URL,
+      API_URL: JSON.stringify(process.env.API_URL),
     }),
   ],
 
