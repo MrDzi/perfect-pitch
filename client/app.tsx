@@ -22,8 +22,7 @@ const App = (): ReactElement => {
   const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
 
   useEffect(() => {
-    const apiUrl = JSON.parse(API_URL);
-    fetch(`${apiUrl}/api/test`).then((res) => {
+    fetch(`${API_URL}/api/test`).then((res) => {
       console.log("from server: ", res);
     });
   }, []);

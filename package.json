@@ -8,9 +8,9 @@
     "start": "node index.js",
     "build:client": "webpack --config webpack.client.prod.js",
     "build:server": "webpack --config webpack.server.js",
-    "client": "webpack serve --config webpack.client.dev.js",
-    "server": "nodemon",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev:client": "webpack serve --config webpack.client.dev.js",
+    "dev:server": "nodemon",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "lint": "eslint ** --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
   },
