@@ -22,19 +22,26 @@ const GameHeader = ({
   return (
     <div className="game-header">
       <div className="flex flex-left">
-        <div>
-          <p>Tone {numOfTonesPlayed + 1} of 10</p>
+        <div className="flex flex-column justify-space-between">
+          <div style={{ height: "50px" }}>
+            {numOfTonesPlayed < 3 && <span className="points">{numOfTonesPlayed + 1}/3</span>}
+          </div>
+          {counter === 0 && numOfTonesPlayed < 3 && isNotePlayed && (
+            <button className="button button--no-border" onClick={playLastNote}>
+              REPEAT NOTE
+            </button>
+          )}
         </div>
       </div>
       <div>
         <div className="flex flex-center" style={{ height: "50px" }}>
           <div className="text-center">
-            {counter !== 0 && numOfTonesPlayed < 3 ? (
-              <span>{counter}</span>
-            ) : isNotePlayed ? (
+            {false ? (
+              <span className="points">{counter}</span>
+            ) : false ? (
               <Microphone />
             ) : (
-              <span onClick={playLastNote} className="tone-icon">
+              <span className="tone-icon">
                 <SoundWave />
               </span>
             )}
@@ -44,10 +51,10 @@ const GameHeader = ({
       <div className="flex flex-right">
         <div className="flex flex-column position-relative">
           <div className="flex flex-center">
-            <span>Total points: </span>
+            <span>Points: </span>
             <span className="points">{totalPoints}</span>
           </div>
-          {counter && points && numOfTonesPlayed ? <div className="points new-points">{`+${points}`}</div> : null}
+          {points !== null ? <div className="points new-points">{`+${points}`}</div> : null}
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/MrDzi/pitch-practice-tool#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },

@@ -85,7 +85,7 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
-      API_URL: JSON.stringify(""),
+      API_URL: JSON.stringify("/api"),
     }),
   ],
   resolve: {

@@ -6,7 +6,9 @@ const Ended = ({ totalPoints, onClick }: { totalPoints: number; onClick: () => v
       <span>Total points: </span>
       <span className="points">{totalPoints}</span>
     </div>
-    <button onClick={onClick}>Try Again</button>
+    <button className="button" onClick={onClick}>
+      Try Again
+    </button>
   </div>
 );
 

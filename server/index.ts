@@ -1,19 +1,21 @@
 import express from "express";
 import cors from "cors";
+import bodyParser from "body-parser";
 import mongoose, { Schema } from "mongoose";
+import config from "./config";
 
 const app = express();
+app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect(
-  "mongodb+srv://perfect_pitch_user:HitThatTone@cluster0.pupdp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  { useNewUrlParser: true }
-);
+console.log(config.mongoDbUrl);
+
+mongoose.connect(config.mongoDbUrl, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 
 const scoreSchema = new Schema({
-  name: {
+  userName: {
     type: String,
     required: true,
   },
@@ -34,15 +36,26 @@ db.once("open", () => {
 
 const port = process.env.PORT || 3000;
 
-app.get("/api/test", (req, res) => {
-  const score = new Score({
-    name: "Test",
-    date: Date.now(),
-    score: 230,
+app.post("/api/scores", (req, res) => {
+  console.log("/api/scores", req.body);
+  const score = new Score(req.body);
+  console.log(score);
+  score.save((err, score) => {
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+    console.log("!", score);
+    res.send(score);
   });
-  console.log("score created", score);
-  res.send({
-    test: JSON.stringify(score),
+});
+
+app.get("/api/scores", (req, res) => {
+  Score.find((err, scores) => {
+    if (err) {
+      res.sendStatus(500);
+    }
+    res.send(scores);
   });
 });
 

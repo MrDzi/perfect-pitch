@@ -62,7 +62,6 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
   const [points, setPoints] = useState<number | null>(null);
   const ctx = useRef<AudioContext>(new AudioContext());
   const analyser = useRef<AnalyserNode | null>(null);
-  const silentFrameCount = useRef<number>(0);
   const nonSilentFrameCount = useRef<number>(0);
   const tonesData = useRef<ToneData[]>([]);
   const requestRef = useRef<number | null>(null);
@@ -77,43 +76,42 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
       if (volume < 0.01) {
         // not enough signal
         setVolume(0);
-        silentFrameCount.current = silentFrameCount.current + 1;
         if (detune !== null) {
           setDetune(null);
-        }
-        if (silentFrameCount.current > 60 && nonSilentFrameCount.current > 40 && requestRef.current) {
-          window.cancelAnimationFrame(requestRef.current);
-          silentFrameCount.current = 0;
-          nonSilentFrameCount.current = 0;
-          const averageToneData = getAverageToneData(tonesData.current);
-          // setFinalNote(averageToneData.note);
-          setStatus({
-            started: false,
-            targetNote: null,
-          });
-          tonesData.current = [];
-          if (status.targetNote) {
-            const pointsWon = getPointsWon(status.targetNote, averageToneData.note, averageToneData.detune);
-            setPoints(pointsWon);
-          }
-          return;
         }
       } else {
         setVolume(Math.min(volume * 5, 2));
         const pitch = autoCorrelate(buf, audioContext.sampleRate);
         const noteNum = noteFromPitch(pitch);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const targetNoteNum = noteFromPitch(getNoteFrequency(status.targetNote!));
-        const currentDetune = centsOffFromPitch(pitch, targetNoteNum);
+        if (status.targetNote) {
+          const targetNoteNum = noteFromPitch(getNoteFrequency(status.targetNote));
+          const currentDetune = centsOffFromPitch(pitch, targetNoteNum);
 
-        silentFrameCount.current = 0;
-        nonSilentFrameCount.current = nonSilentFrameCount.current + 1;
-        tonesData.current.push({
-          note: NOTES[noteNum % 12],
-          detune: currentDetune,
-          pitch,
-        });
-        setDetune(currentDetune);
+          nonSilentFrameCount.current = nonSilentFrameCount.current + 1;
+          tonesData.current.push({
+            note: NOTES[noteNum % 12],
+            detune: currentDetune,
+            pitch,
+          });
+          setDetune(currentDetune);
+          if (nonSilentFrameCount.current > 60 && requestRef.current) {
+            setVolume(0);
+            window.cancelAnimationFrame(requestRef.current);
+            nonSilentFrameCount.current = 0;
+            const averageToneData = getAverageToneData(tonesData.current);
+            setStatus({
+              started: false,
+              targetNote: null,
+            });
+            tonesData.current = [];
+            if (status.targetNote) {
+              const pointsWon = getPointsWon(status.targetNote, averageToneData.note, averageToneData.detune);
+              setPoints(pointsWon);
+            }
+            return;
+          }
+        }
       }
 
       requestRef.current = requestAnimationFrame(update);
@@ -148,7 +146,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
     };
   }, [status.started]);
 
-  const startPitchDetection = (targetNote: Note | null) => {
+  const startPitchDetection = (targetNote: Note) => {
     setPoints(null);
     setStatus({
       started: true,

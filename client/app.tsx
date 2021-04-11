@@ -1,4 +1,5 @@
 import React, { useState, ReactElement, useEffect } from "react";
+import axios from "axios";
 import { NotStarted, Ended, PitchVisualization, GameHeader } from "./components";
 import useDetectPitch from "./hooks/useDetectPitch";
 import usePlayer from "./hooks/usePlayer";
@@ -14,18 +15,13 @@ enum GameStatus {
 declare const API_URL: string;
 
 const App = (): ReactElement => {
+  const [userName, setUserName] = useState<string | null>(null);
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [noteData, playRandomNote, playLastNote] = usePlayer();
   const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/test`).then((res) => {
-      console.log("from server: ", res);
-    });
-  }, []);
 
   useEffect(() => {
     if (noteData.note) {
@@ -39,8 +35,11 @@ const App = (): ReactElement => {
 
   useEffect(() => {
     if (points !== null) {
-      setNumOfTonesPlayed((n) => n + 1);
-      setCounter(3);
+      setTimeout(() => {
+        setNumOfTonesPlayed((n) => n + 1);
+        setTotalPoints((p) => p + points);
+        setCounter(3);
+      }, 2000);
     }
   }, [points]);
 
@@ -49,16 +48,24 @@ const App = (): ReactElement => {
       return;
     }
     setTimeout(() => {
-      if (counter === 2 && numOfTonesPlayed && points) {
-        setTotalPoints((p) => p + points);
-      }
       if (counter === 1) {
         setCounter(counter - 1);
         if (numOfTonesPlayed === 3) {
           setGameStatus(GameStatus.Ended);
-          return;
+          return axios
+            .post(`${API_URL}/scores`, {
+              userName,
+              score: totalPoints,
+              date: Date.now(),
+            })
+            .then(() => {
+              axios.get(`${API_URL}/scores`).then((res) => {
+                console.log("scores from frontend", res);
+              });
+            });
+        } else {
+          playRandomNote();
         }
-        playRandomNote();
       } else {
         setCounter(counter - 1);
       }
@@ -73,7 +80,12 @@ const App = (): ReactElement => {
     }
   }, [gameStatus]);
 
-  const startGame = () => setGameStatus(GameStatus.InProgress);
+  const startGame = (userName?: string) => {
+    setGameStatus(GameStatus.InProgress);
+    if (userName) {
+      setUserName(userName);
+    }
+  };
 
   return (
     <div className="wrapper full-size">
