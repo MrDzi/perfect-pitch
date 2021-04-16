@@ -23,8 +23,8 @@ declare const API_URL: string;
 
 const App = (): ReactElement => {
   const [userName, setUserName] = useState<string | null>(null);
-  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [userId, setUserId] = useState<string | null>(null);
+  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [highScoresList, setHighScoresList] = useState<HighScoresList[]>([]);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
@@ -46,7 +46,6 @@ const App = (): ReactElement => {
     if (points !== null) {
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);
-        console.log(numOfTonesPlayed, totalPoints, points);
         setTotalPoints((p) => Math.round(((p + points) / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10);
         setCounter(3);
       }, 2000);
@@ -101,6 +100,14 @@ const App = (): ReactElement => {
     }
   };
 
+  const restartGame = () => {
+    setTotalPoints(0);
+    setNumOfTonesPlayed(0);
+    setUserName(null);
+    setUserId(null);
+    setGameStatus(GameStatus.NotStarted);
+  };
+
   return (
     <div className="wrapper full-size">
       {gameStatus === GameStatus.NotStarted && <NotStarted onClick={startGame} />}
@@ -118,7 +125,7 @@ const App = (): ReactElement => {
         </div>
       )}
       {gameStatus === GameStatus.Ended && (
-        <Ended totalPoints={totalPoints} userId={userId} highScoresList={highScoresList} onClick={startGame} />
+        <Ended totalPoints={totalPoints} userId={userId} highScoresList={highScoresList} onClick={restartGame} />
       )}
     </div>
   );

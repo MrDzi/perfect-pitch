@@ -50,13 +50,11 @@ const GameHeader = ({
       </div>
       <div className="flex flex-right">
         <div className="flex flex-column position-relative">
-          {totalPoints > 0 && (
-            <div className="flex flex-center">
-              <span>Score: </span>
-              <span className="points">{totalPoints}%</span>
-            </div>
-          )}
-          {points !== null ? <div className="points new-points">{`+${points}%`}</div> : null}
+          <div className="flex flex-center">
+            <span>Score: </span>
+            <span className="points">{totalPoints}%</span>
+          </div>
+          {points !== null && numOfTonesPlayed > 0 ? <div className="points new-points">{`+${points}%`}</div> : null}
         </div>
       </div>
     </div>
