@@ -188,6 +188,52 @@ input {
     transition: transform 0.05s linear;
     top: -41px;
     transform: scaleX(2) scaleY(0);
+    &--active {
+      transform: scaleY(1);
+    }
+  }
+}
+
+.list {
+  max-height: 300px;
+  width: 300px;
+  padding: 0 20px;
+  overflow: scroll;
+  li {
+    margin-bottom: 3px;
+    &.selected-item {
+      font-weight: bold;
+      color: var(--brick);
+    }
+  }
+}
+
+.group {
+  animation: groupAnimation linear 2s infinite;
+}
+
+.group-mic {
+  animation: groupAnimation2 linear 1.2s infinite;
+}
+
+@keyframes groupAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(500px);
+  }
+}
+
+@keyframes groupAnimation2 {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
@@ -225,4 +271,18 @@ input {
   &:hover {
     box-shadow: 11px 11px 0px 0px rgba(0,0,0,0.17);
   }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--apricot);
+  -webkit-box-shadow: 0 0 0px 1000px var(--dark-purple) inset;
+  transition: background-color 5000s ease-in-out 0s;
 }

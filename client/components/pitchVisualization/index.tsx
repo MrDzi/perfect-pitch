@@ -9,9 +9,9 @@ interface PitchVisualizationProps {
 
 const getPitchIndicatorStyles = ({ detune, volume }: { detune: number | null; volume: number }): CSSProperties => {
   if (detune === null) {
-    return { transform: `scaleX(1.7) scaleY(${volume}px)` };
+    return { transform: `scaleX(1.15) scaleY(${volume > 0 ? 1 : 0}px)` };
   }
-  return { transform: `translateX(${detune}px) scaleX(1.7) scaleY(${volume})` };
+  return { transform: `translateX(${detune}px) scaleX(1.15) scaleY(${volume > 0 ? 1 : 0})` };
 };
 
 const PitchVisualization = ({ volume, detune, counter }: PitchVisualizationProps): ReactElement => {

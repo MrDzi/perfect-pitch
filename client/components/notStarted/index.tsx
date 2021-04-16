@@ -16,6 +16,9 @@ const NotStarted = ({ onClick }: { onClick: (inputValue: string) => void }): Rea
     setInputValue(event.target.value);
   };
   const onStartClick = () => {
+    if (!inputValue.length) {
+      return;
+    }
     onClick(inputValue);
   };
 

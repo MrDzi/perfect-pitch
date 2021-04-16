@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import Microphone from "./icons/microphone";
-import SoundWave from "./icons/sound-wave";
+import SineWave from "./icons/sine-wave";
 
 interface GameHeaderProps {
   numOfTonesPlayed: number;
@@ -36,13 +36,13 @@ const GameHeader = ({
       <div>
         <div className="flex flex-center" style={{ height: "50px" }}>
           <div className="text-center">
-            {false ? (
+            {counter !== 0 && numOfTonesPlayed < 3 ? (
               <span className="points">{counter}</span>
-            ) : false ? (
+            ) : isNotePlayed ? (
               <Microphone />
             ) : (
               <span className="tone-icon">
-                <SoundWave />
+                <SineWave />
               </span>
             )}
           </div>
@@ -50,11 +50,13 @@ const GameHeader = ({
       </div>
       <div className="flex flex-right">
         <div className="flex flex-column position-relative">
-          <div className="flex flex-center">
-            <span>Points: </span>
-            <span className="points">{totalPoints}</span>
-          </div>
-          {points !== null ? <div className="points new-points">{`+${points}`}</div> : null}
+          {totalPoints > 0 && (
+            <div className="flex flex-center">
+              <span>Score: </span>
+              <span className="points">{totalPoints}%</span>
+            </div>
+          )}
+          {points !== null ? <div className="points new-points">{`+${points}%`}</div> : null}
         </div>
       </div>
     </div>

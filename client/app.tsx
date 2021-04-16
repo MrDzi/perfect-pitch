@@ -11,12 +11,21 @@ enum GameStatus {
   Ended,
 }
 
+export interface HighScoresList {
+  _id: string;
+  date: Date;
+  userName: string;
+  score: number;
+}
+
 // in production mode, API_URL will come from webpack
 declare const API_URL: string;
 
 const App = (): ReactElement => {
   const [userName, setUserName] = useState<string | null>(null);
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [highScoresList, setHighScoresList] = useState<HighScoresList[]>([]);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
@@ -37,7 +46,8 @@ const App = (): ReactElement => {
     if (points !== null) {
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => p + points);
+        console.log(numOfTonesPlayed, totalPoints, points);
+        setTotalPoints((p) => Math.round(((p + points) / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10);
         setCounter(3);
       }, 2000);
     }
@@ -58,9 +68,13 @@ const App = (): ReactElement => {
               score: totalPoints,
               date: Date.now(),
             })
-            .then(() => {
+            .then((user) => {
+              if (user.data._id) {
+                setUserId(user.data._id);
+              }
               axios.get(`${API_URL}/scores`).then((res) => {
                 console.log("scores from frontend", res);
+                setHighScoresList(res.data);
               });
             });
         } else {
@@ -103,7 +117,9 @@ const App = (): ReactElement => {
           <PitchVisualization volume={volume} detune={detune} counter={counter} />
         </div>
       )}
-      {gameStatus === GameStatus.Ended && <Ended totalPoints={totalPoints} onClick={startGame} />}
+      {gameStatus === GameStatus.Ended && (
+        <Ended totalPoints={totalPoints} userId={userId} highScoresList={highScoresList} onClick={startGame} />
+      )}
     </div>
   );
 };

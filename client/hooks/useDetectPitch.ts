@@ -73,7 +73,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
       }
       analyser.getFloatTimeDomainData(buf);
       const volume = getVolume(buf);
-      if (volume < 0.01) {
+      if (volume < 0.015) {
         // not enough signal
         setVolume(0);
         if (detune !== null) {
@@ -95,7 +95,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
             pitch,
           });
           setDetune(currentDetune);
-          if (nonSilentFrameCount.current > 60 && requestRef.current) {
+          if (nonSilentFrameCount.current > 50 && requestRef.current) {
             setVolume(0);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;
