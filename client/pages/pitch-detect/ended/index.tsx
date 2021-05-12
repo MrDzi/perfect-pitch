@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { HighScoresList } from "../../app";
+import { HighScoresList } from "../../../app";
 
 const Ended = ({
   totalPoints,

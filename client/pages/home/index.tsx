@@ -1,25 +1,33 @@
-import React, { useState, useEffect, useRef, ReactElement, ChangeEvent } from "react";
+import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext } from "react";
+import { useHistory } from "react-router-dom";
+import { AppContext } from "../../app";
 
-const NotStarted = ({ onClick }: { onClick: (inputValue: string) => void }): ReactElement => {
+const Home = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const history = useHistory();
+  const [user, setUser] = useContext(AppContext);
 
   useEffect(() => {
-    console.log(inputRef.current);
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, [inputRef.current]);
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setInputValue(event.target.value);
   };
   const onStartClick = () => {
     if (!inputValue.length) {
       return;
     }
-    onClick(inputValue);
+    if (inputValue && setUser) {
+      setUser((u) => ({
+        id: u.id,
+        name: inputValue,
+      }));
+    }
+    history.push("/pitch-detect");
   };
 
   return (
@@ -44,4 +52,4 @@ const NotStarted = ({ onClick }: { onClick: (inputValue: string) => void }): Rea
   );
 };
 
-export default NotStarted;
+export default Home;
