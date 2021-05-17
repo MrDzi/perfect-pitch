@@ -1,52 +1,48 @@
-import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import { AppContext } from "../../app";
+import React, { ReactElement, useState } from "react";
+import { Link } from "react-router-dom";
+// import { AppContext } from "../../app";
+import Sing from "./icons/listen";
+import Listen from "./icons/sing";
 
 const Home = (): ReactElement => {
-  const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const history = useHistory();
-  const [user, setUser] = useContext(AppContext);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputRef.current]);
-
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-  const onStartClick = () => {
-    if (!inputValue.length) {
-      return;
-    }
-    if (inputValue && setUser) {
-      setUser((u) => ({
-        id: u.id,
-        name: inputValue,
-      }));
-    }
-    history.push("/pitch-detect");
-  };
+  // const [user] = useContext(AppContext);
+  const [hovered, setHovered] = useState(1);
 
   return (
-    <div className="flex flex-center full-size">
-      <div className="landing-content">
-        <h1>test your pitch</h1>
-        <p>
-          Turn on the sound and make sure there is no noise in the room.
-          <br />
-          You wll hear a random tone which you should repeat.
-          <br />
-          Each tone brings a maximum of 100 points.
-          <br />
-          Write your name bellow and hit that Start button!
-        </p>
-        <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} />
-        <button className="button" onClick={onStartClick}>
-          Start Game
-        </button>
+    <div className="full-size flex flex-center">
+      <div style={{ width: 700, height: "80vh" }}>
+        <div className={`parent hovered-${hovered}`}>
+          <div className="child1" onMouseEnter={() => setHovered(1)}>
+            <Link to="/singing">
+              <div className="overlay flex flex-center">
+                {hovered === 1 && (
+                  <div className="child-desc">
+                    <h3>Singing</h3>
+                    <p>Practice singing by sdfs lasdfksa sdfjlkjasd sadflk sadf</p>
+                  </div>
+                )}
+                <div>
+                  <Listen />
+                </div>
+              </div>
+            </Link>
+          </div>
+          <div className="child2" onMouseEnter={() => setHovered(2)}>
+            <Link to="/listening">
+              <div className="overlay flex flex-center">
+                {hovered === 2 && (
+                  <div className="child-desc">
+                    <h3>Listening</h3>
+                    <p>Practice listening by sdfs lasdfksa sdfjlkjasd sadflk sadf</p>
+                  </div>
+                )}
+                <div>
+                  <Sing />
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

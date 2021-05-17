@@ -8,8 +8,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-console.log(config.mongoDbUrl);
-
 mongoose.connect(config.mongoDbUrl, { useNewUrlParser: true });
 
 const db = mongoose.connection;

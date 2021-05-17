@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { getNoteFrequency, Note, NOTES } from "../constants";
-import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume } from "../helpers";
+import { getNoteFrequency, Note, NOTES } from "../../../constants";
+import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume } from "../../../helpers";
 
 interface ToneData {
   note: Note;
@@ -95,7 +95,8 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
             pitch,
           });
           setDetune(currentDetune);
-          if (nonSilentFrameCount.current > 50 && requestRef.current) {
+          console.log("nonSilentFrame", nonSilentFrameCount.current);
+          if (nonSilentFrameCount.current > 60 && requestRef.current) {
             setVolume(0);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;

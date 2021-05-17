@@ -2,33 +2,42 @@ import React, { ReactElement } from "react";
 import Microphone from "./icons/microphone";
 import SineWave from "./icons/sine-wave";
 
-interface GameHeaderProps {
-  numOfTonesPlayed: number;
+interface HeaderProps {
+  step: number;
   counter: number | null;
-  playLastNote: () => void;
   totalPoints: number;
   points: number | null;
   isNotePlayed: boolean;
+  isSingingMode?: boolean;
+  totalSteps?: number;
+  onRepeatClick: () => void;
 }
 
-const GameHeader = ({
-  numOfTonesPlayed,
+const Header = ({
+  step,
+  totalSteps = 3,
   counter,
-  playLastNote,
   totalPoints,
   points,
   isNotePlayed,
-}: GameHeaderProps): ReactElement => {
+  onRepeatClick,
+  isSingingMode = true,
+}: HeaderProps): ReactElement => {
+  console.log("points", points);
   return (
     <div className="game-header">
       <div className="flex flex-left">
         <div className="flex flex-column justify-space-between">
           <div style={{ height: "50px" }}>
-            {numOfTonesPlayed < 3 && <span className="points">{numOfTonesPlayed + 1}/3</span>}
+            {step < totalSteps && (
+              <span className="points">
+                {step + 1}/{totalSteps}
+              </span>
+            )}
           </div>
-          {counter === 0 && numOfTonesPlayed < 3 && isNotePlayed && (
-            <button className="button button--no-border" onClick={playLastNote}>
-              REPEAT NOTE
+          {counter === 0 && step < totalSteps && isNotePlayed && (
+            <button className="button button--no-border" onClick={onRepeatClick}>
+              REPEAT NOTE{isSingingMode ? "" : "S"}
             </button>
           )}
         </div>
@@ -36,10 +45,12 @@ const GameHeader = ({
       <div>
         <div className="flex flex-center" style={{ height: "50px" }}>
           <div className="text-center">
-            {counter !== 0 && numOfTonesPlayed < 3 ? (
+            {counter !== 0 && step < totalSteps ? (
               <span className="points">{counter}</span>
             ) : isNotePlayed ? (
-              <Microphone />
+              isSingingMode ? (
+                <Microphone />
+              ) : null
             ) : (
               <span className="tone-icon">
                 <SineWave />
@@ -54,11 +65,11 @@ const GameHeader = ({
             <span>Score: </span>
             <span className="points">{totalPoints}%</span>
           </div>
-          {points !== null && numOfTonesPlayed > 0 ? <div className="points new-points">{`+${points}%`}</div> : null}
+          {points !== null ? <div className="points new-points">{`+${points}%`}</div> : null}
         </div>
       </div>
     </div>
   );
 };
 
-export default GameHeader;
+export default Header;

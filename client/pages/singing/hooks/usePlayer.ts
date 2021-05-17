@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { NOTES, getNoteFrequency, Note } from "../constants";
+import { NOTES, getNoteFrequency, Note } from "../../../constants";
 
 interface NoteData {
   note: Note | null;
@@ -31,26 +31,24 @@ const usePlayer = (): [NoteData, () => void, () => void] => {
   const ctx = useRef<AudioContext>(new AudioContext());
 
   useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-    let oscNode: OscillatorNode;
-    let gainNode: GainNode;
-    if (ctx.current && noteData.note !== null && !noteData.played) {
-      oscNode = ctx.current.createOscillator();
-      oscNode.frequency.value = getNoteFrequency(noteData.note);
-      gainNode = ctx.current.createGain();
-      oscNode.connect(gainNode);
-      gainNode.connect(ctx.current.destination);
-
-      gainNode.gain.value = 0.15;
-      oscNode.start(ctx.current.currentTime);
-      timeout = setTimeout(() => {
-        stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
-        setNoteData({
-          note: noteData.note,
-          played: true,
-        });
-      }, 1000);
+    if (!ctx.current || noteData.note === null || noteData.played) {
+      return;
     }
+    const oscNode: OscillatorNode = ctx.current.createOscillator();
+    oscNode.frequency.value = getNoteFrequency(noteData.note);
+    const gainNode: GainNode = ctx.current.createGain();
+    oscNode.connect(gainNode);
+    gainNode.connect(ctx.current.destination);
+
+    gainNode.gain.value = 0.15;
+    oscNode.start(ctx.current.currentTime);
+    const timeout = setTimeout(() => {
+      stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
+      setNoteData({
+        note: noteData.note,
+        played: true,
+      });
+    }, 1000);
 
     return () => {
       if (timeout) {

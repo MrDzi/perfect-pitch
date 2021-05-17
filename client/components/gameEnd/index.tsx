@@ -1,7 +1,8 @@
 import React, { ReactElement } from "react";
-import { HighScoresList } from "../../../app";
+import { Link } from "react-router-dom";
+import { HighScoresList } from "../../app";
 
-const Ended = ({
+const GameEnd = ({
   totalPoints,
   highScoresList,
   userId,
@@ -33,11 +34,16 @@ const Ended = ({
             );
           })}
       </ol>
-      <button className="button" onClick={onClick} style={{ width: 300, marginTop: 100 }}>
+      <button className="button" onClick={onClick} style={{ width: 300, marginTop: 50 }}>
         Try Again
       </button>
+      <Link to="/home">
+        <button className="button" onClick={onClick} style={{ width: 300, marginTop: 15 }}>
+          Home
+        </button>
+      </Link>
     </div>
   </div>
 );
 
-export default Ended;
+export default GameEnd;

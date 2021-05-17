@@ -1,7 +1,9 @@
 import React, { createContext, useState, ReactElement, Dispatch, SetStateAction } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Start from "./pages/start";
 import Home from "./pages/home";
-import PitchDetect from "./pages/pitch-detect";
+import Listening from "./pages/listening";
+import Singing from "./pages/singing";
 import "./app.scss";
 
 export interface HighScoresList {
@@ -10,10 +12,6 @@ export interface HighScoresList {
   userName: string;
   score: number;
 }
-
-// in production mode, API_URL will come from webpack
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-declare const API_URL: string;
 
 interface User {
   id: string | null;
@@ -25,7 +23,11 @@ const userInitialState = {
   name: null,
 };
 
-export const AppContext = createContext<[User, Dispatch<SetStateAction<User>> | null]>([userInitialState, null]);
+export const AppContext = createContext<[User, Dispatch<SetStateAction<User>> | (() => void)]>([
+  userInitialState,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  () => {},
+]);
 
 const App = (): ReactElement => {
   const [user, setUser] = useState<User>(userInitialState);
@@ -34,12 +36,20 @@ const App = (): ReactElement => {
     <div className="wrapper full-size">
       <AppContext.Provider value={[user, setUser]}>
         <Router>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/pitch-detect">
-            <PitchDetect />
-          </Route>
+          <Switch>
+            <Route exact path="/">
+              <Start />
+            </Route>
+            <Route exact path="/home">
+              <Home />
+            </Route>
+            <Route exact path="/listening">
+              <Listening />
+            </Route>
+            <Route path="/singing">
+              <Singing />
+            </Route>
+          </Switch>
         </Router>
       </AppContext.Provider>
     </div>

@@ -1,17 +1,10 @@
 import React, { useState, ReactElement, useEffect, useContext } from "react";
-// import {
-//   BrowserRouter as Router,
-//   Switch,
-//   Route,
-//   Link,
-//   useHistory
-// } from "react-router-dom";
 import axios from "axios";
-import GameHeader from "./gameHeader";
+import Header from "../../components/header";
 import PitchVisualization from "./pitchVisualization";
-import useDetectPitch from "../../hooks/useDetectPitch";
-import Ended from "./ended";
-import usePlayer from "../../hooks/usePlayer";
+import useDetectPitch from "./hooks/useDetectPitch";
+import GameEnd from "../../components/gameEnd";
+import usePlayer from "./hooks/usePlayer";
 import { AppContext } from "../../app";
 
 enum GameStatus {
@@ -29,7 +22,10 @@ export interface HighScoresList {
 // in production mode, API_URL will come from webpack
 declare const API_URL: string;
 
-const PitchDetect = (): ReactElement => {
+const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
+  Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
+
+const Singing = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.InProgress);
   const [highScoresList, setHighScoresList] = useState<HighScoresList[]>([]);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
@@ -53,7 +49,7 @@ const PitchDetect = (): ReactElement => {
     if (points !== null) {
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => Math.round(((p + points) / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10);
+        setTotalPoints((p) => getTotalPoints(p + points, numOfTonesPlayed));
         setCounter(3);
       }, 2000);
     }
@@ -75,14 +71,13 @@ const PitchDetect = (): ReactElement => {
               date: Date.now(),
             })
             .then((user) => {
-              if (user.data._id && setUser) {
+              if (user.data._id) {
                 setUser((u) => ({
                   id: user.data._id,
                   name: u.name,
                 }));
               }
               axios.get(`${API_URL}/scores`).then((res) => {
-                console.log("scores from frontend", res);
                 setHighScoresList(res.data);
               });
             });
@@ -113,22 +108,22 @@ const PitchDetect = (): ReactElement => {
     <div className="game full-size">
       {gameStatus === GameStatus.InProgress && (
         <>
-          <GameHeader
-            numOfTonesPlayed={numOfTonesPlayed}
+          <Header
+            step={numOfTonesPlayed}
             counter={counter}
-            playLastNote={playLastNote}
-            totalPoints={totalPoints}
             points={points}
+            totalPoints={totalPoints}
             isNotePlayed={noteData.played}
+            onRepeatClick={playLastNote}
           />
           <PitchVisualization volume={volume} detune={detune} counter={counter} />
         </>
       )}
       {gameStatus === GameStatus.Ended && (
-        <Ended totalPoints={totalPoints} userId={user.id} highScoresList={highScoresList} onClick={restartGame} />
+        <GameEnd totalPoints={totalPoints} userId={user.id} highScoresList={highScoresList} onClick={restartGame} />
       )}
     </div>
   );
 };
 
-export default PitchDetect;
+export default Singing;
