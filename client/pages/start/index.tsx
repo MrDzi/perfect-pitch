@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { AppContext } from "../../app";
+import "./start.scss";
 
 const Start = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
@@ -31,9 +32,9 @@ const Start = (): ReactElement => {
   };
 
   return (
-    <div className="flex flex-center full-size">
-      <div className="landing-content">
-        <h1>Test your ear</h1>
+    <div className="page">
+      <div className="start-content">
+        <h1>Test your pitch</h1>
         <p>To start, write your name bellow</p>
         <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} />
         <button className="button" onClick={onStartClick}>

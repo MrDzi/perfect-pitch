@@ -105,7 +105,7 @@ const Singing = (): ReactElement => {
   };
 
   return (
-    <div className="game full-size">
+    <div className="page">
       {gameStatus === GameStatus.InProgress && (
         <>
           <Header

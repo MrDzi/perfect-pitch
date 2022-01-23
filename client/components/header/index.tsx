@@ -26,7 +26,7 @@ const Header = ({
   console.log("points", points);
   return (
     <div className="game-header">
-      <div className="flex flex-left">
+      <div className="flex flex-left padding">
         <div className="flex flex-column justify-space-between">
           <div style={{ height: "50px" }}>
             {step < totalSteps && (
@@ -43,7 +43,7 @@ const Header = ({
         </div>
       </div>
       <div>
-        <div className="flex flex-center" style={{ height: "50px" }}>
+        <div className="flex flex-center padding" style={{ height: "50px" }}>
           <div className="text-center">
             {counter !== 0 && step < totalSteps ? (
               <span className="points">{counter}</span>
@@ -59,7 +59,7 @@ const Header = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-right">
+      <div className="flex flex-right padding">
         <div className="flex flex-column position-relative">
           <div className="flex flex-center">
             <span>Score: </span>
