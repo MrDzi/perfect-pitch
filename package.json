@@ -4,12 +4,12 @@
   "description": "Tool to practice singing in pitch",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
     "dev:client": "cd client && webpack serve --config webpack.client.dev.js",
     "dev:server": "cd server && nodemon",
     "build:client": "cd client && webpack --config webpack.client.prod.js",
     "build:server": "cd server && webpack --config webpack.server.js",
-    "postinstall": "(cd client && npm install); (cd server && npm install);",
+    "postinstall": "(cd client && yarn); (cd server && yarn);",
     "lint": "eslint ** --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
   },

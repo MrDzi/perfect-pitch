@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../app";
 import "./start.scss";
 
 const Start = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [, setUser] = useContext(AppContext);
 
@@ -27,7 +27,7 @@ const Start = (): ReactElement => {
       id: u.id,
       name: inputValue,
     }));
-    history.push("/home");
+    navigate("/home");
   };
 
   return (

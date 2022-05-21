@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactElement, Dispatch, SetStateAction } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Start from "./pages/start";
 import Home from "./pages/home";
 import Listening from "./pages/listening";
@@ -36,20 +36,12 @@ const App = (): ReactElement => {
     <div className="wrapper full-size">
       <AppContext.Provider value={[user, setUser]}>
         <Router>
-          <Switch>
-            <Route exact path="/">
-              <Start />
-            </Route>
-            <Route exact path="/home">
-              <Home />
-            </Route>
-            <Route exact path="/listening">
-              <Listening />
-            </Route>
-            <Route path="/singing">
-              <Singing />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Start />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/listening" element={<Listening />} />
+            <Route path="/singing" element={<Singing />} />
+          </Routes>
         </Router>
       </AppContext.Provider>
     </div>

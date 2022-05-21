@@ -17,7 +17,7 @@ const GameEnd = ({
     <div className="flex flex-column flex-center">
       <div className="flex margin-bottom">
         <div className="flex flex-center">
-          <span>Score: </span>
+          <span>Score:</span>
           <span className="points">{totalPoints}%</span>
         </div>
       </div>
