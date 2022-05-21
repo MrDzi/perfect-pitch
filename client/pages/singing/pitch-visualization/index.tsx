@@ -1,5 +1,6 @@
 import React, { CSSProperties, ReactElement } from "react";
 import PitchIcon from "./icons/pitch";
+import "./pitch-visualization.scss";
 
 interface PitchVisualizationProps {
   volume: number;

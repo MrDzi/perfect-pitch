@@ -1,16 +1,13 @@
 import React, { useState, ReactElement, useEffect, useContext } from "react";
 import axios from "axios";
-import Header from "../../components/header";
-import PitchVisualization from "./pitchVisualization";
-import useDetectPitch from "./hooks/useDetectPitch";
-import GameEnd from "../../components/gameEnd";
-import usePlayer from "./hooks/usePlayer";
+import Header from "../../components/game-header";
+import PitchVisualization from "./pitch-visualization";
+import useDetectPitch from "./hooks/use-detect-pitch";
+import GameEnd from "../../components/game-end";
+import usePlayer from "./hooks/use-player";
+import { GameStatus } from "../../types";
 import { AppContext } from "../../app";
-
-enum GameStatus {
-  InProgress,
-  Ended,
-}
+import { API_URL } from "../../constants";
 
 export interface HighScoresList {
   _id: string;
@@ -18,9 +15,6 @@ export interface HighScoresList {
   userName: string;
   score: number;
 }
-
-// in production mode, API_URL will come from webpack
-declare const API_URL: string;
 
 const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
   Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
@@ -109,12 +103,13 @@ const Singing = (): ReactElement => {
       {gameStatus === GameStatus.InProgress && (
         <>
           <Header
-            step={numOfTonesPlayed}
+            currentStep={numOfTonesPlayed + 1}
             counter={counter}
             points={points}
             totalPoints={totalPoints}
             isNotePlayed={noteData.played}
             onRepeatClick={playLastNote}
+            isSingingMode
           />
           <PitchVisualization volume={volume} detune={detune} counter={counter} />
         </>

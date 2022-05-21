@@ -5,8 +5,8 @@ import "./start.scss";
 
 const Start = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [, setUser] = useContext(AppContext);
 
   useEffect(() => {
@@ -18,16 +18,15 @@ const Start = (): ReactElement => {
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
+
   const onStartClick = () => {
-    if (!inputValue.length) {
+    if (!inputValue || !inputValue.length) {
       return;
     }
-    if (inputValue) {
-      setUser((u) => ({
-        id: u.id,
-        name: inputValue,
-      }));
-    }
+    setUser((u) => ({
+      id: u.id,
+      name: inputValue,
+    }));
     history.push("/home");
   };
 

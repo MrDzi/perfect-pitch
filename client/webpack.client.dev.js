@@ -9,7 +9,9 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    contentBase: path.join(__dirname, "dist"),
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
     open: true,
     hot: true,
     proxy: {
@@ -84,7 +86,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "index.html"),
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       API_URL: JSON.stringify("/api"),
     }),
@@ -92,4 +93,5 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
+  // TODO resolve client and server paths
 };

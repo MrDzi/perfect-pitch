@@ -12,8 +12,7 @@ interface ToneData {
 const createContextFromStream = (audioContext: AudioContext, stream: any) => {
   const source = audioContext.createMediaStreamSource(stream);
   const analyser = audioContext.createAnalyser();
-  const bufSize = 2048;
-  analyser.fftSize = bufSize;
+  analyser.fftSize = 2048;
 
   source.connect(analyser);
 
@@ -66,19 +65,43 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
   const tonesData = useRef<ToneData[]>([]);
   const requestRef = useRef<number | null>(null);
 
-  const updatePitch = (audioContext: AudioContext, analyser: AnalyserNode, buf: Float32Array) => {
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      ctx.current = new AudioContext();
+      analyser.current = createContextFromStream(ctx.current, stream);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!status.started) {
+      if (requestRef.current) {
+        window.cancelAnimationFrame(requestRef.current);
+      }
+      return;
+    }
+    if (analyser.current) {
+      updatePitch(ctx.current, analyser.current);
+    }
+
+    return () => {
+      if (requestRef.current) {
+        window.cancelAnimationFrame(requestRef.current);
+      }
+    };
+  }, [status.started]);
+
+  const updatePitch = (audioContext: AudioContext, analyser: AnalyserNode) => {
     const update = () => {
       if (!analyser || !audioContext) {
         return;
       }
+      const buf = new Float32Array(analyser.fftSize);
       analyser.getFloatTimeDomainData(buf);
       const volume = getVolume(buf);
       if (volume < 0.015) {
         // not enough signal
         setVolume(0);
-        if (detune !== null) {
-          setDetune(null);
-        }
+        setDetune(null);
       } else {
         setVolume(Math.min(volume * 5, 2));
         const pitch = autoCorrelate(buf, audioContext.sampleRate);
@@ -95,7 +118,6 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
             pitch,
           });
           setDetune(currentDetune);
-          console.log("nonSilentFrame", nonSilentFrameCount.current);
           if (nonSilentFrameCount.current > 60 && requestRef.current) {
             setVolume(0);
             window.cancelAnimationFrame(requestRef.current);
@@ -120,32 +142,6 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
 
     update();
   };
-
-  useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      ctx.current = new AudioContext();
-      analyser.current = createContextFromStream(ctx.current, stream);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!status.started) {
-      if (requestRef.current) {
-        window.cancelAnimationFrame(requestRef.current);
-      }
-      return;
-    }
-    if (analyser.current) {
-      const buf = new Float32Array(analyser.current.fftSize);
-      updatePitch(ctx.current, analyser.current, buf);
-    }
-
-    return () => {
-      if (requestRef.current) {
-        window.cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, [status.started]);
 
   const startPitchDetection = (targetNote: Note) => {
     setPoints(null);

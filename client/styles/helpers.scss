@@ -1,0 +1,67 @@
+// position & size
+.position-relative {
+  position: relative;
+}
+
+.full-size {
+  height: 100%;
+  width: 100%;
+}
+
+.overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+// flex
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-left {
+  justify-content: flex-start;
+}
+
+.flex-right {
+  justify-content: flex-end;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.justify-space-around {
+  justify-content: space-around;
+}
+
+// text alignment
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: left;
+}
+
+// padding & margin
+.padding {
+  padding: 1em;
+}
+
+.margin-bottom {
+  margin-bottom: 1em;
+}

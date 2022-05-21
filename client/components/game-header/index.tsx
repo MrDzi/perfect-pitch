@@ -1,9 +1,10 @@
 import React, { ReactElement } from "react";
 import Microphone from "./icons/microphone";
 import SineWave from "./icons/sine-wave";
+import "./game-header.scss";
 
-interface HeaderProps {
-  step: number;
+interface GameHeaderProps {
+  currentStep: number;
   counter: number | null;
   totalPoints: number;
   points: number | null;
@@ -13,29 +14,36 @@ interface HeaderProps {
   onRepeatClick: () => void;
 }
 
+const shouldRenderRepeatButton = (
+  counter: number | null,
+  currentStep: number,
+  totalSteps: number,
+  isNotePlayed: boolean
+): boolean => counter === 0 && currentStep <= totalSteps && isNotePlayed;
+
 const Header = ({
-  step,
+  currentStep,
   totalSteps = 3,
   counter,
   totalPoints,
   points,
   isNotePlayed,
   onRepeatClick,
-  isSingingMode = true,
-}: HeaderProps): ReactElement => {
-  console.log("points", points);
+  isSingingMode = false,
+}: GameHeaderProps): ReactElement => {
+  console.log(currentStep, totalSteps);
   return (
     <div className="game-header">
       <div className="flex flex-left padding">
         <div className="flex flex-column justify-space-between">
           <div style={{ height: "50px" }}>
-            {step < totalSteps && (
+            {currentStep <= totalSteps && (
               <span className="points">
-                {step + 1}/{totalSteps}
+                {currentStep}/{totalSteps}
               </span>
             )}
           </div>
-          {counter === 0 && step < totalSteps && isNotePlayed && (
+          {shouldRenderRepeatButton(counter, currentStep, totalSteps, isNotePlayed) && (
             <button className="button button--no-border" onClick={onRepeatClick}>
               REPEAT NOTE{isSingingMode ? "" : "S"}
             </button>
@@ -45,8 +53,8 @@ const Header = ({
       <div>
         <div className="flex flex-center padding" style={{ height: "50px" }}>
           <div className="text-center">
-            {counter !== 0 && step < totalSteps ? (
-              <span className="points">{counter}</span>
+            {counter !== 0 && currentStep <= totalSteps ? (
+              <span className="game-header_points">{counter}</span>
             ) : isNotePlayed ? (
               isSingingMode ? (
                 <Microphone />
@@ -63,9 +71,9 @@ const Header = ({
         <div className="flex flex-column position-relative">
           <div className="flex flex-center">
             <span>Score: </span>
-            <span className="points">{totalPoints}%</span>
+            <span className="game-header_points">{totalPoints}%</span>
           </div>
-          {points !== null ? <div className="points new-points">{`+${points}%`}</div> : null}
+          {points !== null ? <div className="game-header_points game-header_new-points">{`+${points}%`}</div> : null}
         </div>
       </div>
     </div>

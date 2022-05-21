@@ -18,15 +18,12 @@ const getNoteFrequencies = (noteData: NoteData): [number, number] => {
   let frequency2;
   switch (noteData.relation) {
     case TonesRelation.FirstHigher:
-      console.log(0, noteData.relation);
       frequency2 = frequency1 - Math.floor(Math.random() * 10);
       break;
     case TonesRelation.SecondHigher:
-      console.log(1, noteData.relation);
       frequency2 = frequency1 + Math.floor(Math.random() * 10);
       break;
     default:
-      console.log(2, noteData.relation);
       frequency2 = frequency1;
   }
   return [frequency1, frequency2];
@@ -43,11 +40,7 @@ const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
   return getNote();
 };
 
-const getRandomRelation = () => {
-  const randomIndex = Math.floor(Math.random() * 3);
-  console.log(7, randomIndex);
-  return randomIndex;
-};
+const getRandomRelation = () => Math.floor(Math.random() * 3);
 
 const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTime: number | undefined = 0) => {
   gainNode.gain.setValueAtTime(gainNode.gain.value, currentTime);
@@ -70,7 +63,6 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
     const oscNode: OscillatorNode = ctx.current.createOscillator();
     const [frequency1, frequency2] = getNoteFrequencies(noteData);
     oscNode.frequency.value = frequency1;
-    console.log(oscNode.frequency.value);
     const gainNode: GainNode = ctx.current.createGain();
     oscNode.connect(gainNode);
     gainNode.connect(ctx.current.destination);
@@ -82,7 +74,6 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
       gainNode.gain.value = 0;
       timeout2 = setTimeout(() => {
         oscNode.frequency.value = frequency2;
-        console.log(oscNode.frequency.value);
         gainNode.gain.value = 0.15;
         timeout3 = setTimeout(() => {
           stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
@@ -100,7 +91,7 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
       const t = timeout || timeout2 || timeout3;
       if (t) {
         stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
-        clearTimeout(t);
+        clearTimeout(t); // clear other timeouts!
       }
     };
   }, [noteData]);
@@ -108,7 +99,6 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
   const playTwoNotes = () => {
     const randomNote = getRandomNote(NOTES, noteData.note);
     const randomRelation = getRandomRelation();
-    console.log(8, noteData.relation);
     setNoteData({
       note: randomNote,
       relation: randomRelation,

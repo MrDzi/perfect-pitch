@@ -12,7 +12,8 @@ const Home = (): ReactElement => {
   return (
     <div className="page">
       <div className="home-content-wrapper">
-        <div className={`home-content hovered-${hovered}`}>
+        <div className={`home-content`}>
+          {/* hovered-${hovered} */}
           <div className="home-content_block home-content_block--left" onMouseEnter={() => setHovered("left")}>
             <Link to="/singing">
               <div className="overlay flex flex-center padding">

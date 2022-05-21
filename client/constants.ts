@@ -1,5 +1,3 @@
-export const baseURL = process.env.NODE_ENV === "development" ? "" : "https://hit-that-tone.herokuapp.com";
-
 export const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
 
 export type Note = typeof NOTES[number];
@@ -25,3 +23,6 @@ const NOTE_FREQUENCIES: NoteFrequencies = {
 };
 
 export const getNoteFrequency = (note: Note): number => NOTE_FREQUENCIES[note][0];
+
+// in production mode, API_URL will come from heroku
+export declare const API_URL: string;

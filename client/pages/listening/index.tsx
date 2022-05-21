@@ -1,14 +1,11 @@
 import React, { useState, ReactElement, useEffect, useContext, ChangeEvent } from "react";
 import axios from "axios";
-import Header from "../../components/header";
-import GameEnd from "../../components/gameEnd";
-import useListeningPlayer from "./hooks/useListeningPlayer";
+import Header from "../../components/game-header";
+import GameEnd from "../../components/game-end";
+import useListeningPlayer from "./hooks/use-listening-player";
+import { GameStatus } from "../../types";
 import { AppContext } from "../../app";
-
-enum GameStatus {
-  InProgress,
-  Ended,
-}
+import { API_URL } from "../../constants";
 
 export interface HighScoresList {
   _id: string;
@@ -17,13 +14,10 @@ export interface HighScoresList {
   score: number;
 }
 
-// in production mode, API_URL will come from webpack
-declare const API_URL: string;
-
 const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
   Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
 
-const Singing = (): ReactElement => {
+const Listening = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.InProgress);
   const [highScoresList, setHighScoresList] = useState<HighScoresList[]>([]);
   const [points, setPoints] = useState<number | null>(null);
@@ -50,7 +44,9 @@ const Singing = (): ReactElement => {
       return;
     }
     setTimeout(() => {
-      if (counter === 1) {
+      if (counter !== 1) {
+        setCounter(counter - 1);
+      } else {
         setCounter(counter - 1);
         if (numOfTonesPlayed === 5) {
           setGameStatus(GameStatus.Ended);
@@ -74,8 +70,6 @@ const Singing = (): ReactElement => {
         } else {
           playTwoNotes();
         }
-      } else {
-        setCounter(counter - 1);
       }
     }, 1000);
   }, [counter]);
@@ -95,7 +89,6 @@ const Singing = (): ReactElement => {
   };
 
   const onAnswerSubmit = () => {
-    console.log(noteData.relation, selectedOption);
     setPoints(noteData.relation === selectedOption ? 100 : 0);
     setSelectedOption(null);
   };
@@ -109,14 +102,13 @@ const Singing = (): ReactElement => {
       {gameStatus === GameStatus.InProgress && (
         <>
           <Header
-            step={numOfTonesPlayed}
+            currentStep={numOfTonesPlayed + 1}
             totalSteps={5}
             counter={counter}
             points={points}
             totalPoints={totalPoints}
             isNotePlayed={noteData.played}
             onRepeatClick={playLastNote}
-            isSingingMode={false}
           />
           <div className="game-visualization flex-center">
             {noteData.played && counter === 0 && (
@@ -163,4 +155,4 @@ const Singing = (): ReactElement => {
   );
 };
 
-export default Singing;
+export default Listening;

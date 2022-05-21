@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Playfair+Display:wght@900&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap");
+@font-face {
+  font-family: "calistogaregular";
+  src: url("assets/fonts/calistoga-regular-webfont.woff2") format("woff2"),
+       url("assets/fonts/calistoga-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --blue: #355070;
+  --purple: #5E4D6A;
+  --dark-purple: #564562;
+  --apricot: #EAAC8B;
+  --pink: #E56B6F;
+  --dark-pink: #B56576;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--apricot);
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-size: 18px;
+}
+
+#app {
+  height: 100%;
+}
+
+.wrapper {
+  background: var(--purple);
+}

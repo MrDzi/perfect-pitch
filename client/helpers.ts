@@ -24,11 +24,12 @@ export const getVolume = (buf: Float32Array): number => {
   let rms = 0;
 
   for (let i = 0; i < SIZE; i++) {
-    rms += buf[i] * buf[i];
+    rms += Math.pow(buf[i], 2);
   }
   return Math.sqrt(rms / SIZE);
 };
 
+// Logic taken from: https://github.com/cwilso/PitchDetect/blob/4190bc705747fbb3f82eb465ea18a2dfb5873080/js/pitchdetect.js
 export const autoCorrelate = (buf: Float32Array, sampleRate: number): number => {
   let SIZE = buf.length;
 

@@ -1,0 +1,26 @@
+.target {
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  width: 1px;
+  background: #4B3C55;
+  transition: background 0.25s ease-in-out; 
+}
+
+.line {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  background: var(--pink);
+  .pitch-indicator {
+    display: flex;
+    position: absolute;
+    left: calc(50% - 67px);
+    transition: transform 0.05s linear;
+    top: -41px;
+    transform: scaleX(2) scaleY(0);
+    &--active {
+      transform: scaleY(1);
+    }
+  }
+}

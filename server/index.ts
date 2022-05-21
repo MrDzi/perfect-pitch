@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect(config.mongoDbUrl, { useNewUrlParser: true });
+mongoose.connect(config.mongoDbUrl);
 
 const db = mongoose.connection;
 
@@ -38,7 +38,7 @@ app.post("/api/scores", (req, res) => {
   console.log("/api/scores", req.body);
   const score = new Score(req.body);
   console.log(score);
-  score.save((err, score) => {
+  score.save((err: any, score: any) => {
     if (err) {
       console.error(err);
       res.sendStatus(500);
