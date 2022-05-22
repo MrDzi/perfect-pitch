@@ -27,17 +27,17 @@
   margin-left: 0.15em;
 }
 
-// .list {
-//   max-height: 300px;
-//   width: 300px;
-//   padding: 0 20px;
-//   overflow: scroll;
-//   list-style-type: decimal;
-//   li {
-//     margin-bottom: 3px;
-//     &.selected-item {
-//       font-weight: bold;
-//       color: var(--pink);
-//     }
-//   }
-// }
+.list {
+  max-height: 300px;
+  width: 300px;
+  padding: 0 20px;
+  overflow: scroll;
+  list-style-type: decimal;
+  li {
+    margin-bottom: 3px;
+    &.selected-item {
+      font-weight: bold;
+      color: var(--pink);
+    }
+  }
+}

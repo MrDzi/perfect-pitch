@@ -23,6 +23,3 @@ const NOTE_FREQUENCIES: NoteFrequencies = {
 };
 
 export const getNoteFrequency = (note: Note): number => NOTE_FREQUENCIES[note][0];
-
-// in production mode, API_URL will come from heroku
-export declare const API_URL: string;

@@ -3,9 +3,9 @@ import axios from "axios";
 import Header from "../../components/game-header";
 import GameEnd from "../../components/game-end";
 import useListeningPlayer from "./hooks/use-listening-player";
-import { GameStatus } from "../../types";
+import { GameStatus } from "../../types/types";
 import { AppContext } from "../../app";
-import { API_URL } from "../../constants";
+import { API_URL } from "../../types/declarations";
 
 export interface HighScoresList {
   _id: string;

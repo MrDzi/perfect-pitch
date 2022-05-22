@@ -5,10 +5,12 @@ import PitchVisualization from "./pitch-visualization";
 import useDetectPitch from "./hooks/use-detect-pitch";
 import GameEnd from "../../components/game-end";
 import usePlayer from "./hooks/use-player";
-import { GameStatus } from "../../types";
+import { GameStatus } from "../../types/types";
 import { AppContext } from "../../app";
-import { API_URL } from "../../constants";
+import { API_URL } from "../../types/declarations";
 
+// declare const API_URL: string;
+console.log("API URL", API_URL);
 export interface HighScoresList {
   _id: string;
   date: Date;
@@ -28,6 +30,8 @@ const Singing = (): ReactElement => {
   const [noteData, playRandomNote, playLastNote] = usePlayer();
   const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
   const [user, setUser] = useContext(AppContext);
+
+  console.log("USER", user);
 
   useEffect(() => {
     if (noteData.note) {
