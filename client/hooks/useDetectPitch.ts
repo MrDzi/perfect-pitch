@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { getNoteFrequency, Note, NOTES } from "../../../constants";
-import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume } from "../../../helpers";
+import { getNoteFrequency, Note, NOTES } from "../constants";
+import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume } from "../helpers";
 
 interface ToneData {
   note: Note;

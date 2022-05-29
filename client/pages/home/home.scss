@@ -1,6 +1,6 @@
 .home-content-wrapper {
-  width: 700px;
-  height: "80vh";
+  width: 1000px;
+  height: 500px;
 }
 
 .home-content {
@@ -11,64 +11,49 @@
   grid-row-gap: 0px;
   height: 100%;
   h3 {
-    margin: 5px 0;
+    margin: 0 0 5px;
+    color: #fff;
   }
   p {
     font-size: 14px;
+    font-weight: 500;
     margin: 0 0 10px;
+    color: #fff;
   }
   .home-content_block {
-    padding: 0.5em;
-    transform: scale(1);
+    margin: 0.5em;
+    padding: 1em;
     cursor: pointer;
-    background: rgba(85, 70, 98, .5);
-    transition: transform .3s ease-in-out;
+    border-radius: 15px;
+    box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
+    transition: box-shadow 0.2s ease-in-out;
+    &:hover {
+      box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
+    }
   }
 }
   
-.home-content_block--left {
-  grid-area: 1 / 2 / 2 / 3;
-  height: 100%;
+.home-content_block--big {
+  grid-area: 1 / 1 / 3 / 2;
   transform-origin: top right;
-  .hovered-left & {
-    transform: scale(1.5);
-    background: rgba(85, 70, 98, .9);
-    border: 1px solid var(--apricot);
-    z-index: 3;
-  }
-  .hovered-right & {
-    transition: transform .4s ease-in-out .1s;
-    transform: scale(0.6);
-    z-index: 0;
-  }
+  background-image: url("../../assets/images/singing.jpg");
+  background-size: cover;
   .home-content_desc {
-    position: absolute;
-    width: 90%;
-    top: 100%;
-    right: 0;
-    text-align: right;
     color: var(--apricot);
   }
 }
-.home-content_block--right {
-  grid-area: 2 / 1 / 3 / 2;
-  width: 100%;
-  transform-origin: bottom left;
-  .hovered-left & {
-    transform: scale(0.6);
-    transition: transform .4s ease-in-out .1s;
-  }
-  .hovered-right & {
-    transform: scale(1.5);
-    background: rgba(85, 70, 98, .9);
-    border: 1px solid var(--apricot);
-  }
-  .home-content_desc {
-    position: absolute;
-    width: 90%;
-    bottom: 100%;
-    left: 0;
-    text-align: left;
-    color: var(--apricot);
-  }
+
+.home-content_block--small-up {
+  grid-area: 1 / 2 / 2 / 3;
+  background-image: url("../../assets/images/listening.jpg");
+  background-size: cover;
+}
+
+.home-content_block--small-down {
+  background-color: #F67F7D;
+  grid-area: 2 / 2 / 3 / 3;
+}
+
+.home-content_desc {
+  color: var(--apricot);
 }

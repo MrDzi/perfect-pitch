@@ -5,7 +5,7 @@ import "./pitch-visualization.scss";
 interface PitchVisualizationProps {
   volume: number;
   detune: number | null;
-  counter: number | null;
+  shouldVisualize: boolean;
 }
 
 const getPitchIndicatorStyles = ({ detune, volume }: { detune: number | null; volume: number }): CSSProperties => {
@@ -15,8 +15,8 @@ const getPitchIndicatorStyles = ({ detune, volume }: { detune: number | null; vo
   return { transform: `translateX(${detune}px) scaleX(1.15) scaleY(${volume > 0 ? 1 : 0})` };
 };
 
-const PitchVisualization = ({ volume, detune, counter }: PitchVisualizationProps): ReactElement => {
-  const isInCenter = counter === 0 && volume && detune && detune > -10 && detune < 10;
+const PitchVisualization = ({ volume, detune, shouldVisualize }: PitchVisualizationProps): ReactElement => {
+  const isInCenter = shouldVisualize && volume && detune && detune > -10 && detune < 10;
 
   return (
     <div className="game-visualization">
@@ -24,7 +24,7 @@ const PitchVisualization = ({ volume, detune, counter }: PitchVisualizationProps
       <div className="line">
         <div
           className="pitch-indicator"
-          style={getPitchIndicatorStyles({ detune, volume: counter !== null && counter === 0 ? volume : 0 })}
+          style={getPitchIndicatorStyles({ detune, volume: shouldVisualize ? volume : 0 })}
         >
           <PitchIcon />
         </div>

@@ -1,16 +1,11 @@
-import React, { useState, ReactElement, useEffect, useContext } from "react";
-import axios from "axios";
+import React, { useState, ReactElement, useEffect } from "react";
 import Header from "../../components/game-header";
 import PitchVisualization from "./pitch-visualization";
-import useDetectPitch from "./hooks/use-detect-pitch";
 import GameEnd from "../../components/game-end";
-import usePlayer from "./hooks/use-player";
-import { GameStatus } from "../../types/types";
-import { AppContext } from "../../app";
-import { API_URL } from "../../types/declarations";
+import usePlayer from "../../hooks/usePlayer";
+import useDetectPitch from "../../hooks/useDetectPitch";
+import { GameMode, GameStatus } from "../../types/types";
 
-// declare const API_URL: string;
-console.log("API URL", API_URL);
 export interface HighScoresList {
   _id: string;
   date: Date;
@@ -21,22 +16,21 @@ export interface HighScoresList {
 const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
   Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
 
+const NUM_OF_NOTES_TO_PLAY = 3;
+const COUNTER_START_VALUE = 3;
+
 const Singing = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.InProgress);
-  const [highScoresList, setHighScoresList] = useState<HighScoresList[]>([]);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [noteData, playRandomNote, playLastNote] = usePlayer();
+  const [noteData, playRandomNotes, repeatPlaying] = usePlayer();
   const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
-  const [user, setUser] = useContext(AppContext);
-
-  console.log("USER", user);
 
   useEffect(() => {
-    if (noteData.note) {
+    if (noteData.notes) {
       if (noteData.played) {
-        startPitchDetection(noteData.note);
+        startPitchDetection(noteData.notes[0]);
       } else {
         stopPitchDetection();
       }
@@ -48,7 +42,7 @@ const Singing = (): ReactElement => {
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);
         setTotalPoints((p) => getTotalPoints(p + points, numOfTonesPlayed));
-        setCounter(3);
+        setCounter(COUNTER_START_VALUE);
       }, 2000);
     }
   }, [points]);
@@ -60,27 +54,11 @@ const Singing = (): ReactElement => {
     setTimeout(() => {
       if (counter === 1) {
         setCounter(counter - 1);
-        if (numOfTonesPlayed === 3) {
+        if (numOfTonesPlayed === NUM_OF_NOTES_TO_PLAY) {
           setGameStatus(GameStatus.Ended);
-          return axios
-            .post(`${API_URL}/scores`, {
-              userName: user.name,
-              score: totalPoints,
-              date: Date.now(),
-            })
-            .then((user) => {
-              if (user.data._id) {
-                setUser((u) => ({
-                  id: user.data._id,
-                  name: u.name,
-                }));
-              }
-              axios.get(`${API_URL}/scores`).then((res) => {
-                setHighScoresList(res.data);
-              });
-            });
+          return;
         } else {
-          playRandomNote();
+          playRandomNotes();
         }
       } else {
         setCounter(counter - 1);
@@ -92,7 +70,7 @@ const Singing = (): ReactElement => {
     if (gameStatus === GameStatus.InProgress) {
       setTotalPoints(0);
       setNumOfTonesPlayed(0);
-      setCounter(3);
+      setCounter(COUNTER_START_VALUE);
     }
   }, [gameStatus]);
 
@@ -112,14 +90,15 @@ const Singing = (): ReactElement => {
             points={points}
             totalPoints={totalPoints}
             isNotePlayed={noteData.played}
-            onRepeatClick={playLastNote}
+            onRepeatClick={repeatPlaying}
             isSingingMode
+            withPercentage
           />
-          <PitchVisualization volume={volume} detune={detune} counter={counter} />
+          <PitchVisualization volume={volume} detune={detune} shouldVisualize={counter === 0} />
         </>
       )}
       {gameStatus === GameStatus.Ended && (
-        <GameEnd totalPoints={totalPoints} userId={user.id} highScoresList={highScoresList} onClick={restartGame} />
+        <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.SINGING} withPercentage />
       )}
     </div>
   );

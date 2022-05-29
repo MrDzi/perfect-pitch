@@ -5,17 +5,14 @@ import Home from "./pages/home";
 import Listening from "./pages/listening";
 import Singing from "./pages/singing";
 import "./app.scss";
+import { User } from "./types/types";
+import Pitchle from "./pages/pitchle";
 
 export interface HighScoresList {
   _id: string;
   date: Date;
   userName: string;
   score: number;
-}
-
-interface User {
-  id: string | null;
-  name: string | null;
 }
 
 const userInitialState = {
@@ -41,6 +38,7 @@ const App = (): ReactElement => {
             <Route path="/home" element={<Home />} />
             <Route path="/listening" element={<Listening />} />
             <Route path="/singing" element={<Singing />} />
+            <Route path="/pitchle" element={<Pitchle />} />
           </Routes>
         </Router>
       </AppContext.Provider>

@@ -1,49 +1,41 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 import { Link } from "react-router-dom";
-// import { AppContext } from "../../app";
-import Sing from "./icons/listen";
-import Listen from "./icons/sing";
 import "./home.scss";
 
 const Home = (): ReactElement => {
-  // const [user] = useContext(AppContext);
-  const [hovered, setHovered] = useState("left");
-
   return (
-    <div className="page">
-      <div className="home-content-wrapper">
-        <div className={`home-content`}>
-          {/* hovered-${hovered} */}
-          <div className="home-content_block home-content_block--left" onMouseEnter={() => setHovered("left")}>
-            <Link to="/singing">
-              <div className="overlay flex flex-center padding">
-                {hovered === "left" && (
-                  <div className="home-content_desc">
-                    <h3>Singing</h3>
-                    <p>Practice singing by sdfs lasdfksa sdfjlkjasd sadflk sadf</p>
-                  </div>
-                )}
-                <div>
-                  <Listen />
-                </div>
+    <div className="home-content-wrapper">
+      <div className={`home-content`}>
+        {/* hovered-${hovered} */}
+        <div className="home-content_block home-content_block--big">
+          <Link to="/singing">
+            <div className="overlay">
+              <div className="home-content_desc">
+                <h3>Sing</h3>
+                <p>Sing five randomly given tones as precisely as possible.</p>
               </div>
-            </Link>
-          </div>
-          <div className="home-content_block home-content_block--right" onMouseEnter={() => setHovered("right")}>
-            <Link to="/listening">
-              <div className="overlay flex flex-center padding">
-                {hovered === "right" && (
-                  <div className="home-content_desc">
-                    <h3>Listening</h3>
-                    <p>Practice listening by sdfs lasdfksa sdfjlkjasd sadflk sadf</p>
-                  </div>
-                )}
-                <div>
-                  <Sing />
-                </div>
+            </div>
+          </Link>
+        </div>
+        <div className="home-content_block home-content_block--small-up">
+          <Link to="/listening">
+            <div className="overlay">
+              <div className="home-content_desc">
+                <h3>Listen</h3>
+                <p>Recognize subtle differences.</p>
               </div>
-            </Link>
-          </div>
+            </div>
+          </Link>
+        </div>
+        <div className="home-content_block home-content_block--small-down">
+          <Link to="/pitchle">
+            <div className="overlay">
+              <div className="home-content_desc">
+                <h3>Pitchle</h3>
+                <p>Play the music version of the famous game.</p>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

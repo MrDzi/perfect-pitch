@@ -25,15 +25,16 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: "ts-loader",
         include: path.resolve(__dirname),
         exclude: /node_modules/,
+        use: ["source-map-loader", "ts-loader"],
       },
       {
         test: /\.(jsx|js)$/,
         include: path.resolve(__dirname),
         exclude: /node_modules/,
         use: [
+          "source-map-loader",
           {
             loader: "babel-loader",
             options: {

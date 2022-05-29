@@ -3,8 +3,17 @@
   left: 50%;
   height: 100%;
   width: 1px;
-  background: #4B3C55;
+  background: #dedede;
   transition: background 0.25s ease-in-out; 
+}
+
+.game-visualization {
+  background: #efefef;
+  position: relative;
+  flex: 1;
+  display: flex;
+  width: 100%;
+  align-items: center;
 }
 
 .line {
