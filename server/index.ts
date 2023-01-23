@@ -1,4 +1,4 @@
-import express, { Request } from "express";
+import express, { application, Request } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose, { Schema } from "mongoose";
@@ -81,6 +81,10 @@ app.get("/api/scores", (req: Request<Params>, res) => {
     }
     res.send(scores);
   });
+});
+
+app.get("/api/health", (_, res) => {
+  res.sendStatus(200);
 });
 
 app.listen(port, () => {

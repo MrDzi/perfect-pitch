@@ -22,31 +22,67 @@
   }
   .home-content_block {
     margin: 0.5em;
-    padding: 1em;
     cursor: pointer;
     border-radius: 15px;
-    box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
-    transition: box-shadow 0.2s ease-in-out;
-    &:hover {
-      box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
+    overflow: hidden;
+    position: relative;
+    a {
+      display: block;
+      position: relative;
+      z-index: 1;
+      height: 100%;
     }
+  }
+}
+
+.home-content_block {
+  transition: box-shadow 0.5s ease-in-out;
+  box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
+  &:hover {
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
   }
 }
   
 .home-content_block--big {
   grid-area: 1 / 1 / 3 / 2;
   transform-origin: top right;
-  background-image: url("../../assets/images/singing.jpg");
-  background-size: cover;
+  position: relative;
   .home-content_desc {
     color: var(--apricot);
   }
+  .home-content_block_inner {
+    background-image: url("../../assets/images/singing.jpg");
+  }
+  &:hover {
+    .home-content_block_inner {
+      transform: scale(1.3);
+      transition: all 3s ease-in-out;
+    }
+  }
+}
+
+.home-content_block_inner {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: cover;
+  transition: all 0.7s ease-in-out;
+  scale: 1;
 }
 
 .home-content_block--small-up {
   grid-area: 1 / 2 / 2 / 3;
-  background-image: url("../../assets/images/listening.jpg");
-  background-size: cover;
+  .home-content_block_inner {
+    background-image: url("../../assets/images/listening.jpg");
+  }
+  &:hover {
+    .home-content_block_inner {
+      transform: scale(1.3);
+      transition: all 3s ease-in-out;
+    }
+  }
 }
 
 .home-content_block--small-down {
@@ -55,5 +91,6 @@
 }
 
 .home-content_desc {
+  padding: 1em;
   color: var(--apricot);
 }
