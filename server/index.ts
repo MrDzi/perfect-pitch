@@ -1,4 +1,4 @@
-import express, { application, Request } from "express";
+import express, { Request } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose, { Schema } from "mongoose";
@@ -90,3 +90,12 @@ app.get("/api/health", (_, res) => {
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
+
+process
+  .on("unhandledRejection", (reason, p) => {
+    console.error(reason, "Unhandled Rejection at Promise", p);
+  })
+  .on("uncaughtException", (err) => {
+    console.error(err, "Uncaught Exception thrown");
+    process.exit(1);
+  });
