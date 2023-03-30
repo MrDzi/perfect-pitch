@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext } from "react";
+import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext, KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import useTransition from "../../hooks/useTransition";
 import { AppContext } from "../../app";
 import "./start.scss";
 
 const Start = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
+  const [transition] = useTransition();
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [, setUser] = useContext(AppContext);
@@ -27,7 +29,16 @@ const Start = (): ReactElement => {
       id: u.id,
       name: inputValue,
     }));
-    navigate("/home");
+    transition(() => {
+      return navigate("/home");
+    });
+  };
+
+  const handleKeypress = (e: KeyboardEvent) => {
+    //it triggers by pressing the enter key
+    if (e.code === "Enter") {
+      onStartClick();
+    }
   };
 
   return (
@@ -36,7 +47,7 @@ const Start = (): ReactElement => {
         <h1>Test your pitch</h1>
         <p>To start, write your name bellow</p>
         <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} />
-        <button className="button" onClick={onStartClick}>
+        <button className="button" onClick={onStartClick} onKeyPress={handleKeypress}>
           Start
         </button>
       </div>

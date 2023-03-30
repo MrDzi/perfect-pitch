@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
@@ -75,6 +76,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       API_URL: JSON.stringify(process.env.API_URL),
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "static" }],
     }),
   ],
 
