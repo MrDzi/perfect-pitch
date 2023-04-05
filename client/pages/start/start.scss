@@ -1,7 +1,18 @@
 .start-content {
-  max-width: 550px;
-  text-align: center;
+  text-align: left;
+  padding: 0 100px;
+  h1 {
+    flex-grow: 1;
+    flex-shrink: 0;
+    font-size: 64px;
+  }
+  input {
+    font-size: 64px;
+    margin-left: 14px;
+    min-width: 0;
+  }
   button {
-    margin-top: 30px;
+    margin-top: 50px;
+    margin-bottom: 20px;
   }
 }
