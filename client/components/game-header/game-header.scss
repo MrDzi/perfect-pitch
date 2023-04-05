@@ -1,14 +1,15 @@
 .game-header {
   display: flex;
   width: 100%;
-  height: 165px;
+  height: 135px;
+  padding-bottom: 20px;
   > div {
     flex: 1;
   }
 }
 
 .game-header_points {
-  font-family: "calistogaregular", serif;
+  font-family: "poppins", sans-serif;
   font-size: 48px;
   line-height: 1;
   margin-left: 0.15em;
