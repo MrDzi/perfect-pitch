@@ -15,19 +15,24 @@ export interface HighScoresList {
   score: number;
 }
 
-const userInitialState = {
-  id: null,
-  name: null,
-};
-
 export const AppContext = createContext<[User, Dispatch<SetStateAction<User>> | (() => void)]>([
-  userInitialState,
+  {
+    id: null,
+    name: null,
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   () => {},
 ]);
 
 const App = (): ReactElement => {
+  const userFromLocalStorage = window.localStorage.getItem("PERFECT_PITCH_USER");
+  const userInitialState = {
+    id: null,
+    name: userFromLocalStorage || null,
+  };
   const [user, setUser] = useState<User>(userInitialState);
+
+  console.log("USER", user);
 
   return (
     <div className="wrapper full-size">

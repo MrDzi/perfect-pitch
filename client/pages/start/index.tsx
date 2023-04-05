@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext, KeyboardEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import useTransition from "../../hooks/useTransition";
+import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import { AppContext } from "../../app";
 import "./start.scss";
 
 const Start = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
-  const [transition] = useTransition();
-  const navigate = useNavigate();
+  const [navigate] = useNavigateWithTransition();
   const inputRef = useRef<HTMLInputElement>(null);
   const [, setUser] = useContext(AppContext);
 
@@ -25,13 +23,12 @@ const Start = (): ReactElement => {
     if (!inputValue || !inputValue.length) {
       return;
     }
+    window.localStorage.setItem("PERFECT_PITCH_USER", inputValue);
     setUser((u) => ({
       id: u.id,
       name: inputValue,
     }));
-    transition(() => {
-      return navigate("/home");
-    });
+    navigate("/home");
   };
 
   const handleKeypress = (e: KeyboardEvent) => {
@@ -44,10 +41,13 @@ const Start = (): ReactElement => {
   return (
     <div className="page">
       <div className="start-content">
-        <h1>Test your pitch</h1>
-        <p>To start, write your name bellow</p>
-        <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} />
-        <button className="button" onClick={onStartClick} onKeyPress={handleKeypress}>
+        <div className="flex flex-center">
+          <h1>Test your pitch, </h1>
+          <form autoComplete="off">
+            <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} placeholder="Name" />
+          </form>
+        </div>
+        <button className="button" onClick={onStartClick} onKeyUp={handleKeypress}>
           Start
         </button>
       </div>

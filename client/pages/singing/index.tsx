@@ -20,7 +20,7 @@ const NUM_OF_NOTES_TO_PLAY = 3;
 const COUNTER_START_VALUE = 3;
 
 const Singing = (): ReactElement => {
-  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.InProgress);
+  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
@@ -74,6 +74,10 @@ const Singing = (): ReactElement => {
     }
   }, [gameStatus]);
 
+  const startGame = () => {
+    setGameStatus(GameStatus.InProgress);
+  };
+
   const restartGame = () => {
     setTotalPoints(0);
     setNumOfTonesPlayed(0);
@@ -82,7 +86,7 @@ const Singing = (): ReactElement => {
 
   return (
     <div className="page">
-      {gameStatus === GameStatus.InProgress && (
+      {gameStatus !== GameStatus.Ended ? (
         <>
           <Header
             currentStep={numOfTonesPlayed + 1}
@@ -91,13 +95,14 @@ const Singing = (): ReactElement => {
             totalPoints={totalPoints}
             isNotePlayed={noteData.played}
             onRepeatClick={repeatPlaying}
+            onStartClick={startGame}
+            gameStatus={gameStatus}
             isSingingMode
             withPercentage
           />
           <PitchVisualization volume={volume} detune={detune} shouldVisualize={counter === 0} />
         </>
-      )}
-      {gameStatus === GameStatus.Ended && (
+      ) : (
         <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.SINGING} withPercentage />
       )}
     </div>

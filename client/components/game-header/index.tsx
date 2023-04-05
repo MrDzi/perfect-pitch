@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import Microphone from "./icons/microphone";
 import SineWave from "./icons/sine-wave";
 import "./game-header.scss";
+import { GameStatus } from "../../types/types";
 
 interface GameHeaderProps {
   currentStep: number;
@@ -9,10 +10,12 @@ interface GameHeaderProps {
   totalPoints: number;
   points: number | null;
   isNotePlayed: boolean;
+  gameStatus?: GameStatus;
   isSingingMode?: boolean;
   withPercentage?: boolean;
   totalSteps?: number;
   onRepeatClick: () => void;
+  onStartClick?: () => void;
 }
 
 const shouldRenderRepeatButton = (
@@ -29,56 +32,68 @@ const Header = ({
   totalPoints,
   points,
   isNotePlayed,
+  onStartClick,
   onRepeatClick,
+  gameStatus,
   isSingingMode = false,
   withPercentage = false,
-}: GameHeaderProps): ReactElement => (
-  <div className="game-header">
-    <div className="flex flex-left padding">
-      <div className="flex flex-column justify-space-between">
-        <div style={{ height: "50px" }}>
-          {currentStep <= totalSteps && (
-            <span className="points">
-              {currentStep}/{totalSteps}
-            </span>
+}: GameHeaderProps): ReactElement => {
+  const getCentralComponent = () => {
+    if (gameStatus !== undefined && gameStatus === GameStatus.NotStarted) {
+      return (
+        <button className="button button--no-border" onClick={onStartClick}>
+          Click here to start
+        </button>
+      );
+    }
+    if (counter !== 0 && currentStep <= totalSteps) {
+      return <span className="game-header_points">{counter}</span>;
+    }
+    if (isNotePlayed && isSingingMode) {
+      return <Microphone />;
+    }
+    return (
+      <span className="tone-icon">
+        <SineWave />
+      </span>
+    );
+  };
+  return (
+    <div className="game-header">
+      <div className="flex flex-left">
+        <div className="flex flex-column justify-space-between">
+          <div style={{ height: "50px" }}>
+            {currentStep <= totalSteps && (
+              <span className="points">
+                {currentStep}/{totalSteps}
+              </span>
+            )}
+          </div>
+          {shouldRenderRepeatButton(counter, currentStep, totalSteps, isNotePlayed) && (
+            <button className="button button--no-border" onClick={onRepeatClick}>
+              REPEAT NOTE{isSingingMode ? "" : "S"}
+            </button>
           )}
         </div>
-        {shouldRenderRepeatButton(counter, currentStep, totalSteps, isNotePlayed) && (
-          <button className="button button--no-border" onClick={onRepeatClick}>
-            REPEAT NOTE{isSingingMode ? "" : "S"}
-          </button>
-        )}
       </div>
-    </div>
-    <div>
-      <div className="flex flex-center padding" style={{ height: "50px" }}>
-        <div className="text-center">
-          {counter !== 0 && currentStep <= totalSteps ? (
-            <span className="game-header_points">{counter}</span>
-          ) : isNotePlayed ? (
-            isSingingMode ? (
-              <Microphone />
-            ) : null
-          ) : (
-            <span className="tone-icon">
-              <SineWave />
-            </span>
-          )}
+      <div>
+        <div className="flex flex-center" style={{ height: "50px" }}>
+          <div className="text-center">{getCentralComponent()}</div>
+        </div>
+      </div>
+      <div className="flex flex-right">
+        <div className="flex flex-column position-relative">
+          <div className="flex flex-center">
+            <span>Score: </span>
+            <span className="game-header_points">{`${totalPoints}${withPercentage ? "%" : ""}`}</span>
+          </div>
+          {points !== null ? (
+            <div className="game-header_points game-header_new-points">{`+${points}${withPercentage ? "%" : ""}`}</div>
+          ) : null}
         </div>
       </div>
     </div>
-    <div className="flex flex-right padding">
-      <div className="flex flex-column position-relative">
-        <div className="flex flex-center">
-          <span>Score: </span>
-          <span className="game-header_points">{`${totalPoints}${withPercentage ? "%" : ""}`}</span>
-        </div>
-        {points !== null ? (
-          <div className="game-header_points game-header_new-points">{`+${points}${withPercentage ? "%" : ""}`}</div>
-        ) : null}
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 export default Header;

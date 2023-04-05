@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import cx from "classnames";
 import { Note } from "../../../constants";
+import "../pitchle.scss";
 
 const PITCHLE_LENGTH = 5;
 
@@ -69,15 +70,23 @@ const GameStep = ({
             })}
           >
             <div className="text-input-wrapper_front">
-              <div className="text-input">{value}</div>
+              <div className="text-input flex flex-center">
+                <div className="note">
+                  <span>{value[0]}</span>
+                  <span>{value[1]}</span>
+                </div>
+              </div>
             </div>
             <div
-              className={cx("text-input-wrapper_back", {
+              className={cx("text-input-wrapper_back flex flex-center", {
                 ["text-input-wrapper_back--green"]: results[i] === InputStatus.GUESSED,
                 ["text-input-wrapper_back--yellow"]: results[i] === InputStatus.GUESSED_NO_POSITION,
               })}
             >
-              {value}
+              <div className="note">
+                <span>{value[0]}</span>
+                <span>{value[1]}</span>
+              </div>
             </div>
           </div>
         </div>

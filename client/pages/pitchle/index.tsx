@@ -6,6 +6,7 @@ import usePlayer from "../../hooks/usePlayer";
 import { GameMode, GameStatus } from "../../types/types";
 import GameStep from "./game-step";
 import { Note, NOTES } from "../../constants";
+import SineWave from "../../components/game-header/icons/sine-wave";
 
 export interface HighScoresList {
   _id: string;
@@ -17,6 +18,8 @@ export interface HighScoresList {
 const NUM_OF_TONES_TO_PLAY = 5;
 const NUM_OF_ATTEMPTS = 5;
 
+const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
+
 const Pitchle = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   // const [points, setPoints] = useState<number | null>(null);
@@ -24,14 +27,12 @@ const Pitchle = (): ReactElement => {
   const [noteData, playRandomNotes, repeatPlaying] = usePlayer(700);
   const solution = useRef<Note[]>([]);
   const [currentInput, setCurrentInput] = useState<{ [key: number]: Note[] }>(
-    [...Array(NUM_OF_ATTEMPTS)].reduce((acc, _, i) => {
+    attemptsArray.reduce((acc, _, i) => {
       acc[i] = [];
       return acc;
     }, {})
   );
   const [currentAttempt, setCurrentAttempt] = useState(0);
-
-  console.log("current input", currentInput);
 
   const playMelody = () => {
     playRandomNotes(NUM_OF_TONES_TO_PLAY);
@@ -46,7 +47,7 @@ const Pitchle = (): ReactElement => {
 
   const renderInputs = () => (
     <div>
-      {[...Array(NUM_OF_ATTEMPTS)].map((_, i) => (
+      {attemptsArray.map((_, i) => (
         <GameStep
           solution={solution.current}
           values={currentInput[i]}
@@ -58,7 +59,7 @@ const Pitchle = (): ReactElement => {
   );
 
   const onSubmit = () => {
-    console.log("Submitted");
+    console.log("currentInput", currentInput);
     setCurrentAttempt(currentAttempt + 1);
   };
 
@@ -72,7 +73,7 @@ const Pitchle = (): ReactElement => {
     });
   };
 
-  const onBack = () => {
+  const onDelete = () => {
     if (currentInput[currentAttempt].length === 0) {
       return;
     }
@@ -82,49 +83,56 @@ const Pitchle = (): ReactElement => {
     });
   };
 
-  console.log("noteData.played", noteData.played);
+  console.log("noteData", noteData, gameStatus);
 
   return (
     <div className="page">
-      {noteData.played ? <div onClick={repeatPlaying}>Repeat melody</div> : <div onClick={playMelody}>Play melody</div>}
-      {gameStatus === GameStatus.InProgress && (
-        <>
-          {/* <Header
-            currentStep={numOfTonesPlayed + 1}
-            totalSteps={5}
-            counter={counter}
-            points={points}
-            totalPoints={totalPoints}
-            isNotePlayed={noteData.played}
-            onRepeatClick={playLastNote}
-          /> */}
-          {solution.current.length ? (
-            <>
-              <div className="game-visualization flex-center">
-                <div className="pitchle-input-group">{renderInputs()}</div>
-              </div>
-              <div className="flex">
-                {NOTES.map((n) => (
-                  <div onClick={() => onInput(n)} className={cx("note-button", {})} key={`note-button-${n}`}>
-                    {n}
-                  </div>
-                ))}
-                <div onClick={onBack} key="note-button-back">
-                  Back
+      <div className="pitchle">
+        {noteData.played ? (
+          <button className="button button--no-border" onClick={repeatPlaying}>
+            Repeat the melody
+          </button>
+        ) : gameStatus !== GameStatus.InProgress ? (
+          <button className="button" onClick={playMelody}>
+            Play random melody
+          </button>
+        ) : (
+          <span className="tone-icon">
+            <SineWave />
+          </span>
+        )}
+        {gameStatus === GameStatus.InProgress && noteData.played && (
+          <>
+            <div className="flex-center">
+              <div className="pitchle-input-group">{renderInputs()}</div>
+            </div>
+            <div className="flex">
+              {NOTES.map((n) => (
+                <div onClick={() => onInput(n)} className="note note-button note-button--note" key={`note-button-${n}`}>
+                  <span>{n[0]}</span>
+                  <span>{n[1]}</span>
                 </div>
-                <div onClick={onSubmit} key="note-button-submit">
-                  Enter
-                </div>
-              </div>
-            </>
-          ) : (
-            <div>Click on the button above to hear the melody and start the game</div>
-          )}
-        </>
-      )}
-      {/* {gameStatus === GameStatus.Ended && (
-        <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.PITCHLE} />
-      )} */}
+              ))}
+            </div>
+            <div className="flex">
+              <button onClick={onDelete} className="note-button note-button--back" key="note-button-back">
+                Delete
+              </button>
+              <button
+                disabled={currentInput[currentAttempt] && currentInput[currentAttempt].length < 5}
+                onClick={onSubmit}
+                className="note-button note-button--submit"
+                key="note-button-submit"
+              >
+                Enter
+              </button>
+            </div>
+          </>
+        )}
+        {/* {gameStatus === GameStatus.Ended && (
+          <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.PITCHLE} />
+        )} */}
+      </div>
     </div>
   );
 };
