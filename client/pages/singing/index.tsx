@@ -5,6 +5,7 @@ import GameEnd from "../../components/game-end";
 import usePlayer from "../../hooks/usePlayer";
 import useDetectPitch from "../../hooks/useDetectPitch";
 import { GameMode, GameStatus } from "../../types/types";
+import PageWrapper from "../../components/page-wrapper";
 
 export interface HighScoresList {
   _id: string;
@@ -85,7 +86,7 @@ const Singing = (): ReactElement => {
   };
 
   return (
-    <div className="page">
+    <PageWrapper>
       {gameStatus !== GameStatus.Ended ? (
         <>
           <Header
@@ -105,7 +106,7 @@ const Singing = (): ReactElement => {
       ) : (
         <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.SINGING} withPercentage />
       )}
-    </div>
+    </PageWrapper>
   );
 };
 

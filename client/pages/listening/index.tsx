@@ -3,6 +3,7 @@ import Header from "../../components/game-header";
 import GameEnd from "../../components/game-end";
 import useListeningPlayer from "../../hooks/useListeningPlayer";
 import { GameMode, GameStatus } from "../../types/types";
+import PageWrapper from "../../components/page-wrapper";
 
 export interface HighScoresList {
   _id: string;
@@ -73,60 +74,62 @@ const Listening = (): ReactElement => {
   };
 
   return (
-    <div className="page">
-      {gameStatus === GameStatus.InProgress && (
-        <>
-          <Header
-            currentStep={numOfTonesPlayed + 1}
-            totalSteps={5}
-            counter={counter}
-            points={points}
-            totalPoints={totalPoints}
-            isNotePlayed={noteData.played}
-            onRepeatClick={playLastNote}
-          />
-          <div className="game-visualization flex-center">
-            {noteData.played && counter === 0 && (
-              <div className="radio-group">
-                <input
-                  type="radio"
-                  name="options"
-                  id="0"
-                  value={0}
-                  onChange={handleOptionChange}
-                  checked={selectedOption === 0}
-                />
-                <label htmlFor="0">The first tone was higher</label>
-                <input
-                  type="radio"
-                  name="options"
-                  id="1"
-                  value={1}
-                  onChange={handleOptionChange}
-                  checked={selectedOption === 1}
-                />
-                <label htmlFor="1">The second tone was higher</label>
-                <input
-                  type="radio"
-                  name="options"
-                  id="2"
-                  value={2}
-                  onChange={handleOptionChange}
-                  checked={selectedOption === 2}
-                />
-                <label htmlFor="2">Two tones are identical</label>
-                <button className="button" onClick={onAnswerSubmit}>
-                  Next
-                </button>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-      {gameStatus === GameStatus.Ended && (
-        <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.LISTENING} />
-      )}
-    </div>
+    <PageWrapper>
+      <>
+        {gameStatus === GameStatus.InProgress && (
+          <>
+            <Header
+              currentStep={numOfTonesPlayed + 1}
+              totalSteps={5}
+              counter={counter}
+              points={points}
+              totalPoints={totalPoints}
+              isNotePlayed={noteData.played}
+              onRepeatClick={playLastNote}
+            />
+            <div className="game-visualization flex-center">
+              {noteData.played && counter === 0 && (
+                <div className="radio-group">
+                  <input
+                    type="radio"
+                    name="options"
+                    id="0"
+                    value={0}
+                    onChange={handleOptionChange}
+                    checked={selectedOption === 0}
+                  />
+                  <label htmlFor="0">The first tone was higher</label>
+                  <input
+                    type="radio"
+                    name="options"
+                    id="1"
+                    value={1}
+                    onChange={handleOptionChange}
+                    checked={selectedOption === 1}
+                  />
+                  <label htmlFor="1">The second tone was higher</label>
+                  <input
+                    type="radio"
+                    name="options"
+                    id="2"
+                    value={2}
+                    onChange={handleOptionChange}
+                    checked={selectedOption === 2}
+                  />
+                  <label htmlFor="2">Two tones are identical</label>
+                  <button className="button" onClick={onAnswerSubmit}>
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+        {gameStatus === GameStatus.Ended && (
+          <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.LISTENING} />
+        )}
+      </>
+    </PageWrapper>
   );
 };
 

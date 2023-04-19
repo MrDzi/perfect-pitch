@@ -4,19 +4,6 @@
 @import "./styles/typography";
 @import "./styles/button";
 
-.page {
-  @extend .flex;
-  @extend .flex-center;
-  @extend .flex-column;
-  background-color: #fff;
-  box-sizing: border-box;
-  border-radius: 15px;
-  box-shadow: 0 0 17px 0px rgba(0, 0, 0, .25);
-  height: 90vh;
-  width: 95vw;
-  padding: 25px;
-}
-
 .points {
   font-family: "poppins", sans-serif;
   font-size: 48px;

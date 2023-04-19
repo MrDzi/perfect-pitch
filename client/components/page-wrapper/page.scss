@@ -1,0 +1,24 @@
+.page {
+  position: relative;
+  margin: 50px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-radius: 15px;
+  box-shadow: 0 0 17px 0px rgba(0, 0, 0, .25);
+  padding: 25px;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: -30px;
+}

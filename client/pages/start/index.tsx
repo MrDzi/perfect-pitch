@@ -32,7 +32,6 @@ const Start = (): ReactElement => {
   };
 
   const handleKeypress = (e: KeyboardEvent) => {
-    //it triggers by pressing the enter key
     if (e.code === "Enter") {
       onStartClick();
     }
@@ -41,7 +40,7 @@ const Start = (): ReactElement => {
   return (
     <div className="page">
       <div className="start-content">
-        <div className="flex flex-center">
+        <div className="flex">
           <h1>Test your pitch, </h1>
           <form autoComplete="off">
             <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} placeholder="Name" />

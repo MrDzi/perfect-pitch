@@ -63,7 +63,7 @@ a {
   margin-bottom: 10px;
 }
 
-@keyframes grow-x {
+@keyframes slide-from-right {
   from {
     transform: translateX(100%);
   }
@@ -72,7 +72,43 @@ a {
   }
 }
 
-@keyframes shrink-x {
+@keyframes slide-to-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-to-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-out {
   from {
     transform: translateX(0);
   }
@@ -84,12 +120,32 @@ a {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   transform-origin: center;
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(.14,.05,0,1.13);
+  animation-direction: both;
 }
 
 ::view-transition-old(root) {
-  animation: 0.3s ease-in-out both shrink-x;
+  animation-name: slide-to-left;
 }
 
 ::view-transition-new(root) {
-  animation: 0.3s ease-in-out both grow-x;
+  animation-name: slide-from-right;
+}
+
+// .page-transition-name {
+//   view-transition-name: page;
+// }
+
+// ::view-transition-old(page),
+// ::view-transition-new(page) {
+//   animation: 0.3s ease-in-out both scale-in;
+// }
+
+.back-transition::view-transition-old(root) {
+  animation-name: slide-to-right;
+}
+
+.back-transition::view-transition-new(root) {
+  animation-name: slide-from-left;
 }
