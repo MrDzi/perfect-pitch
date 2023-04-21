@@ -14,6 +14,7 @@
     margin: 0 0 5px;
     color: #fff;
     font-size: 2rem;
+    text-transform: uppercase;
   }
   p {
     font-size: 14px;
@@ -39,9 +40,9 @@
 
 .home-content_block {
   transition: box-shadow 0.5s ease-in-out;
-  box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
+  // box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
   &:hover {
-    box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
+    // box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
     .home-content_block_inner {
       transform: scale(1.1);
       transition: all 0.5s ease-in-out;
@@ -87,6 +88,6 @@
 .home-content_desc {
   position: relative;
   z-index: 1;
-  padding: 1em;
+  padding: 1.5em;
   color: var(--apricot);
 }

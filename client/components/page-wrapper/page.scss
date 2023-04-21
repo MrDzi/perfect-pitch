@@ -1,7 +1,12 @@
 .page {
   position: relative;
-  margin: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   max-width: 1200px;
 }
 
@@ -11,14 +16,17 @@
   justify-content: center;
   flex-direction: column;
   background-color: #fff;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
   border-radius: 15px;
-  box-shadow: 0 0 17px 0px rgba(0, 0, 0, .25);
+  // box-shadow: 0 0 17px 0px rgba(0, 0, 0, .25);
   padding: 25px;
 }
 
 .back-button {
   position: absolute;
   left: 0;
-  top: -30px;
+  top: 20px;
+  left: 50px;
 }

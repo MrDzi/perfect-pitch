@@ -6,13 +6,13 @@ import "../pitchle.scss";
 
 const PITCHLE_LENGTH = 5;
 
-enum InputStatus {
+export enum InputStatus {
   GUESSED,
   GUESSED_NO_POSITION,
   MISSED,
 }
 
-const getResults = (values: Note[], solution: Note[]): InputStatus[] => {
+export const getResults = (values: Note[], solution: Note[]): InputStatus[] => {
   const sol: Array<Note | null> = [...solution];
   const map = solution.reduce((acc: { [key in Note]: number }, v: Note) => {
     acc[v] = acc[v] ? acc[v] + 1 : 1;
@@ -70,7 +70,11 @@ const GameStep = ({
             })}
           >
             <div className="text-input-wrapper_front">
-              <div className="text-input flex flex-center">
+              <div
+                className={cx("text-input", "flex", "flex-center", {
+                  ["text-input--filled"]: value[0],
+                })}
+              >
                 <div className="note">
                   <span>{value[0]}</span>
                   <span>{value[1]}</span>

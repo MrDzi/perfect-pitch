@@ -2,16 +2,14 @@
 // @import url("https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap");
 @font-face {
   font-family: "Poppins";
-  src: url("assets/fonts/Poppins-Regular.woff") format("woff"),
-      url("assets/fonts/Poppins-Regular.woff") format("woff2");
+  src: url("assets/fonts/Poppins-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Poppins";
-  src: url("assets/fonts/Poppins-Bold.woff") format("woff")
-      url("assets/fonts/Poppins-Bold.woff") format("woff2");
+  src: url("assets/fonts/Poppins-SemiBold.woff2") format("woff2");
   font-weight: bold;
   font-style: bold;
 }
@@ -59,7 +57,7 @@ a {
 }
 
 .game-step {
-  width: 270px;
+  width: 276px;
   margin-bottom: 10px;
 }
 
@@ -120,8 +118,8 @@ a {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   transform-origin: center;
-  animation-duration: 0.7s;
-  animation-timing-function: cubic-bezier(.14,.05,0,1.13);
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(.39,.47,.05,1.05);
   animation-direction: both;
 }
 
