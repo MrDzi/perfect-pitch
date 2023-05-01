@@ -1,12 +1,13 @@
-import React, { createContext, useState, ReactElement, Dispatch, SetStateAction } from "react";
+import React, { createContext, useState, ReactElement, Dispatch, SetStateAction, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Start from "./pages/start";
 import Home from "./pages/home";
-import Listening from "./pages/listening";
-import Singing from "./pages/singing";
 import "./app.scss";
 import { User } from "./types/types";
-import Pitchle from "./pages/pitchle";
+
+const Start = lazy(() => import("./pages/start"));
+const Listening = lazy(() => import("./pages/listening"));
+const Singing = lazy(() => import("./pages/singing"));
+const Pitchle = lazy(() => import("./pages/pitchle"));
 
 export interface HighScoresList {
   _id: string;
@@ -38,13 +39,15 @@ const App = (): ReactElement => {
     <div className="wrapper full-size">
       <AppContext.Provider value={[user, setUser]}>
         <Router>
-          <Routes>
-            <Route path="/" element={<Start />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/listening" element={<Listening />} />
-            <Route path="/singing" element={<Singing />} />
-            <Route path="/pitchle" element={<Pitchle />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<Start />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/listening" element={<Listening />} />
+              <Route path="/singing" element={<Singing />} />
+              <Route path="/pitchle" element={<Pitchle />} />
+            </Routes>
+          </Suspense>
         </Router>
       </AppContext.Provider>
     </div>
