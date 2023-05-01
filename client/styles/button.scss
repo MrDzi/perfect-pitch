@@ -3,12 +3,13 @@
   background: var(--yellow);
   color: #fff;
   border-radius: 50px;
-  border: none;
-  padding: 1.2rem 4.5rem;
+  border: 3px solid #111;
+  color: #111;
+  padding: 1.15rem 4.5rem;
   margin: 0;
   text-decoration: none;
   text-transform: uppercase;
-  font-family: "Roboto", sans-serif;
+  font-weight: bold;
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;

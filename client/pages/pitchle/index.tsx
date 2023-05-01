@@ -7,6 +7,8 @@ import { GameStatus } from "../../types/types";
 import GameStep, { getResults, InputStatus } from "./game-step";
 import { Note, NOTES } from "../../constants";
 import SineWave from "../../components/game-header/icons/sine-wave";
+import popSound from "../../assets/tones/pop.mp3";
+import useSound from "use-sound";
 
 export interface HighScoresList {
   _id: string;
@@ -60,7 +62,7 @@ const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 
 const Pitchle = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
-  const [noteData, playRandomNotes, repeatPlaying] = usePlayer(700);
+  const [noteData, playRandomNotes, repeatPlaying] = usePlayer(800);
   // const [showModal, setShowModal] = useState(false);
   const [clipboardMessage, setClipboardMessage] = useState(
     "Copy your result to clipboard and share with your friends!"
@@ -74,6 +76,18 @@ const Pitchle = (): ReactElement => {
     }, {})
   );
   const [currentStep, setCurrentStep] = useState(0);
+  const [playPopSound] = useSound(popSound, {
+    volume: 0.5,
+  });
+
+  const notesPlayer = new Audio("../assets/tones/c.wav");
+
+  console.log("NOTE PLAYER", notesPlayer);
+
+  notesPlayer.addEventListener("canplaythrough", (event) => {
+    /* the audio is now playable; play it if permissions allow */
+    notesPlayer.play();
+  });
 
   const playMelody = () => {
     playRandomNotes(NUM_OF_TONES_TO_PLAY);
@@ -124,6 +138,7 @@ const Pitchle = (): ReactElement => {
     if (currentInput[currentStep].length >= 5) {
       return;
     }
+    playPopSound();
     setCurrentInput({
       ...currentInput,
       [currentStep]: [...currentInput[currentStep], n],

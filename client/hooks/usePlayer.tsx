@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { NOTES, getNoteFrequency, Note } from "../constants";
+import { NOTES, Note } from "../constants";
+import scale from "../assets/tones/scale.mp3";
+import useSound from "use-sound";
 
 interface NoteData {
   notes: Note[];
   played: boolean;
 }
+
+const TONE_DURATION = 1403;
 
 const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
   const index = Math.floor(Math.random() * notes.length);
@@ -20,16 +24,7 @@ const getRandomNotes = (notes: readonly Note[], count = 1): Note[] => {
   for (let i = 0; i < count; i++) {
     randomNotes.push(getRandomNote(notes, randomNotes[i - 1]));
   }
-
-  console.log("RANDOM NOTES", randomNotes);
-
   return randomNotes;
-};
-
-const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTime: number | undefined = 0) => {
-  gainNode.gain.setValueAtTime(gainNode.gain.value, currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, currentTime + 0.1);
-  oscNode.stop(currentTime + 1);
 };
 
 const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => void] => {
@@ -38,29 +33,38 @@ const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => 
     played: false,
   });
   const ctx = useRef<AudioContext>(new AudioContext());
+  const [play] = useSound(scale, {
+    sprite: {
+      c: [0, TONE_DURATION],
+      "c#": [TONE_DURATION, TONE_DURATION],
+      d: [TONE_DURATION * 2, TONE_DURATION],
+      "d#": [TONE_DURATION * 3, TONE_DURATION],
+      e: [TONE_DURATION * 4, TONE_DURATION],
+      f: [TONE_DURATION * 5, TONE_DURATION],
+      "f#": [TONE_DURATION * 6, TONE_DURATION],
+      g: [TONE_DURATION * 7, TONE_DURATION],
+      "g#": [TONE_DURATION * 8, TONE_DURATION],
+      a: [TONE_DURATION * 9, TONE_DURATION],
+      "a#": [TONE_DURATION * 10, TONE_DURATION],
+      b: [TONE_DURATION * 11, TONE_DURATION],
+    },
+  });
 
   useEffect(() => {
     if (!ctx.current || !noteData.notes.length || noteData.played) {
       return;
     }
-    const oscNode: OscillatorNode = ctx.current.createOscillator();
-    const frequencies = noteData.notes.map(getNoteFrequency);
     let currentIndex = 0;
-    oscNode.frequency.value = frequencies[currentIndex];
-    const gainNode: GainNode = ctx.current.createGain();
-    oscNode.connect(gainNode);
-    gainNode.connect(ctx.current.destination);
-
-    gainNode.gain.value = 0.15;
-    oscNode.start(ctx.current.currentTime);
+    const note = noteData.notes[currentIndex].toLowerCase();
+    play({ id: note });
 
     const interval = setInterval(() => {
       console.log(currentIndex, noteData.notes);
       if (currentIndex < noteData.notes.length - 1) {
         currentIndex++;
-        oscNode.frequency.value = frequencies[currentIndex];
+        const note = noteData.notes[currentIndex].toLowerCase();
+        play({ id: note });
       } else {
-        stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
         setNoteData({
           ...noteData,
           played: true,
@@ -71,7 +75,6 @@ const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => 
 
     return () => {
       if (interval) {
-        stopTonePlaying(gainNode, oscNode, ctx.current?.currentTime);
         clearInterval(interval);
       }
     };

@@ -37,7 +37,7 @@ body {
   margin: 0;
   background-color: var(--grey-yellow);
   color: var(--black);
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 300;
   font-size: 18px;
 }
@@ -49,7 +49,24 @@ body {
 .wrapper {
   @extend .flex;
   @extend .flex-center;
-  background: var(--background);
+  background: hsla(81, 28%, 90%, 1);
+  background: linear-gradient(0deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+  background: -moz-linear-gradient(0deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+  background: -webkit-linear-gradient(0deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  &--home {
+    background: hsla(81, 28%, 90%, 1);
+    background: linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+    background: -moz-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+    background: -webkit-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+  }
 }
 
 a {

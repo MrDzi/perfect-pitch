@@ -55,6 +55,14 @@ module.exports = {
         ],
       },
       {
+        test: /\.(wav|mp3)$/,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
+      },
+      {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
         type: "asset/resource",
       },

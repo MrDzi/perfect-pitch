@@ -12,21 +12,23 @@
   height: 100%;
   h3 {
     margin: 0 0 5px;
-    color: #fff;
-    font-size: 2rem;
+    color: #111;
+    font-size: 1.8rem;
     text-transform: uppercase;
   }
   p {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     margin: 0 0 10px;
-    color: #fff;
+    color: #111;
     font-weight: 300;
   }
   .home-content_block {
     margin: 0.5em;
     cursor: pointer;
-    border-radius: 15px;
+    border-radius: 30px;
+    border: 3px solid #111;
+    background: #DAE2CB;
     overflow: hidden;
     position: relative;
     a {
@@ -43,15 +45,14 @@
   // box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
   &:hover {
     // box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
-    .home-content_block_inner {
-      transform: scale(1.1);
-      transition: all 0.5s ease-in-out;
-    }
+    // .home-content_block_inner {
+    //   transform: scale(1.1);
+    //   transition: all 0.5s ease-in-out;
+    // }
   }
 }
   
 .home-content_block--big {
-  background-color: var(--dark-black);
   grid-area: 1 / 1 / 3 / 2;
   transform-origin: top right;
   position: relative;
@@ -66,28 +67,36 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-size: cover;
-  transition: all 0.7s ease-in-out;
+  // background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 80% 111%;
+  // transition: all 0.7s ease-in-out;
   scale: 1;
+}
+
+.home-content_block--big {
+  .home-content_block_inner {
+    background-image: url("../../assets/images/cable.svg");
+  }
 }
 
 .home-content_block--small-up {
   grid-area: 1 / 2 / 2 / 3;
   .home-content_block_inner {
-    background-image: url("../../assets/images/listening.jpg");
+    background-image: url("../../assets/images/mic.svg");
   }
 }
 
 .home-content_block--small-down {
   grid-area: 2 / 2 / 3 / 3;
   .home-content_block_inner {
-    background-image: url("../../assets/images/singing.jpg");
+    background-image: url("../../assets/images/headphones.svg");
   }
 }
 
 .home-content_desc {
   position: relative;
   z-index: 1;
-  padding: 1.5em;
+  padding: 1em 1.5em;
   color: var(--apricot);
 }
