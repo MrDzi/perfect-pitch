@@ -36,21 +36,19 @@ const App = (): ReactElement => {
   console.log("USER", user);
 
   return (
-    <div className="wrapper full-size">
-      <AppContext.Provider value={[user, setUser]}>
-        <Router>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<Start />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/listening" element={<Listening />} />
-              <Route path="/singing" element={<Singing />} />
-              <Route path="/pitchle" element={<Pitchle />} />
-            </Routes>
-          </Suspense>
-        </Router>
-      </AppContext.Provider>
-    </div>
+    <AppContext.Provider value={[user, setUser]}>
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Start />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/listening" element={<Listening />} />
+            <Route path="/singing" element={<Singing />} />
+            <Route path="/pitchle" element={<Pitchle />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </AppContext.Provider>
   );
 };
 

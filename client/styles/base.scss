@@ -16,12 +16,9 @@
   --grey: #CFDBD5;
   --grey-yellow: #e8eddf;
   --yellow: #F3C33F;
-  --dark-yellow: #F2BD2C;
+  --dark-yellow: #F0B719;
   --black: #333533;
   --dark-black: #242423;
-  --blue: #355070;
-  --background: ##efefef;
-  --dark-purple: #564562;
   --apricot: #EAAC8B;
   --pink: #E56B6F;
   --dark-pink: #B56576;
@@ -44,15 +41,6 @@ body {
   height: 100%;
 }
 
-.wrapper {
-  @extend .flex;
-  @extend .flex-center;
-  background: hsla(81, 28%, 90%, 1);
-  background: linear-gradient(0deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
-  background: -moz-linear-gradient(0deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
-  background: -webkit-linear-gradient(0deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
-}
-
 .page {
   display: flex;
   align-items: center;
@@ -69,11 +57,6 @@ body {
 
 a {
   text-decoration: none;
-}
-
-.game-step {
-  width: 276px;
-  margin-bottom: 10px;
 }
 
 @keyframes slide-from-right {
@@ -112,24 +95,6 @@ a {
   }
 }
 
-@keyframes scale-in {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-@keyframes slide-out {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
 ::view-transition-old(root),
 ::view-transition-new(root) {
   transform-origin: center;
@@ -145,15 +110,6 @@ a {
 ::view-transition-new(root) {
   animation-name: slide-from-right;
 }
-
-// .page-transition-name {
-//   view-transition-name: page;
-// }
-
-// ::view-transition-old(page),
-// ::view-transition-new(page) {
-//   animation: 0.3s ease-in-out both scale-in;
-// }
 
 .back-transition::view-transition-old(root) {
   animation-name: slide-to-right;

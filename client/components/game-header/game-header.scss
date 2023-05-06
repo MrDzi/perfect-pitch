@@ -24,10 +24,6 @@
   animation-fill-mode: forwards;
 }
 
-.sine-wave_group {
-  animation: groupAnimation linear 2s infinite;
-}
-
 .microphone_group {
   animation: groupAnimation2 linear 1.2s infinite;
 }
@@ -40,26 +36,5 @@
   100% {
     opacity: 0;
     transform: translateY(0);
-  }
-}
-
-@keyframes groupAnimation {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-500px);
-  }
-}
-
-@keyframes groupAnimation2 {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 1;
   }
 }

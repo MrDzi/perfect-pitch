@@ -1,16 +1,21 @@
-.start-content {
+.page--start {
   text-align: left;
-  padding: 0 260px;
+  background: hsla(81, 28%, 90%, 1);
+  background: linear-gradient(0deg, hsla(81, 28%, 90%, 1) 0%, hsla(89, 39%, 40%, 1) 100%);
+  background: -moz-linear-gradient(0deg, hsla(81, 28%, 90%, 1) 0%, hsla(89, 39%, 40%, 1) 100%);
+  background: -webkit-linear-gradient(0deg, hsla(81, 28%, 90%, 1) 0%, hsla(89, 39%, 40%, 1) 100%);
+  &_content-wrapper {
+    padding: 0 200px;
+  }
   h1 {
     flex-shrink: 0;
-    font-size: 64px;
   }
   input {
     font-size: 64px;
     margin-left: 14px;
     min-width: 0;
   }
-  button {
+  .button {
     margin-top: 50px;
     margin-bottom: 20px;
   }

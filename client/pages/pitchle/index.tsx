@@ -1,6 +1,4 @@
-import React, { useState, ReactElement, useEffect, useRef } from "react";
-import cx from "classnames";
-import Modal from "react-bootstrap/Modal";
+import React, { useState, ReactElement, useEffect, useRef, lazy } from "react";
 import PageWrapper from "../../components/page-wrapper";
 import usePlayer from "../../hooks/usePlayer";
 import { GameStatus } from "../../types/types";
@@ -9,6 +7,7 @@ import { Note, NOTES } from "../../constants";
 import SineWave from "../../components/game-header/icons/sine-wave";
 import popSound from "../../assets/tones/pop.mp3";
 import useSound from "use-sound";
+const GameEnd = lazy(() => import("../../components/game-end-confetti"));
 
 export interface HighScoresList {
   _id: string;
@@ -62,11 +61,9 @@ const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 
 const Pitchle = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
-  const [noteData, playRandomNotes, repeatPlaying] = usePlayer(800);
+  const [noteData, playRandomNotes, repeatPlaying] = usePlayer(600);
   // const [showModal, setShowModal] = useState(false);
-  const [clipboardMessage, setClipboardMessage] = useState(
-    "Copy your result to clipboard and share with your friends!"
-  );
+  const [shareButtonLabel, setShareButtonLabel] = useState("Share");
   const [message, setMessage] = useState("");
   const solution = useRef<Note[]>([]);
   const [currentInput, setCurrentInput] = useState<{ [key: number]: Note[] }>(
@@ -78,15 +75,6 @@ const Pitchle = (): ReactElement => {
   const [currentStep, setCurrentStep] = useState(0);
   const [playPopSound] = useSound(popSound, {
     volume: 0.5,
-  });
-
-  const notesPlayer = new Audio("../assets/tones/c.wav");
-
-  console.log("NOTE PLAYER", notesPlayer);
-
-  notesPlayer.addEventListener("canplaythrough", (event) => {
-    /* the audio is now playable; play it if permissions allow */
-    notesPlayer.play();
   });
 
   const playMelody = () => {
@@ -113,7 +101,7 @@ const Pitchle = (): ReactElement => {
         // setShowModal(true);
         setMessage(generateFinalMessage(solution.current, currentInput, currentStep));
         setGameStatus(GameStatus.Ended);
-      }, 3000);
+      }, 1500);
     }
   }, [currentStep]);
 
@@ -169,104 +157,81 @@ const Pitchle = (): ReactElement => {
   const getPitchleHeader = () => {
     if (noteData.played && gameStatus !== GameStatus.Ended) {
       return (
-        <button className="button button--no-border" onClick={repeatPlaying}>
+        <button className="button button--secondary button--small" onClick={repeatPlaying}>
           Repeat the melody
         </button>
       );
     }
     if (!noteData.played && gameStatus === GameStatus.NotStarted) {
       return (
-        <button className="button" onClick={playMelody}>
+        <button className="button button--small" onClick={playMelody}>
           Play the melody
         </button>
       );
     }
     if (!noteData.played && gameStatus === GameStatus.InProgress) {
-      return (
-        <span className="tone-icon">
-          <SineWave />
-        </span>
-      );
+      return <SineWave />;
     }
   };
 
-  const onCopyClick = () => {
-    navigator.clipboard.writeText(message).then(() => {
-      setClipboardMessage("Result copied!");
-    });
-  };
-
   const onShareClick = () => {
-    navigator.share({
-      text: message,
+    const clipboard = navigator.clipboard;
+    if ("share" in navigator) {
+      return navigator.share({
+        text: message,
+      });
+    }
+    clipboard.writeText(message).then(() => {
+      setShareButtonLabel("Copied to clipboard!");
     });
   };
 
   return (
     <PageWrapper>
       <div className="pitchle page-transition-name">
-        <div className="pitchle_header">
-          {/* {gameStatus === GameStatus.Ended ? (
-            <button className="button" onClick={playMelody}>
-              Play again
-            </button>
-          ) : null} */}
-          {getPitchleHeader()}
-        </div>
-        <div>SOLUTION: {solution.current.join(",")}</div>
+        <div className="pitchle_header">{getPitchleHeader()}</div>
         <div className="pitchle_content">
-          <div className="flex-center">
+          <div className="flex-center" style={{ marginTop: 12 }}>
             <div className="pitchle-input-group">{renderInputs()}</div>
           </div>
-          <div className="flex">
-            {NOTES.map((n) => (
-              <button
-                onClick={() => onInput(n)}
-                className="note note-button note-button--note"
-                key={`note-button-${n}`}
-                disabled={gameStatus !== GameStatus.InProgress}
-              >
-                <span>{n[0]}</span>
-                <span>{n[1]}</span>
-              </button>
-            ))}
-          </div>
-          <div className="flex">
-            <button onClick={onDelete} className="note-button note-button--back" key="note-button-back">
-              Delete
-            </button>
-            <button
-              disabled={
-                (currentInput[currentStep] && currentInput[currentStep].length < 5) || gameStatus === GameStatus.Ended
-              }
-              onClick={onSubmit}
-              className="note-button note-button--submit"
-              key="note-button-submit"
-            >
-              Enter
-            </button>
-          </div>
-        </div>
-        {gameStatus === GameStatus.Ended ? (
-          <>
-            <div style={{ cursor: "pointer" }} onClick={onCopyClick}>
-              {clipboardMessage}
-            </div>
-            {"share" in navigator ? (
-              <div style={{ marginTop: 20 }} onClick={onShareClick}>
-                SHARE
+          {gameStatus !== GameStatus.Ended ? (
+            <div>
+              <div className="flex margin-bottom-half">
+                {NOTES.map((n) => (
+                  <button
+                    onClick={() => onInput(n)}
+                    className="note note-button note-button--note"
+                    key={`note-button-${n}`}
+                    disabled={gameStatus !== GameStatus.InProgress}
+                  >
+                    <span>{n[0]}</span>
+                    <span>{n[1]}</span>
+                  </button>
+                ))}
               </div>
-            ) : null}
-          </>
-        ) : null}
-        {/* <div onClick={e => e.stopPropagation()}>
-          <Modal show={true}>
-            <Modal.Header closeButton>
-              <Modal.Title>Modal heading</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Woohoo, text in a modal!</Modal.Body>
-          </Modal>
-        </div> */}
+              <div className="flex flex-center">
+                <button onClick={onDelete} className="note-button note-button--back" key="note-button-back">
+                  Delete
+                </button>
+                <button
+                  disabled={currentInput[currentStep] && currentInput[currentStep].length < 5}
+                  onClick={onSubmit}
+                  className="note-button note-button--submit"
+                  key="note-button-submit"
+                >
+                  Enter
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <GameEnd />
+              <button className="button button--secondary" onClick={onShareClick}>
+                {shareButtonLabel}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </PageWrapper>
   );

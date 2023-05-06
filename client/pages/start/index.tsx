@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext, KeyboardEvent } from "react";
+import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext, FormEvent } from "react";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import { AppContext } from "../../app";
 import "./start.scss";
@@ -31,22 +31,21 @@ const Start = (): ReactElement => {
     navigate("/home");
   };
 
-  const handleKeypress = (e: KeyboardEvent) => {
-    if (e.code === "Enter") {
-      onStartClick();
-    }
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onStartClick();
   };
 
   return (
-    <div className="page">
-      <div className="start-content">
+    <div className="page page--start">
+      <div className="page--start_content-wrapper">
         <div className="flex">
           <h1>Test your pitch, </h1>
-          <form autoComplete="off">
+          <form onSubmit={handleSubmit} autoComplete="off">
             <input max={25} ref={inputRef} id="name" name="name" onChange={onInputChange} placeholder="Name" />
           </form>
         </div>
-        <button className="button" onClick={onStartClick} onKeyUp={handleKeypress}>
+        <button className="button" onClick={onStartClick}>
           Start
         </button>
       </div>

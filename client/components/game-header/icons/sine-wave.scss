@@ -1,0 +1,12 @@
+.sine-wave_group {
+  animation: groupAnimation linear 1s infinite;
+}
+
+@keyframes groupAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100px);
+  }
+}

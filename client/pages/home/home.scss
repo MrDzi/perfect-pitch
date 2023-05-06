@@ -31,6 +31,19 @@
     background: #DAE2CB;
     overflow: hidden;
     position: relative;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      background: lighten(#DAE2CB, 5%);
+      svg {
+        right: 12%;
+      }
+    }
+    svg {
+      transition: right 0.15s ease-in-out;
+      position: absolute;
+      right: 11%;
+      bottom: -5%;
+    }
     a {
       display: block;
       position: relative;
@@ -40,25 +53,16 @@
   }
 }
 
-.home-content_block {
-  transition: box-shadow 0.5s ease-in-out;
-  // box-shadow: 0 0 17px 0px rgba(0, 0, 0, .35);
-  &:hover {
-    // box-shadow: 0 0 20px 5px rgba(0, 0, 0, .3);
-    // .home-content_block_inner {
-    //   transform: scale(1.1);
-    //   transition: all 0.5s ease-in-out;
-    // }
-  }
+.home-content_desc {
+  position: relative;
+  z-index: 1;
+  padding: 1em 1.5em;
 }
   
 .home-content_block--big {
   grid-area: 1 / 1 / 3 / 2;
   transform-origin: top right;
   position: relative;
-  .home-content_desc {
-    color: var(--apricot);
-  }
 }
 
 .home-content_block_inner {
@@ -67,36 +71,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  // background-size: cover;
   background-repeat: no-repeat;
   background-position: 80% 111%;
-  // transition: all 0.7s ease-in-out;
   scale: 1;
-}
-
-.home-content_block--big {
-  .home-content_block_inner {
-    background-image: url("../../assets/images/cable.svg");
-  }
-}
-
-.home-content_block--small-up {
-  grid-area: 1 / 2 / 2 / 3;
-  .home-content_block_inner {
-    background-image: url("../../assets/images/mic.svg");
-  }
-}
-
-.home-content_block--small-down {
-  grid-area: 2 / 2 / 3 / 3;
-  .home-content_block_inner {
-    background-image: url("../../assets/images/headphones.svg");
-  }
-}
-
-.home-content_desc {
-  position: relative;
-  z-index: 1;
-  padding: 1em 1.5em;
-  color: var(--apricot);
 }
