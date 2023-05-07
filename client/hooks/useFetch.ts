@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { HttpMethods } from "../types/types";
 import usePrevious from "./usePrevious";
 
+export enum HttpMethods {
+  GET,
+  POST,
+}
 interface UseFetchParams {
   url: string;
   method: HttpMethods;

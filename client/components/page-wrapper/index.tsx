@@ -6,7 +6,7 @@ import "./page.scss";
 const PageWrapper = ({ children }: { children: ReactElement }): ReactElement => {
   const [navigate] = useNavigateWithTransition();
   const goToHome = () => {
-    navigate("/home", true);
+    navigate("/", true);
   };
   return (
     <div className="page page--game">

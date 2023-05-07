@@ -23,7 +23,8 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
-    "use-sound": "^4.0.1"
+    "use-sound": "^4.0.1",
+    "js-confetti": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",

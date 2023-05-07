@@ -4,15 +4,8 @@ import PitchVisualization from "./pitch-visualization";
 import GameEnd from "../../components/game-end";
 import usePlayer from "../../hooks/usePlayer";
 import useDetectPitch from "../../hooks/useDetectPitch";
-import { GameMode, GameStatus } from "../../types/types";
+import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
-
-export interface HighScoresList {
-  _id: string;
-  date: Date;
-  userName: string;
-  score: number;
-}
 
 const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
   Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
@@ -104,7 +97,7 @@ const Singing = (): ReactElement => {
           <PitchVisualization volume={volume} detune={detune} shouldVisualize={counter === 0} />
         </>
       ) : (
-        <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.SINGING} withPercentage />
+        <GameEnd totalPoints={totalPoints} onClick={restartGame} withPercentage />
       )}
     </PageWrapper>
   );

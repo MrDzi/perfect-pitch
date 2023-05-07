@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, useContext, FormEvent } from "react";
+import React, { useState, useEffect, useRef, ReactElement, ChangeEvent, FormEvent } from "react";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
-import { AppContext } from "../../app";
 import "./start.scss";
 
 const Start = (): ReactElement => {
   const [inputValue, setInputValue] = useState("");
   const [navigate] = useNavigateWithTransition();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [, setUser] = useContext(AppContext);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -23,11 +21,6 @@ const Start = (): ReactElement => {
     if (!inputValue || !inputValue.length) {
       return;
     }
-    window.localStorage.setItem("PERFECT_PITCH_USER", inputValue);
-    setUser((u) => ({
-      id: u.id,
-      name: inputValue,
-    }));
     navigate("/home");
   };
 

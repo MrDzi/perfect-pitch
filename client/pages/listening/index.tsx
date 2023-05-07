@@ -2,15 +2,8 @@ import React, { useState, ReactElement, useEffect, ChangeEvent } from "react";
 import Header from "../../components/game-header";
 import GameEnd from "../../components/game-end";
 import useListeningPlayer from "../../hooks/useListeningPlayer";
-import { GameMode, GameStatus } from "../../types/types";
+import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
-
-export interface HighScoresList {
-  _id: string;
-  date: Date;
-  userName: string;
-  score: number;
-}
 
 const NUM_OF_TONES_TO_PLAY = 5;
 
@@ -125,9 +118,7 @@ const Listening = (): ReactElement => {
             </div>
           </>
         )}
-        {gameStatus === GameStatus.Ended && (
-          <GameEnd totalPoints={totalPoints} onClick={restartGame} mode={GameMode.LISTENING} />
-        )}
+        {gameStatus === GameStatus.Ended && <GameEnd totalPoints={totalPoints} onClick={restartGame} />}
       </>
     </PageWrapper>
   );

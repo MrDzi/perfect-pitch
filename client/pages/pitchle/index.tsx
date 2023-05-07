@@ -9,13 +9,6 @@ import popSound from "../../assets/tones/pop.mp3";
 import useSound from "use-sound";
 const GameEnd = lazy(() => import("../../components/game-end-confetti"));
 
-export interface HighScoresList {
-  _id: string;
-  date: Date;
-  userName: string;
-  score: number;
-}
-
 const greySquare = "\u{2B1C}";
 const yellowSqare = "\u{1F7E8}";
 const greenSquare = "\u{1F7E9}";
@@ -62,7 +55,6 @@ const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 const Pitchle = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [noteData, playRandomNotes, repeatPlaying] = usePlayer(600);
-  // const [showModal, setShowModal] = useState(false);
   const [shareButtonLabel, setShareButtonLabel] = useState("Share");
   const [message, setMessage] = useState("");
   const solution = useRef<Note[]>([]);
