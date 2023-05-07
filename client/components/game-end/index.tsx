@@ -1,5 +1,4 @@
 import React, { ReactElement } from "react";
-import { Link } from "react-router-dom";
 
 const GameEnd = ({
   totalPoints,
@@ -19,14 +18,9 @@ const GameEnd = ({
             <span className="points">{`${totalPoints}${withPercentage ? "%" : ""}`}</span>
           </div>
         </div>
-        <button className="button" onClick={onClick} style={{ width: 300, marginTop: 50 }}>
+        <button className="button button--secondary" onClick={onClick} style={{ width: 250, marginTop: 50 }}>
           Try Again
         </button>
-        <Link to="/home">
-          <button className="button" onClick={onClick} style={{ width: 300, marginTop: 15 }}>
-            Home
-          </button>
-        </Link>
       </div>
     </div>
   );

@@ -4,11 +4,12 @@ import GameEnd from "../../components/game-end";
 import useListeningPlayer from "../../hooks/useListeningPlayer";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
+import "./listening.scss";
 
 const NUM_OF_TONES_TO_PLAY = 5;
 
 const Listening = (): ReactElement => {
-  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.InProgress);
+  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [points, setPoints] = useState<number | null>(null);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
@@ -21,6 +22,7 @@ const Listening = (): ReactElement => {
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);
         setTotalPoints((p) => p + points);
+        setSelectedOption(null);
         setPoints(null);
         setCounter(3);
       }, 2000);
@@ -36,6 +38,7 @@ const Listening = (): ReactElement => {
       if (counter === 1) {
         if (numOfTonesPlayed === NUM_OF_TONES_TO_PLAY) {
           setGameStatus(GameStatus.Ended);
+          return;
         } else {
           playTwoNotes();
         }
@@ -51,15 +54,19 @@ const Listening = (): ReactElement => {
     }
   }, [gameStatus]);
 
-  const restartGame = () => {
-    setTotalPoints(0);
-    setNumOfTonesPlayed(0);
+  const startGame = () => {
     setGameStatus(GameStatus.InProgress);
+  };
+
+  const restartGame = () => {
+    // setTotalPoints(0);
+    // setNumOfTonesPlayed(0);
+    // setGameStatus(GameStatus.InProgress);
+    window.location.reload();
   };
 
   const onAnswerSubmit = () => {
     setPoints(noteData.relation === selectedOption ? 1 : 0);
-    setSelectedOption(null);
   };
 
   const handleOptionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,19 +76,21 @@ const Listening = (): ReactElement => {
   return (
     <PageWrapper>
       <>
-        {gameStatus === GameStatus.InProgress && (
-          <>
+        {gameStatus !== GameStatus.Ended && (
+          <div className="flex flex-column full-size">
             <Header
               currentStep={numOfTonesPlayed + 1}
-              totalSteps={5}
               counter={counter}
               points={points}
+              totalSteps={5}
               totalPoints={totalPoints}
               isNotePlayed={noteData.played}
               onRepeatClick={playLastNote}
+              gameStatus={gameStatus}
+              onStartClick={startGame}
             />
             <div className="game-visualization flex-center">
-              {noteData.played && counter === 0 && (
+              {counter === 0 && (
                 <div className="radio-group">
                   <input
                     type="radio"
@@ -116,7 +125,7 @@ const Listening = (): ReactElement => {
                 </div>
               )}
             </div>
-          </>
+          </div>
         )}
         {gameStatus === GameStatus.Ended && <GameEnd totalPoints={totalPoints} onClick={restartGame} />}
       </>

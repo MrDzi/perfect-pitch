@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 
 const Microphone = (): ReactElement => (
   <svg width="41px" height="43px" viewBox="30 0 249 314">
-    <g fill="#EAAC8B" className="microphone_group">
+    <g fill="#242423" className="microphone-group">
       <path
         d="M260.326,21.419C246.512,7.606,228.147,0,208.612,0c-19.535,0-37.9,7.606-51.713,21.419
         c-13.814,13.814-21.421,32.181-21.421,51.716c0,5.448,0.612,10.799,1.766,15.992L38.254,210.638

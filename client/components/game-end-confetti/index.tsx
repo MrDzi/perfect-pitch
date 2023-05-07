@@ -5,8 +5,9 @@ const GameEndConfetti = (): ReactElement => {
   useEffect(() => {
     const jsConfetti = new JSConfetti();
     jsConfetti.addConfetti({
-      emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁"],
-      confettiNumber: 130,
+      emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁", "🎸", "🎼", "🎤", "🎧", "🎹", "🎺", "🎻"],
+      confettiNumber: 150,
+      emojiSize: 60,
     });
     return () => {
       console.log("CLEAR CANVAS!");

@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import Microphone from "./icons/microphone";
-import SineWave from "./icons/sine-wave";
+import AudioWave from "./icons/sine-wave";
 import "./game-header.scss";
 import { GameStatus } from "../../types/types";
 
@@ -49,15 +49,17 @@ const Header = ({
     if (counter !== 0 && currentStep <= totalSteps) {
       return <span className="game-header_points">{counter}</span>;
     }
-    if (isNotePlayed && isSingingMode) {
-      return <Microphone />;
+    if (isNotePlayed) {
+      if (isSingingMode) {
+        return <Microphone />;
+      }
+      return null;
     }
-    return (
-      <span className="tone-icon">
-        <SineWave />
-      </span>
-    );
+    return <AudioWave width={45} />;
   };
+
+  console.log("points", points);
+  console.log("currentStep", currentStep);
   return (
     <div className="game-header">
       <div className="flex flex-left">
@@ -87,7 +89,7 @@ const Header = ({
             <span>Score: </span>
             <span className="game-header_points">{`${totalPoints}${withPercentage ? "%" : ""}`}</span>
           </div>
-          {points !== null ? (
+          {points !== null && currentStep !== 0 ? (
             <div className="game-header_points game-header_new-points">{`+${points}${withPercentage ? "%" : ""}`}</div>
           ) : null}
         </div>

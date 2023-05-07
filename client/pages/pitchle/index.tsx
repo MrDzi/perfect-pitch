@@ -1,51 +1,14 @@
 import React, { useState, ReactElement, useEffect, useRef, lazy } from "react";
+import useSound from "use-sound";
 import PageWrapper from "../../components/page-wrapper";
+import { generateFinalMessage, checkIfEqualArrays } from "./helpers";
 import usePlayer from "../../hooks/usePlayer";
 import { GameStatus } from "../../types/types";
-import GameStep, { getResults, InputStatus } from "./game-step";
+import GameStep from "./game-step";
 import { Note, NOTES } from "../../constants";
-import SineWave from "../../components/game-header/icons/sine-wave";
+import AudioWave from "../../components/game-header/icons/sine-wave";
 import popSound from "../../assets/tones/pop.mp3";
-import useSound from "use-sound";
 const GameEnd = lazy(() => import("../../components/game-end-confetti"));
-
-const greySquare = "\u{2B1C}";
-const yellowSqare = "\u{1F7E8}";
-const greenSquare = "\u{1F7E9}";
-const lineBreak = "\u{000A}";
-const doubleLineBreak = "\u{000A}\u{000A}";
-
-const generateFinalMessage = (solution: Note[], input: { [key: number]: Note[] }, step: number): string => {
-  let message = `I guessed this 5-tone melody in ${step}/6 tries.${doubleLineBreak}`;
-
-  for (let i = 0; i < Object.keys(input).length; i++) {
-    const results = getResults(input[i], solution);
-    for (let j = 0; j < results.length; j++) {
-      switch (results[j]) {
-        case InputStatus.GUESSED:
-          message += greenSquare;
-          break;
-        case InputStatus.GUESSED_NO_POSITION:
-          message += yellowSqare;
-          break;
-        case InputStatus.MISSED:
-        default:
-          message += greySquare;
-      }
-      if (j === results.length - 1) {
-        message += lineBreak;
-      }
-    }
-  }
-  message += lineBreak;
-  message += "Can you guess this melody?";
-  message += lineBreak;
-  message += "test .com";
-
-  console.log(message);
-
-  return message;
-};
 
 const NUM_OF_TONES_TO_PLAY = 5;
 const NUM_OF_ATTEMPTS = 6;
@@ -55,7 +18,7 @@ const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 const Pitchle = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [noteData, playRandomNotes, repeatPlaying] = usePlayer(600);
-  const [shareButtonLabel, setShareButtonLabel] = useState("Share");
+  const [shareButtonLabel, setShareButtonLabel] = useState("Share \u{1F3A4}");
   const [message, setMessage] = useState("");
   const solution = useRef<Note[]>([]);
   const [currentInput, setCurrentInput] = useState<{ [key: number]: Note[] }>(
@@ -135,17 +98,6 @@ const Pitchle = (): ReactElement => {
     });
   };
 
-  function checkIfEqualArrays<T>(arr1: T[], arr2: T[]): boolean {
-    const length = Math.max(arr1.length, arr2.length);
-    let equalArrays = true;
-    for (let i = 0; i < length; i++) {
-      if (arr1[i] !== arr2[i]) {
-        equalArrays = false;
-      }
-    }
-    return equalArrays;
-  }
-
   const getPitchleHeader = () => {
     if (noteData.played && gameStatus !== GameStatus.Ended) {
       return (
@@ -162,7 +114,11 @@ const Pitchle = (): ReactElement => {
       );
     }
     if (!noteData.played && gameStatus === GameStatus.InProgress) {
-      return <SineWave />;
+      return (
+        <div className="sine-wave-wrapper">
+          <AudioWave />
+        </div>
+      );
     }
   };
 
@@ -218,7 +174,7 @@ const Pitchle = (): ReactElement => {
           ) : (
             <>
               <GameEnd />
-              <button className="button button--secondary" onClick={onShareClick}>
+              <button className="button" onClick={onShareClick}>
                 {shareButtonLabel}
               </button>
             </>

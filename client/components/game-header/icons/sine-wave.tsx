@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
-import sineWaveGif from "./icons8-audio-wave.gif";
+import sineWaveGif from "./audio-wave.gif";
 
-const SineWave = (): ReactElement => <img src={sineWaveGif} />;
+const AudioWave = ({ width }: { width?: number }): ReactElement => <img width={width || 35} src={sineWaveGif} />;
 
-export default SineWave;
+export default AudioWave;

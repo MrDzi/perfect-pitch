@@ -119,7 +119,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
             pitch,
           });
           setDetune(currentDetune);
-          if (nonSilentFrameCount.current > 90 && requestRef.current) {
+          if (nonSilentFrameCount.current > 120 && requestRef.current) {
             setVolume(0);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;

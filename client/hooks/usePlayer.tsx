@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { NOTES, Note } from "../constants";
 import scale from "../assets/tones/scale.mp3";
 import useSound from "use-sound";
@@ -32,7 +32,6 @@ const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => 
     notes: [],
     played: false,
   });
-  const ctx = useRef<AudioContext>(new AudioContext());
   const [play] = useSound(scale, {
     sprite: {
       c: [0, TONE_DURATION],
@@ -51,7 +50,7 @@ const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => 
   });
 
   useEffect(() => {
-    if (!ctx.current || !noteData.notes.length || noteData.played) {
+    if (!noteData.notes.length || noteData.played) {
       return;
     }
     let currentIndex = 0;

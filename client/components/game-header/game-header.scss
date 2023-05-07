@@ -24,8 +24,8 @@
   animation-fill-mode: forwards;
 }
 
-.microphone_group {
-  animation: groupAnimation2 linear 1.2s infinite;
+.microphone-group {
+  animation: fadeInOut linear 1.2s infinite;
 }
 
 @keyframes fade-out {
@@ -36,5 +36,17 @@
   100% {
     opacity: 0;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
   }
 }

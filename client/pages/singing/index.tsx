@@ -46,16 +46,14 @@ const Singing = (): ReactElement => {
       return;
     }
     setTimeout(() => {
+      setCounter(counter - 1);
       if (counter === 1) {
-        setCounter(counter - 1);
         if (numOfTonesPlayed === NUM_OF_NOTES_TO_PLAY) {
           setGameStatus(GameStatus.Ended);
           return;
         } else {
           playRandomNotes();
         }
-      } else {
-        setCounter(counter - 1);
       }
     }, 1000);
   }, [counter]);
@@ -73,15 +71,18 @@ const Singing = (): ReactElement => {
   };
 
   const restartGame = () => {
-    setTotalPoints(0);
-    setNumOfTonesPlayed(0);
-    setGameStatus(GameStatus.InProgress);
+    // setTotalPoints(0);
+    // setNumOfTonesPlayed(0);
+    // setGameStatus(GameStatus.InProgress);
+    window.location.reload();
   };
+
+  console.log("POINTS", points);
 
   return (
     <PageWrapper>
       {gameStatus !== GameStatus.Ended ? (
-        <>
+        <div className="flex flex-column full-size">
           <Header
             currentStep={numOfTonesPlayed + 1}
             counter={counter}
@@ -95,7 +96,7 @@ const Singing = (): ReactElement => {
             withPercentage
           />
           <PitchVisualization volume={volume} detune={detune} shouldVisualize={counter === 0} />
-        </>
+        </div>
       ) : (
         <GameEnd totalPoints={totalPoints} onClick={restartGame} withPercentage />
       )}
