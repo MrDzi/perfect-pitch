@@ -27,7 +27,7 @@ const getRandomNotes = (notes: readonly Note[], count = 1): Note[] => {
   return randomNotes;
 };
 
-const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => void] => {
+const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number) => void, () => void] => {
   const [noteData, setNoteData] = useState<NoteData>({
     notes: [],
     played: false,
@@ -79,10 +79,9 @@ const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => 
     };
   }, [noteData]);
 
-  const playRandomNotes = (count = 1) => {
-    const randomNotes = getRandomNotes(NOTES, count);
+  const playNotes = (notes?: Note[], count = 1) => {
     setNoteData({
-      notes: randomNotes,
+      notes: notes || getRandomNotes(NOTES, count),
       played: false,
     });
   };
@@ -94,7 +93,7 @@ const usePlayer = (toneDuration = 1000): [NoteData, (n?: number) => void, () => 
     });
   };
 
-  return [noteData, playRandomNotes, repeatPlaying];
+  return [noteData, playNotes, repeatPlaying];
 };
 
 export default usePlayer;

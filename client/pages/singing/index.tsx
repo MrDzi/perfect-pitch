@@ -18,7 +18,7 @@ const Singing = (): ReactElement => {
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [noteData, playRandomNotes, repeatPlaying] = usePlayer();
+  const [noteData, playRandomNote, repeatPlaying] = usePlayer();
   const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Singing = (): ReactElement => {
           setGameStatus(GameStatus.Ended);
           return;
         } else {
-          playRandomNotes();
+          playRandomNote();
         }
       }
     }, 1000);
@@ -71,9 +71,9 @@ const Singing = (): ReactElement => {
   };
 
   const restartGame = () => {
-    // setTotalPoints(0);
-    // setNumOfTonesPlayed(0);
-    // setGameStatus(GameStatus.InProgress);
+    setTotalPoints(0);
+    setNumOfTonesPlayed(0);
+    setGameStatus(GameStatus.InProgress);
     window.location.reload();
   };
 

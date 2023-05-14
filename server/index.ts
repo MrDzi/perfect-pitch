@@ -1,4 +1,4 @@
-import express, { Request } from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose, { Schema } from "mongoose";
@@ -8,26 +8,41 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-export type GameMode = "singing" | "listening" | "pitchle";
-
 mongoose.connect(config.mongoDbUrl);
 
 const db = mongoose.connection;
 
-const scoreSchema = new Schema({
-  userName: {
-    type: String,
-    required: true,
-  },
-  score: {
-    type: Number,
-    required: true,
-  },
-  date: Date,
+const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
+
+type Note = typeof NOTES[number];
+
+type Melody = {
+  melody: Note[];
+  dateKey: string;
+};
+
+const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
+  const index = Math.floor(Math.random() * notes.length);
+  if (skip && notes[index] === skip) {
+    return getRandomNote(notes, skip);
+  }
+  return notes[index];
+};
+
+const getRandomNotes = (count = 5): Note[] => {
+  const randomNotes: Note[] = [];
+
+  for (let i = 0; i < count; i++) {
+    randomNotes.push(getRandomNote(NOTES, randomNotes[i - 1]));
+  }
+  return randomNotes;
+};
+
+const melodySchema = new Schema({
+  melody: [String],
+  dateKey: String,
 });
-const SingingScore = mongoose.model("Score", scoreSchema);
-const ListeningScore = mongoose.model("Score", scoreSchema);
-const PitchleScore = mongoose.model("Score", scoreSchema);
+const Melody = mongoose.model("Melody", melodySchema);
 
 db.on("error", () => {
   console.log("db conection error");
@@ -42,45 +57,50 @@ type paramKeys = "gameMode";
 
 type Params = { [key in paramKeys]: string };
 
-app.post("/api/scores", (req: Request<Params>, res) => {
-  console.log("/api/scores", req.body);
-  let score;
-  switch (req.query.gameMode) {
-    case "singing":
-      score = new SingingScore(req.body);
-    case "listening":
-      score = new ListeningScore(req.body);
-    case "pitchle":
-      score = new PitchleScore(req.body);
-  }
-  score.save((err: any, score: any) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error with writing to database");
-    }
-    console.log("!", score);
-    res.send(score);
-  });
-});
+let melodyFallback: Melody | null;
 
-app.get("/api/scores", (req: Request<Params>, res) => {
-  let score;
-  switch (req.query.gameMode) {
-    case "singing":
-      score = SingingScore;
-    case "listening":
-      score = ListeningScore;
-    case "pitchle":
-      score = PitchleScore;
-    default:
-      score = SingingScore;
+const handleMissingMelody = async (res: Response<Melody>, dateKey: string) => {
+  const newMelody = getRandomNotes();
+  const data = {
+    melody: newMelody,
+    dateKey,
+  };
+  melodyFallback = data;
+  const melody = new Melody(data);
+  try {
+    await melody.save();
+
+    res.send(data);
+  } catch {
+    // TODO
+    console.log("SENDING NEW DATA FROM CATCH", data);
+    res.send(data);
   }
-  score.find((err, scores) => {
-    if (err) {
-      res.status(500).send("Error with reading from database");
+};
+
+app.get("/api/melody", async (req: Request<Params>, res: Response<Melody>) => {
+  const currentDate = new Date();
+  const date = ("0" + currentDate.getDate()).slice(-2);
+  const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+  const year = currentDate.getFullYear();
+
+  const dateKey = `${date}/${month}/${year}`;
+
+  try {
+    const data = await Melody.find({ dateKey }).exec();
+
+    if (data.length) {
+      return res.send({
+        melody: data[0].melody as Note[],
+        dateKey,
+      });
+    } else if (melodyFallback && melodyFallback.dateKey === dateKey) {
+      return res.send(melodyFallback);
     }
-    res.send(scores);
-  });
+    return handleMissingMelody(res, dateKey);
+  } catch {
+    return handleMissingMelody(res, dateKey);
+  }
 });
 
 app.get("/api/health", (_, res) => {

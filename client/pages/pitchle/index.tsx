@@ -6,6 +6,8 @@ import usePlayer from "../../hooks/usePlayer";
 import { GameStatus } from "../../types/types";
 import GameStep from "./game-step";
 import { Note, NOTES } from "../../constants";
+import { API_URL } from "../../types/declarations";
+import useFetch, { HttpMethods } from "../../hooks/useFetch";
 import AudioWave from "../../components/game-header/icons/sine-wave";
 import popSound from "../../assets/tones/pop.mp3";
 const GameEnd = lazy(() => import("../../components/game-end-confetti"));
@@ -15,9 +17,13 @@ const NUM_OF_ATTEMPTS = 6;
 
 const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 
+type MelodyData = {
+  date: Date;
+  melody: Note[];
+};
+
 const Pitchle = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
-  const [noteData, playRandomNotes, repeatPlaying] = usePlayer(600);
   const [shareButtonLabel, setShareButtonLabel] = useState("Share \u{1F3A4}");
   const [message, setMessage] = useState("");
   const solution = useRef<Note[]>([]);
@@ -31,10 +37,19 @@ const Pitchle = (): ReactElement => {
   const [playPopSound] = useSound(popSound, {
     volume: 0.5,
   });
+  const [melodyData, melodyDataError, isLoading] = useFetch<MelodyData>({
+    url: `${API_URL}/melody`,
+    method: HttpMethods.GET,
+  });
+  const [noteData, playNotes, repeatPlaying] = usePlayer(600);
+
+  console.log("melodyData", melodyData);
 
   const playMelody = () => {
-    playRandomNotes(NUM_OF_TONES_TO_PLAY);
-    setGameStatus(GameStatus.InProgress);
+    if (melodyData) {
+      playNotes(melodyData.melody);
+      setGameStatus(GameStatus.InProgress);
+    }
   };
 
   useEffect(() => {
@@ -99,6 +114,9 @@ const Pitchle = (): ReactElement => {
   };
 
   const getPitchleHeader = () => {
+    if (isLoading) {
+      return <p>Loading the melody...</p>;
+    }
     if (noteData.played && gameStatus !== GameStatus.Ended) {
       return (
         <button className="button button--secondary button--small" onClick={repeatPlaying}>
@@ -134,9 +152,19 @@ const Pitchle = (): ReactElement => {
     });
   };
 
+  if (melodyDataError) {
+    return (
+      <PageWrapper>
+        <div className="full-size flex flex-center">
+          Failed to fetch the melody. Please try again by refreshing the page.
+        </div>
+      </PageWrapper>
+    );
+  }
+
   return (
     <PageWrapper>
-      <div className="pitchle page-transition-name">
+      <div className="pitchle">
         <div className="pitchle_header">{getPitchleHeader()}</div>
         <div className="pitchle_content">
           <div className="flex-center" style={{ marginTop: 12 }}>

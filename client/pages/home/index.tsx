@@ -5,6 +5,13 @@ import HeadphonesIcon from "./icons/headphones";
 import CableIcon from "./icons/cable";
 import "./home.scss";
 
+const currentDate = new Date();
+const date = ("0" + currentDate.getDate()).slice(-2);
+const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+const year = currentDate.getFullYear();
+
+const dateFormatted = `${date}/${month}/${year}`;
+
 const Home = (): ReactElement => {
   const [navigate] = useNavigateWithTransition();
   const onLinkClick = (route: string) => {
@@ -19,9 +26,8 @@ const Home = (): ReactElement => {
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>Pitchle</h3>
-              <p>
-                A musical twist of the famous Wordle game. Guess each tone in a random melody in a maximum of 6 tries.
-              </p>
+              <p>A musical twist of the Wordle game.</p>
+              <p>{`Try to guess each tone in a melody for ${dateFormatted}. You have of 6 tries!`}</p>
             </div>
           </div>
           <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/singing")}>

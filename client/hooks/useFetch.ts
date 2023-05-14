@@ -18,7 +18,7 @@ interface UseFetchParams {
 const useFetch = <T>({ url, method, body, params, wait }: UseFetchParams): [T | null, Error | null, boolean] => {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const prevWait = usePrevious<boolean | undefined>(wait);
 
   useEffect(() => {
@@ -41,13 +41,13 @@ const useFetch = <T>({ url, method, body, params, wait }: UseFetchParams): [T | 
         } catch (error) {
           setError(error);
         } finally {
-          setLoaded(true);
+          setIsLoading(false);
         }
       })();
     }
   }, [wait]);
 
-  return [data, error, loaded];
+  return [data, error, isLoading];
 };
 
 export default useFetch;
