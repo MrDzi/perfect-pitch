@@ -27,7 +27,7 @@ const Home = (): ReactElement => {
             <div className="home-content_desc">
               <h3>Pitchle</h3>
               <p>A musical twist of the Wordle game.</p>
-              <p>{`Try to guess each tone in a melody for ${dateFormatted}. You have of 6 tries!`}</p>
+              <p>{`Try to guess each tone in a melody for ${dateFormatted}. You have 6 tries!`}</p>
             </div>
           </div>
           <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/singing")}>

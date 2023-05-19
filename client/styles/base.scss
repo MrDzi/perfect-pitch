@@ -16,6 +16,7 @@
   --grey: #CFDBD5;
   --grey-yellow: #e8eddf;
   --yellow: #F3C33F;
+  --green: #678e3e;
   --dark-yellow: #F0B719;
   --black: #333533;
   --dark-black: #242423;
@@ -39,6 +40,9 @@ body {
 
 #app {
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page {
@@ -51,7 +55,7 @@ body {
     background: hsla(81, 28%, 90%, 1);
     background: linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
     background: -moz-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
-    background: -webkit-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
+    background: -webkit-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, rgb(103, 142, 62) 100%);
   }
 }
 

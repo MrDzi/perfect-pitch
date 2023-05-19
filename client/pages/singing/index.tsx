@@ -19,7 +19,7 @@ const Singing = (): ReactElement => {
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [noteData, playRandomNote, repeatPlaying] = usePlayer();
-  const [startPitchDetection, stopPitchDetection, points, detune, volume] = useDetectPitch();
+  const [startPitchDetection, stopPitchDetection, reset, points, detune, progress] = useDetectPitch();
 
   useEffect(() => {
     if (noteData.notes) {
@@ -37,6 +37,7 @@ const Singing = (): ReactElement => {
         setNumOfTonesPlayed((n) => n + 1);
         setTotalPoints((p) => getTotalPoints(p + points, numOfTonesPlayed));
         setCounter(COUNTER_START_VALUE);
+        reset();
       }, 2000);
     }
   }, [points]);
@@ -45,7 +46,7 @@ const Singing = (): ReactElement => {
     if (!counter) {
       return;
     }
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setCounter(counter - 1);
       if (counter === 1) {
         if (numOfTonesPlayed === NUM_OF_NOTES_TO_PLAY) {
@@ -56,6 +57,9 @@ const Singing = (): ReactElement => {
         }
       }
     }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [counter]);
 
   useEffect(() => {
@@ -74,16 +78,14 @@ const Singing = (): ReactElement => {
     setTotalPoints(0);
     setNumOfTonesPlayed(0);
     setGameStatus(GameStatus.InProgress);
-    window.location.reload();
   };
-
-  console.log("POINTS", points);
 
   return (
     <PageWrapper>
       {gameStatus !== GameStatus.Ended ? (
         <div className="flex flex-column full-size">
           <Header
+            totalSteps={NUM_OF_NOTES_TO_PLAY}
             currentStep={numOfTonesPlayed + 1}
             counter={counter}
             points={points}
@@ -95,7 +97,11 @@ const Singing = (): ReactElement => {
             isSingingMode
             withPercentage
           />
-          <PitchVisualization volume={volume} detune={detune} shouldVisualize={counter === 0} />
+          <PitchVisualization
+            detune={detune}
+            shouldVisualize={counter === 0}
+            progress={points !== null ? 100 : progress}
+          />
         </div>
       ) : (
         <GameEnd totalPoints={totalPoints} onClick={restartGame} withPercentage />

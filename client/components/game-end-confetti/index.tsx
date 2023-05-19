@@ -6,11 +6,10 @@ const GameEndConfetti = (): ReactElement => {
     const jsConfetti = new JSConfetti();
     jsConfetti.addConfetti({
       emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁", "🎸", "🎼", "🎤", "🎧", "🎹", "🎺", "🎻"],
-      confettiNumber: 150,
+      confettiNumber: 170,
       emojiSize: 60,
     });
     return () => {
-      console.log("CLEAR CANVAS!");
       jsConfetti.clearCanvas();
     };
   }, []);

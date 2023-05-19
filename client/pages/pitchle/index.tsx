@@ -12,7 +12,6 @@ import AudioWave from "../../components/game-header/icons/sine-wave";
 import popSound from "../../assets/tones/pop.mp3";
 const GameEnd = lazy(() => import("../../components/game-end-confetti"));
 
-const NUM_OF_TONES_TO_PLAY = 5;
 const NUM_OF_ATTEMPTS = 6;
 
 const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
@@ -68,7 +67,6 @@ const Pitchle = (): ReactElement => {
 
     if (isCurrentInputCorrect) {
       setTimeout(() => {
-        // setShowModal(true);
         setMessage(generateFinalMessage(solution.current, currentInput, currentStep));
         setGameStatus(GameStatus.Ended);
       }, 1500);
@@ -202,7 +200,7 @@ const Pitchle = (): ReactElement => {
           ) : (
             <>
               <GameEnd />
-              <button className="button" onClick={onShareClick}>
+              <button className="button button--pitchle-main" onClick={onShareClick}>
                 {shareButtonLabel}
               </button>
             </>

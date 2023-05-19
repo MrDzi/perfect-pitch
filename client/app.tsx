@@ -13,7 +13,6 @@ const App = (): ReactElement => {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          {/* <Route path="/" element={<Start />} /> */}
           <Route path="/" element={<Home />} />
           <Route path="/listening" element={<Listening />} />
           <Route path="/singing" element={<Singing />} />

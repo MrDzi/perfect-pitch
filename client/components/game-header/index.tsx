@@ -13,7 +13,7 @@ interface GameHeaderProps {
   gameStatus?: GameStatus;
   isSingingMode?: boolean;
   withPercentage?: boolean;
-  totalSteps?: number;
+  totalSteps: number;
   onRepeatClick: () => void;
   onStartClick?: () => void;
 }
@@ -27,7 +27,7 @@ const shouldRenderRepeatButton = (
 
 const Header = ({
   currentStep,
-  totalSteps = 3,
+  totalSteps,
   counter,
   totalPoints,
   points,
@@ -55,11 +55,9 @@ const Header = ({
       }
       return null;
     }
-    return <AudioWave width={45} />;
+    return <AudioWave width={40} />;
   };
 
-  console.log("points", points);
-  console.log("currentStep", currentStep);
   return (
     <div className="game-header">
       <div className="flex flex-left">
@@ -73,7 +71,7 @@ const Header = ({
           </div>
           {shouldRenderRepeatButton(counter, currentStep, totalSteps, isNotePlayed) && (
             <button className="button button--no-border" onClick={onRepeatClick}>
-              REPEAT NOTE{isSingingMode ? "" : "S"}
+              Repeat Tone{isSingingMode ? "" : "s"}
             </button>
           )}
         </div>

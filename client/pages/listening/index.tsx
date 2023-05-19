@@ -4,9 +4,10 @@ import GameEnd from "../../components/game-end";
 import useListeningPlayer from "../../hooks/useListeningPlayer";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
+import cx from "classnames";
 import "./listening.scss";
 
-const NUM_OF_TONES_TO_PLAY = 5;
+const NUM_OF_TONES_TO_PLAY = 2;
 
 const Listening = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
@@ -16,6 +17,7 @@ const Listening = (): ReactElement => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [noteData, playTwoNotes, playLastNote] = useListeningPlayer();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [submitted, isSubmitted] = useState(false);
 
   useEffect(() => {
     if (points !== null) {
@@ -25,23 +27,25 @@ const Listening = (): ReactElement => {
         setSelectedOption(null);
         setPoints(null);
         setCounter(3);
+        isSubmitted(false);
       }, 2000);
     }
   }, [points]);
 
   useEffect(() => {
+    console.log(counter, numOfTonesPlayed);
     if (!counter) {
+      return;
+    }
+    if (numOfTonesPlayed === NUM_OF_TONES_TO_PLAY) {
+      setGameStatus(GameStatus.Ended);
+      setCounter(null);
       return;
     }
     setTimeout(() => {
       setCounter(counter - 1);
       if (counter === 1) {
-        if (numOfTonesPlayed === NUM_OF_TONES_TO_PLAY) {
-          setGameStatus(GameStatus.Ended);
-          return;
-        } else {
-          playTwoNotes();
-        }
+        playTwoNotes();
       }
     }, 1000);
   }, [counter]);
@@ -59,13 +63,13 @@ const Listening = (): ReactElement => {
   };
 
   const restartGame = () => {
-    // setTotalPoints(0);
-    // setNumOfTonesPlayed(0);
-    // setGameStatus(GameStatus.InProgress);
-    window.location.reload();
+    setTotalPoints(0);
+    setNumOfTonesPlayed(0);
+    setGameStatus(GameStatus.InProgress);
   };
 
   const onAnswerSubmit = () => {
+    isSubmitted(true);
     setPoints(noteData.relation === selectedOption ? 1 : 0);
   };
 
@@ -82,7 +86,7 @@ const Listening = (): ReactElement => {
               currentStep={numOfTonesPlayed + 1}
               counter={counter}
               points={points}
-              totalSteps={5}
+              totalSteps={NUM_OF_TONES_TO_PLAY}
               totalPoints={totalPoints}
               isNotePlayed={noteData.played}
               onRepeatClick={playLastNote}
@@ -99,8 +103,11 @@ const Listening = (): ReactElement => {
                     value={0}
                     onChange={handleOptionChange}
                     checked={selectedOption === 0}
+                    className={cx({
+                      highlighted: submitted && noteData.relation === 0,
+                    })}
                   />
-                  <label htmlFor="0">The first tone was higher</label>
+                  <label htmlFor="0">The first tone is higher</label>
                   <input
                     type="radio"
                     name="options"
@@ -108,8 +115,11 @@ const Listening = (): ReactElement => {
                     value={1}
                     onChange={handleOptionChange}
                     checked={selectedOption === 1}
+                    className={cx({
+                      highlighted: submitted && noteData.relation === 1,
+                    })}
                   />
-                  <label htmlFor="1">The second tone was higher</label>
+                  <label htmlFor="1">The second tone is higher</label>
                   <input
                     type="radio"
                     name="options"
@@ -117,6 +127,9 @@ const Listening = (): ReactElement => {
                     value={2}
                     onChange={handleOptionChange}
                     checked={selectedOption === 2}
+                    className={cx({
+                      highlighted: submitted && noteData.relation === 2,
+                    })}
                   />
                   <label htmlFor="2">Two tones are identical</label>
                   <button className="button" onClick={onAnswerSubmit}>

@@ -21,7 +21,7 @@ const createContextFromStream = (audioContext: AudioContext, stream: any) => {
 
 const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
   if (note && targetNote === note && detune) {
-    return Math.abs(detune) > 100 ? 0 : 100 - Math.abs(detune);
+    return Math.abs(detune) > 110 ? 0 : Math.min(110 - Math.abs(detune), 100);
   }
   return 0;
 };
@@ -32,7 +32,7 @@ const getAverageToneData = (data: ToneData[]) => {
   let maxCount = 1;
   let detuneSum = 0;
   data.forEach((d, index) => {
-    if (index > 10) {
+    if (index > 15) {
       if (!toneOccurrences[d.note]) {
         toneOccurrences[d.note] = 1;
       } else {
@@ -47,17 +47,23 @@ const getAverageToneData = (data: ToneData[]) => {
   });
   return {
     note: mostFrequentNote,
-    detune: Math.ceil(detuneSum / (data.length - 10)),
+    detune: Math.ceil(detuneSum / (data.length - 15)),
   };
 };
 
-const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, number | null, number | null, number] => {
+const useDetectPitch = (): [
+  (targetNote: Note | null) => void,
+  () => void,
+  () => void,
+  number | null,
+  number | null,
+  number
+] => {
   const [status, setStatus] = useState<{ inProgress: boolean; targetNote: Note | null }>({
     inProgress: false,
     targetNote: null,
   });
   const [detune, setDetune] = useState<number | null>(null);
-  const [volume, setVolume] = useState(0);
   const [points, setPoints] = useState<number | null>(null);
   const ctx = useRef<AudioContext>(new AudioContext());
   const analyser = useRef<AnalyserNode | null>(null);
@@ -68,16 +74,15 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      console.log("CREATE AUDIO CONTEXT");
       ctx.current = new AudioContext();
       analyser.current = createContextFromStream(ctx.current, stream);
     });
   }, []);
 
   useEffect(() => {
-    if (!status.inProgress) {
-      if (requestRef.current) {
-        window.cancelAnimationFrame(requestRef.current);
-      }
+    if (!status.inProgress && requestRef.current) {
+      window.cancelAnimationFrame(requestRef.current);
       return;
     }
     if (analyser.current) {
@@ -99,12 +104,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
       }
       analyser.getFloatTimeDomainData(buf.current);
       const volume = getVolume(buf.current);
-      if (volume < 0.015) {
-        // not enough signal
-        setVolume(0);
-        setDetune(null);
-      } else {
-        setVolume(Math.min(volume * 5, 2));
+      if (volume > 0.015) {
         const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
         const noteNum = noteFromPitch(pitch);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -118,9 +118,13 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
             detune: currentDetune,
             pitch,
           });
-          setDetune(currentDetune);
+          console.log("CURRENT D", currentDetune);
+          if (nonSilentFrameCount.current % 10 === 0) {
+            setDetune(currentDetune);
+          }
           if (nonSilentFrameCount.current > 120 && requestRef.current) {
-            setVolume(0);
+            console.log("#####");
+            setDetune(null);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;
             const averageToneData = getAverageToneData(tonesData.current);
@@ -159,7 +163,20 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, numbe
     });
   };
 
-  return [startPitchDetection, stopPitchDetection, points, detune, volume];
+  const reset = () => {
+    setPoints(null);
+  };
+
+  console.log("DET", detune);
+
+  return [
+    startPitchDetection,
+    stopPitchDetection,
+    reset,
+    points,
+    detune,
+    Math.floor(nonSilentFrameCount.current / 1.2),
+  ];
 };
 
 export default useDetectPitch;

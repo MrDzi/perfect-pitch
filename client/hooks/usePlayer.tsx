@@ -55,6 +55,7 @@ const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number)
     }
     let currentIndex = 0;
     const note = noteData.notes[currentIndex].toLowerCase();
+    console.log("PLAY NOTE: ", note);
     play({ id: note });
 
     const interval = setInterval(() => {
@@ -62,6 +63,7 @@ const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number)
       if (currentIndex < noteData.notes.length - 1) {
         currentIndex++;
         const note = noteData.notes[currentIndex].toLowerCase();
+        console.log("PLAY NOTE2: ", note);
         play({ id: note });
       } else {
         setNoteData({

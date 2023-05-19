@@ -33,13 +33,13 @@
     position: relative;
     transition: all 0.2s ease-in-out;
     &:hover {
-      background: lighten(#DAE2CB, 9%);
+      background: lighten(#DAE2CB, 7%);
       svg {
-        right: 12%;
+        transform: translateX(-5px);
       }
     }
     svg {
-      transition: right 0.15s ease-in-out;
+      transition: transform 0.15s ease-in-out;
       position: absolute;
       right: 11%;
       bottom: -5%;

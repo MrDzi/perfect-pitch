@@ -1,32 +1,44 @@
-import React, { CSSProperties, ReactElement } from "react";
+import React, { ReactElement } from "react";
+import cx from "classnames";
 import PitchIcon from "./icons/pitch";
 import "./pitch-visualization.scss";
 
 interface PitchVisualizationProps {
-  volume: number;
   detune: number | null;
   shouldVisualize: boolean;
+  progress: number;
 }
 
-const getPitchIndicatorStyles = ({ detune, volume }: { detune: number | null; volume: number }): CSSProperties => {
-  if (detune === null) {
-    return { transform: `scaleX(1.15) scaleY(${volume > 0 ? 1 : 0}px)` };
-  }
-  return { transform: `translateX(${detune}px) scaleX(1.15) scaleY(${volume > 0 ? 1 : 0})` };
-};
+const PitchVisualization = ({ detune, shouldVisualize, progress }: PitchVisualizationProps): ReactElement => {
+  const isInCenter = shouldVisualize && detune && detune > -10 && detune < 10;
 
-const PitchVisualization = ({ volume, detune, shouldVisualize }: PitchVisualizationProps): ReactElement => {
-  const isInCenter = shouldVisualize && volume && detune && detune > -10 && detune < 10;
+  console.log("detune", detune);
 
   return (
     <div className="game-visualization">
-      <div className="target" style={isInCenter ? { background: "#2A9D8F" } : {}} />
-      <div className="line">
-        <div
-          className="pitch-indicator"
-          style={getPitchIndicatorStyles({ detune, volume: shouldVisualize ? volume : 0 })}
-        >
-          <PitchIcon />
+      <div className="game-visualization_progress">
+        <div className="game-visualization_progress-bar-wrapper">
+          <div
+            className="game-visualization_progress-bar"
+            style={{
+              transform: `translateX(${-200 + progress * 2}px)`,
+            }}
+          />
+        </div>
+        <div className="game-visualization_progress-bar-number">{`${progress}%`}</div>
+      </div>
+      <div className="game-visualization_pitch">
+        <div className="target" style={isInCenter ? { background: "#2A9D8F" } : {}} />
+        <div className="line">
+          <div className="pitch-indicator-wrapper" style={{ transform: `translateX(${detune}px)` }}>
+            <div
+              className={cx("pitch-indicator", {
+                "pitch-indicator--active": detune !== null,
+              })}
+            >
+              <PitchIcon />
+            </div>
+          </div>
         </div>
       </div>
     </div>
