@@ -1,19 +1,14 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useContext } from "react";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import MicIcon from "./icons/mic";
 import HeadphonesIcon from "./icons/headphones";
 import CableIcon from "./icons/cable";
+import { AppContext } from "../../app";
 import "./home.scss";
-
-const currentDate = new Date();
-const date = ("0" + currentDate.getDate()).slice(-2);
-const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-const year = currentDate.getFullYear();
-
-const dateFormatted = `${date}/${month}/${year}`;
 
 const Home = (): ReactElement => {
   const [navigate] = useNavigateWithTransition();
+  const appContext = useContext(AppContext);
   const onLinkClick = (route: string) => {
     return () => navigate(route);
   };
@@ -27,7 +22,7 @@ const Home = (): ReactElement => {
             <div className="home-content_desc">
               <h3>Pitchle</h3>
               <p>A musical twist of the Wordle game.</p>
-              <p>{`Try to guess each tone in a melody for ${dateFormatted}. You have 6 tries!`}</p>
+              <p>{`Try to guess each tone in a melody for ${appContext.date}. You have 6 tries!`}</p>
             </div>
           </div>
           <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/singing")}>

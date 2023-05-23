@@ -3,6 +3,7 @@ import { useState } from "react";
 import cx from "classnames";
 import { Note } from "../../../constants";
 import "../pitchle.scss";
+import { GameStatus } from "../../../types/types";
 
 const PITCHLE_LENGTH = 5;
 
@@ -20,8 +21,10 @@ export const getResults = (values: Note[], solution: Note[]): InputStatus[] => {
   }, {} as { [key in Note]: number });
 
   return values.map((v, i) => {
+    console.log("SDFSDFSDFSDFSD", v, sol[i], v === sol[i]);
     if (v === sol[i]) {
       map[v]--;
+      console.log("!!!!!");
       return InputStatus.GUESSED;
     } else {
       const foundIndex = sol.indexOf(v);
@@ -40,16 +43,22 @@ const GameStep = ({
   solution,
   values,
   submitted,
+  gameStatus,
 }: {
   solution: Note[];
   values: Note[];
   submitted: boolean;
+  gameStatus: GameStatus;
 }): JSX.Element => {
   const solutionRef = React.useRef<Array<Note | null>>();
   const [results, setResults] = useState<InputStatus[]>([]);
 
   React.useEffect(() => {
     solutionRef.current = solution;
+    if (submitted || gameStatus === GameStatus.Ended) {
+      const res = getResults(values, solution);
+      setResults(res);
+    }
   }, [solution]);
 
   React.useEffect(() => {
@@ -66,7 +75,7 @@ const GameStep = ({
         <div className="text-input-wrapper" key={`game-step-input-${i}`}>
           <div
             className={cx("text-input-wrapper_inner", {
-              ["text-input-wrapper_inner--is-submitted"]: submitted,
+              ["text-input-wrapper_inner--is-submitted"]: submitted || gameStatus === GameStatus.Ended,
             })}
           >
             <div className="text-input-wrapper_front">
@@ -98,7 +107,15 @@ const GameStep = ({
     });
   };
 
-  return <div className="game-step flex flex-center justify-space-between">{renderInputFields()}</div>;
+  return (
+    <div
+      className={cx("game-step", {
+        "game-step--small": gameStatus === GameStatus.Ended,
+      })}
+    >
+      {renderInputFields()}
+    </div>
+  );
 };
 
 export default GameStep;

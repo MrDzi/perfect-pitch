@@ -5,7 +5,7 @@
   border-radius: 50px;
   border: 3px solid var(--dark-black);
   color: var(--dark-black);
-  padding: 1.15rem 4.5rem;
+  padding: 1rem 4rem;
   margin: 0;
   text-decoration: none;
   text-transform: uppercase;
@@ -30,8 +30,9 @@
     }
   }
   &--small {
-    font-size: .9rem;
-    padding: .9rem 2rem;
+    font-size: .82rem;
+    padding: .7rem 1rem;
+    border-width: 2px;
   }
   &--secondary {
     background: transparent;
