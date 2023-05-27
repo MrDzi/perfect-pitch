@@ -15,19 +15,19 @@ const PitchVisualization = ({ detune, shouldVisualize, progress }: PitchVisualiz
   console.log("detune", detune);
 
   return (
-    <div className="game-visualization">
-      <div className="game-visualization_progress">
-        <div className="game-visualization_progress-bar-wrapper">
+    <div className="pitch-visualization">
+      <div className="pitch-visualization_progress">
+        <div className="pitch-visualization_progress-bar-wrapper">
           <div
-            className="game-visualization_progress-bar"
+            className="pitch-visualization_progress-bar"
             style={{
               transform: `translateX(${-200 + progress * 2}px)`,
             }}
           />
         </div>
-        <div className="game-visualization_progress-bar-number">{`${progress}%`}</div>
+        <div className="pitch-visualization_progress-bar-number">{`${progress}%`}</div>
       </div>
-      <div className="game-visualization_pitch">
+      <div className="pitch-visualization_pitch">
         <div className="target" style={isInCenter ? { background: "#2A9D8F" } : {}} />
         <div className="line">
           <div className="pitch-indicator-wrapper" style={{ transform: `translateX(${detune}px)` }}>

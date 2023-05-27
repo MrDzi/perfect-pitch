@@ -16,6 +16,10 @@
     height: 100%;
     max-width: 1200px;
   }
+  @media only screen and (max-width: 767px) {
+    padding: 5px;
+    padding-top: 40px;
+  }
 }
 
 .content-wrapper {
@@ -28,6 +32,9 @@
   border-radius: 30px;
   border: 3px solid var(--dark-black);
   overflow: overlay;
+  @media only screen and (max-width: 767px) {
+    padding: 20px;
+  }
 }
 
 .back-button {
@@ -41,6 +48,9 @@
     span {
       transform: translateX(3px);
     }
+  }
+  @media only screen and (max-width: 767px) {
+    top: -27px;
   }
   span {
     color: var(--dark-black);

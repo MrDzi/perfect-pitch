@@ -8,10 +8,15 @@
   width: 100%;
   border-radius: 18px;
   overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 0 15px;
 }
 
 .radio-group {
   width: 300px;
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+  }
   button {
     width: 100%;
     margin-top: 10px;

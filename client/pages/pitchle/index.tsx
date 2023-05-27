@@ -1,5 +1,6 @@
 import React, { useState, ReactElement, useEffect, useRef, lazy, useContext } from "react";
 import useSound from "use-sound";
+import cx from "classnames";
 import PageWrapper from "../../components/page-wrapper";
 import { generateFinalMessage, checkIfEqualArrays } from "./helpers";
 import usePlayer from "../../hooks/usePlayer";
@@ -229,15 +230,19 @@ const Pitchle = (): ReactElement => {
 
   return (
     <PageWrapper>
-      <div className="pitchle">
+      <div
+        className={cx("pitchle", {
+          "pitchle--ended": gameStatus === GameStatus.Ended,
+        })}
+      >
         {getPitchleHeader()}
         <div className="pitchle_content">
-          <div className="flex-center" style={{ marginBottom: gameStatus === GameStatus.Ended ? 0 : 40 }}>
+          <div style={{ marginBottom: gameStatus === GameStatus.Ended ? 0 : 40 }}>
             <div className="pitchle-input-group">{renderInputs()}</div>
           </div>
           {gameStatus !== GameStatus.Ended ? (
-            <div style={{ marginBottom: 20 }}>
-              <div className="flex margin-bottom-half">
+            <div className="pitchle_controls">
+              <div className="pitchle_note-buttons flex margin-bottom-half">
                 {NOTES.map((n) => (
                   <button
                     onClick={() => onInput(n)}

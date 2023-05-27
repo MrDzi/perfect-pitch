@@ -41,8 +41,8 @@ const Header = ({
   const getCentralComponent = () => {
     if (gameStatus !== undefined && gameStatus === GameStatus.NotStarted) {
       return (
-        <button className="button button--no-border" onClick={onStartClick}>
-          Click here to start
+        <button className="button button--small" onClick={onStartClick} style={{ padding: "0.7rem 1.5rem" }}>
+          Start
         </button>
       );
     }
@@ -71,13 +71,13 @@ const Header = ({
           </div>
           {shouldRenderRepeatButton(counter, currentStep, totalSteps, isNotePlayed) && (
             <button className="button button--no-border" onClick={onRepeatClick}>
-              Repeat Tone{isSingingMode ? "" : "s"}
+              Listen again
             </button>
           )}
         </div>
       </div>
       <div>
-        <div className="flex flex-center" style={{ height: "50px" }}>
+        <div className="flex flex-center">
           <div className="text-center">{getCentralComponent()}</div>
         </div>
       </div>

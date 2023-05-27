@@ -25,6 +25,9 @@
   --dark-pink: #B56576;
 }
 
+$tablet-bp: 768px;
+$desktop-bp: 999px;
+
 html, body {
   height: 100%;
 }
@@ -122,3 +125,16 @@ a {
 .back-transition::view-transition-new(root) {
   animation-name: slide-from-left;
 }
+
+// @mixin devices($breakpoint) {
+//   @if $breakpoint == tablet {    
+//     @media only screen and (min-width: 768px) and (max-width: 999px) {
+//       @content;
+//     }
+//   }
+//   @if $breakpoint == mobile {
+//     @media only screen and (max-width: 767px) {
+//       @content;
+//     }
+//   }
+// }

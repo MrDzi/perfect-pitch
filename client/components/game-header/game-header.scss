@@ -6,6 +6,9 @@
   > div {
     flex: 1;
   }
+  @media only screen and (max-width: 767px) {
+    font-size: 12px;
+  }
 }
 
 .game-header_points {
@@ -13,6 +16,9 @@
   font-size: 48px;
   line-height: 1;
   margin-left: 0.15em;
+  @media only screen and (max-width: 767px) {
+    font-size: 36px;
+  }
 }
 
 .game-header_new-points {
