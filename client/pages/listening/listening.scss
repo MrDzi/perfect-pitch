@@ -10,6 +10,9 @@
   overflow-x: hidden;
   box-sizing: border-box;
   padding: 0 15px;
+  @media only screen and (max-width: 767px) {
+    border-radius: 12px;
+  }
 }
 
 .radio-group {

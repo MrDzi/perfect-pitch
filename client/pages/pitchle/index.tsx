@@ -16,7 +16,7 @@ const GameEndConfetti = lazy(() => import("../../components/game-end-confetti"))
 const Stats = lazy(() => import("../../components/stats"));
 
 const NUM_OF_ATTEMPTS = 6;
-const LOCAL_STORAGE_KEY = "pitchle";
+const LOCAL_STORAGE_KEY = "pitchle_data";
 
 const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 
@@ -209,7 +209,7 @@ const Pitchle = (): ReactElement => {
       return (
         <div className="pitchle_header">
           <div className="sine-wave-wrapper">
-            <AudioWave width={25} />
+            <AudioWave width={28} />
           </div>
         </div>
       );

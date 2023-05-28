@@ -30,7 +30,7 @@
     }
   }
   &--small {
-    font-size: .82rem;
+    font-size: .9rem;
     padding: .7rem 1rem;
     border-width: 2px;
   }
@@ -39,6 +39,10 @@
     &:hover {
       background: transparent !important;
     }
+  }
+  &--inverted {
+    border-color: #fff;
+    color: #fff;
   }
   &:active, &:focus {
     outline: none;

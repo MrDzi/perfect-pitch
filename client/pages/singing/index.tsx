@@ -6,12 +6,17 @@ import usePlayer from "../../hooks/usePlayer";
 import useDetectPitch from "../../hooks/useDetectPitch";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
+import "./singing.scss";
 
 const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
   Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
 
 const NUM_OF_NOTES_TO_PLAY = 3;
 const COUNTER_START_VALUE = 3;
+const LOCAL_STORAGE_KEY = "singing_info_seen";
+
+const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+const savedDataParsed = typeof savedData === "string" ? JSON.parse(savedData) : null;
 
 const Singing = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
@@ -20,6 +25,7 @@ const Singing = (): ReactElement => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [noteData, playRandomNote, repeatPlaying] = usePlayer();
   const [startPitchDetection, stopPitchDetection, reset, points, detune, progress] = useDetectPitch();
+  const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
 
   useEffect(() => {
     if (noteData.notes) {
@@ -80,10 +86,29 @@ const Singing = (): ReactElement => {
     setGameStatus(GameStatus.InProgress);
   };
 
+  const closeInstructionsOverlay = () => {
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(true));
+    setInstructionsSeen(true);
+  };
+
+  console.log("INSTRUCTIONS SEEN", instructionsSeen);
+
   return (
     <PageWrapper>
       {gameStatus !== GameStatus.Ended ? (
         <div className="flex flex-column full-size">
+          {instructionsSeen !== true ? (
+            <div className="instructions-overlay">
+              <p>Make sure you allowed the application to use your microphone.</p>
+              <p>
+                When you click on the &quot;start&quot; button, you will hear a tone after 3 seconds. You then need to
+                repeat this tone by singing or whistling. You will hear 5 tones in total.
+              </p>
+              <button className="button button--secondary button--inverted" onClick={closeInstructionsOverlay}>
+                Ok
+              </button>
+            </div>
+          ) : null}
           <Header
             totalSteps={NUM_OF_NOTES_TO_PLAY}
             currentStep={numOfTonesPlayed + 1}

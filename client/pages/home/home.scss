@@ -46,6 +46,8 @@
     @media only screen and (max-width: 767px) {
       height: 100%;
       margin: 0.3em;
+      border-width: 2px;
+      border-radius: 15px;
     }
     &:hover {
       background: lighten(#DAE2CB, 5%);
@@ -77,6 +79,9 @@
   position: relative;
   z-index: 1;
   padding: 1em 1.5em;
+  @media only screen and (max-width: 767px) {
+    padding: 1em;
+  }
 }
   
 .home-content_block--big {
@@ -86,6 +91,14 @@
   svg {
     @media only screen and (max-width: 767px) {
       height: 120px !important;
+    }
+  }
+}
+
+.home-content_block--small-down {
+  svg {
+    @media only screen and (max-width: 767px) {
+      height: 110px !important;
     }
   }
 }

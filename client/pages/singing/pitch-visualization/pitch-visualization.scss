@@ -23,6 +23,9 @@
     width: 100%;
     border-radius: 18px;
     overflow-x: hidden;
+    @media only screen and (max-width: 767px) {
+      border-radius: 12px;
+    }
   }
   &_progress-bar-wrapper {
     background: #efefef;
