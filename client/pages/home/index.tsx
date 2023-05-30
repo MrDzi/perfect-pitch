@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from "react";
+import React, { ReactElement, useContext, useEffect } from "react";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import MicIcon from "./icons/mic";
 import HeadphonesIcon from "./icons/headphones";
@@ -9,6 +9,11 @@ import "./home.scss";
 const Home = (): ReactElement => {
   const [navigate] = useNavigateWithTransition();
   const appContext = useContext(AppContext);
+
+  useEffect(() => {
+    document.title = "Home | CheckYourPitch";
+  }, []);
+
   const onLinkClick = (route: string) => {
     return () => navigate(route);
   };

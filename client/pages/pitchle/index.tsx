@@ -22,7 +22,7 @@ const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 
 type MelodyData = {
   date: Date;
-  melody: Note[];
+  melody: string;
 };
 
 type Input = { [key: number]: Note[] };
@@ -97,24 +97,12 @@ const Pitchle = (): ReactElement => {
     url: `${API_URL}/melody`,
     method: HttpMethods.GET,
   });
+  const melodyDecoded = useRef<undefined | Note[]>(undefined);
   const [noteData, playNotes, repeatPlaying] = usePlayer(600);
 
-  if (melodyDataError) {
-    return (
-      <PageWrapper>
-        <div className="full-size flex flex-center">
-          Failed to retrieve the melody for this day. Please try again by refreshing the page.
-        </div>
-      </PageWrapper>
-    );
-  }
-
-  const playMelody = () => {
-    if (melodyData) {
-      playNotes(melodyData.melody);
-      setGameStatus(GameStatus.InProgress);
-    }
-  };
+  useEffect(() => {
+    document.title = "Pitchle | CheckYourPitch";
+  }, []);
 
   useEffect(() => {
     if (currentStep === 0) {
@@ -128,12 +116,12 @@ const Pitchle = (): ReactElement => {
       }, 1500);
     }
     const isCurrentInputCorrect =
-      checkIfEqualArrays(melodyData?.melody || [], currentInput[currentStep - 1]) &&
+      checkIfEqualArrays(melodyDecoded.current || [], currentInput[currentStep - 1]) &&
       (!currentInput[currentStep] || currentInput[currentStep].length === 0);
 
     if (isCurrentInputCorrect) {
       setTimeout(() => {
-        setMessage(generateFinalMessage(melodyData?.melody || [], currentInput, currentStep));
+        setMessage(generateFinalMessage(melodyDecoded.current || [], currentInput, currentStep));
         setGameWon(true);
         statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, true);
         window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
@@ -144,11 +132,31 @@ const Pitchle = (): ReactElement => {
     }
   }, [currentStep]);
 
+  useEffect(() => {
+    console.log("melody data", melodyData);
+    if (melodyData) {
+      const decoded = window.atob(melodyData.melody.slice(1));
+      if (decoded) {
+        melodyDecoded.current = JSON.parse(decoded);
+      }
+    }
+  }, [melodyData]);
+
+  if (melodyDataError) {
+    return (
+      <PageWrapper>
+        <div className="full-size flex flex-center">
+          Failed to retrieve the melody for this day. Please try again by refreshing the page.
+        </div>
+      </PageWrapper>
+    );
+  }
+
   const renderInputs = () => (
     <div>
       {attemptsArray.map((_, i) => (
         <GameStep
-          solution={melodyData?.melody || []}
+          solution={melodyDecoded.current || []}
           values={currentInput[i]}
           submitted={i < currentStep || gameStatus === GameStatus.Ended}
           key={`input-row-${i}`}
@@ -157,6 +165,13 @@ const Pitchle = (): ReactElement => {
       ))}
     </div>
   );
+
+  const playMelody = () => {
+    if (melodyData) {
+      playNotes(melodyDecoded.current);
+      setGameStatus(GameStatus.InProgress);
+    }
+  };
 
   const onSubmit = () => {
     setCurrentStep(currentStep + 1);

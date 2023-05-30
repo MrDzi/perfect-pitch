@@ -28,6 +28,10 @@ const Singing = (): ReactElement => {
   const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
 
   useEffect(() => {
+    document.title = "Singing | CheckYourPitch";
+  }, []);
+
+  useEffect(() => {
     if (noteData.notes) {
       if (noteData.played) {
         startPitchDetection(noteData.notes[0]);

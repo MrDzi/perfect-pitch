@@ -20,6 +20,10 @@ const Listening = (): ReactElement => {
   const [submitted, isSubmitted] = useState(false);
 
   useEffect(() => {
+    document.title = "Listening | CheckYourPitch";
+  }, []);
+
+  useEffect(() => {
     if (points !== null) {
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);

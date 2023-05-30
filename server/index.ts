@@ -44,6 +44,11 @@ const melodySchema = new Schema({
 });
 const Melody = mongoose.model("Melody", melodySchema);
 
+type MelodyResponse = {
+  melody: string;
+  dateKey: string;
+};
+
 db.on("error", () => {
   console.log("db conection error");
 });
@@ -57,28 +62,36 @@ type paramKeys = "gameMode";
 
 type Params = { [key in paramKeys]: string };
 
-let melodyFallback: Melody | null;
+let melodyFallback: MelodyResponse | null;
 
-const handleMissingMelody = async (res: Response<Melody>, dateKey: string) => {
+const encodeMelody = (melody: Note[]) => {
+  const encoded = Buffer.from(JSON.stringify(melody), "utf8").toString("base64");
+  // add one character at the beginning because I have friends who know JavaScript :) (I know there are smarter solutions but this was quick & easy)
+  return `X${encoded}`;
+};
+
+const handleMissingMelody = async (res: Response<MelodyResponse>, dateKey: string) => {
   const newMelody = getRandomNotes();
   const data = {
-    melody: newMelody,
+    melody: encodeMelody(newMelody),
     dateKey,
   };
   melodyFallback = data;
-  const melody = new Melody(data);
+  const melody = new Melody({
+    melody: newMelody,
+    dateKey,
+  });
   try {
     await melody.save();
 
     res.send(data);
   } catch {
     // TODO
-    console.log("SENDING NEW DATA FROM CATCH", data);
     res.send(data);
   }
 };
 
-app.get("/api/melody", async (req: Request<Params>, res: Response<Melody>) => {
+app.get("/api/melody", async (req: Request<Params>, res: Response<MelodyResponse>) => {
   const currentDate = new Date();
   const date = ("0" + currentDate.getDate()).slice(-2);
   const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
@@ -91,7 +104,7 @@ app.get("/api/melody", async (req: Request<Params>, res: Response<Melody>) => {
 
     if (data.length) {
       return res.send({
-        melody: data[0].melody as Note[],
+        melody: encodeMelody(data[0].melody as Note[]),
         dateKey,
       });
     } else if (melodyFallback && melodyFallback.dateKey === dateKey) {
