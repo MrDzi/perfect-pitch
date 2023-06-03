@@ -34,8 +34,6 @@ export const generateFinalMessage = (solution: Note[], input: { [key: number]: N
   message += lineBreak;
   message += "https://checkyourpitch.com/";
 
-  console.log(message);
-
   return message;
 };
 

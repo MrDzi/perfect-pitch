@@ -12,8 +12,6 @@ interface PitchVisualizationProps {
 const PitchVisualization = ({ detune, shouldVisualize, progress }: PitchVisualizationProps): ReactElement => {
   const isInCenter = shouldVisualize && detune && detune > -10 && detune < 10;
 
-  console.log("detune", detune);
-
   return (
     <div className="pitch-visualization">
       <div className="pitch-visualization_progress">

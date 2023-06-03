@@ -10,7 +10,6 @@ const GameEndConfetti = (): ReactElement => {
       emojiSize: 60,
     });
     return () => {
-      console.log("CLEAR CANVAS!");
       jsConfetti.clearCanvas();
     };
   }, []);

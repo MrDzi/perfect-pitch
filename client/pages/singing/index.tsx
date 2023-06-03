@@ -95,8 +95,6 @@ const Singing = (): ReactElement => {
     setInstructionsSeen(true);
   };
 
-  console.log("INSTRUCTIONS SEEN", instructionsSeen);
-
   return (
     <PageWrapper>
       {gameStatus !== GameStatus.Ended ? (

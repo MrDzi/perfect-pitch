@@ -37,7 +37,6 @@ const Listening = (): ReactElement => {
   }, [points]);
 
   useEffect(() => {
-    console.log(counter, numOfTonesPlayed);
     if (!counter) {
       return;
     }

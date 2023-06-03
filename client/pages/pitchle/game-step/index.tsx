@@ -21,10 +21,8 @@ export const getResults = (values: Note[], solution: Note[]): InputStatus[] => {
   }, {} as { [key in Note]: number });
 
   return values.map((v, i) => {
-    console.log("SDFSDFSDFSDFSD", v, sol[i], v === sol[i]);
     if (v === sol[i]) {
       map[v]--;
-      console.log("!!!!!");
       return InputStatus.GUESSED;
     } else {
       const foundIndex = sol.indexOf(v);

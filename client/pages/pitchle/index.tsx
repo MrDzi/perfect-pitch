@@ -13,6 +13,7 @@ import { AppContext } from "../../app";
 import useFetch, { HttpMethods } from "../../hooks/useFetch";
 import AudioWave from "../../components/game-header/icons/sine-wave";
 import popSound from "../../assets/tones/pop.mp3";
+import Share from "./icons/share";
 const GameEndConfetti = lazy(() => import("../../components/game-end-confetti"));
 const Stats = lazy(() => import("../../components/stats"));
 
@@ -79,7 +80,7 @@ const Pitchle = (): ReactElement => {
       ? GameStatus.Ended
       : GameStatus.NotStarted
   );
-  const [shareButtonLabel, setShareButtonLabel] = useState("Share \u{1F3A4}");
+  const [shareButtonLabel, setShareButtonLabel] = useState("Share");
   const [message, setMessage] = useState("");
   const [currentInput, setCurrentInput] = useState<Input>(
     statsData.current && statsData.current.lastCompletedGameDate === appContext.date
@@ -134,7 +135,6 @@ const Pitchle = (): ReactElement => {
   }, [currentStep]);
 
   useEffect(() => {
-    console.log("melody data", melodyData);
     if (melodyData) {
       const decoded = window.atob(melodyData.melody.slice(1));
       if (decoded) {
@@ -286,7 +286,7 @@ const Pitchle = (): ReactElement => {
           ) : (
             <>
               <button className="button button--pitchle-main" onClick={onShareClick}>
-                {shareButtonLabel}
+                {shareButtonLabel} <Share />
               </button>
               {statsData.current ? <Stats data={statsData.current} /> : null}
             </>

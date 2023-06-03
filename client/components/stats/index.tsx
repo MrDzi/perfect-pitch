@@ -3,7 +3,6 @@ import { Stats } from "../../pages/pitchle";
 import "./stats.scss";
 
 const Stats = ({ data }: { data: Stats }): ReactElement => {
-  console.log("FROM STATS", data);
   return (
     <div className="stats">
       <div className="stats_header">

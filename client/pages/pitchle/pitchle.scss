@@ -30,6 +30,13 @@
   p {
     margin: 0 0 20px;
   }
+  .button--pitchle-main {
+    display: inline-flex;
+    svg {
+      width: 33px;
+      height: 18px;
+    }
+  }
 }
 
 .pitchle_header {
@@ -241,9 +248,9 @@
     font-weight: bold;
     border: 2px solid var(--dark-black);
     background-color: var(--dark-yellow);
+    border-radius: 50px;
     &:disabled {
       opacity: 0.5;
-      border-radius: 50px;
     }
   }
   &:hover:not(:disabled) {

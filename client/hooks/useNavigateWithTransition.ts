@@ -11,7 +11,6 @@ const useNavigateWithTransition = () => {
     }
 
     if (isBackNavigation) {
-      console.log("ADDED BACK", document.documentElement);
       document.documentElement.classList.add("back-transition");
     }
 

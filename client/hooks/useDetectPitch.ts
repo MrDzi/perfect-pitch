@@ -21,7 +21,7 @@ const createContextFromStream = (audioContext: AudioContext, stream: any) => {
 
 const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
   if (note && targetNote === note && detune) {
-    return Math.abs(detune) > 110 ? 0 : Math.min(110 - Math.abs(detune), 100);
+    return Math.max(0, Math.min(107 - Math.abs(detune), 100));
   }
   return 0;
 };
@@ -74,7 +74,6 @@ const useDetectPitch = (): [
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      console.log("CREATE AUDIO CONTEXT");
       ctx.current = new AudioContext();
       analyser.current = createContextFromStream(ctx.current, stream);
     });
@@ -118,12 +117,10 @@ const useDetectPitch = (): [
             detune: currentDetune,
             pitch,
           });
-          console.log("CURRENT D", currentDetune);
           if (nonSilentFrameCount.current % 10 === 0) {
             setDetune(currentDetune);
           }
           if (nonSilentFrameCount.current > 120 && requestRef.current) {
-            console.log("#####");
             setDetune(null);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;
@@ -166,8 +163,6 @@ const useDetectPitch = (): [
   const reset = () => {
     setPoints(null);
   };
-
-  console.log("DET", detune);
 
   return [
     startPitchDetection,
