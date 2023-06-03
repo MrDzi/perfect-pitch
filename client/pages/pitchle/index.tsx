@@ -1,5 +1,6 @@
 import React, { useState, ReactElement, useEffect, useRef, lazy, useContext } from "react";
 import useSound from "use-sound";
+import { PulseLoader } from "react-spinners";
 import cx from "classnames";
 import PageWrapper from "../../components/page-wrapper";
 import { generateFinalMessage, checkIfEqualArrays } from "./helpers";
@@ -200,32 +201,30 @@ const Pitchle = (): ReactElement => {
 
   const getPitchleHeader = () => {
     if (isLoading) {
-      return <p>Loading the melody...</p>;
+      return (
+        <div className="flex flex-center" style={{ height: 40 }}>
+          <PulseLoader color="#678e3e" />
+        </div>
+      );
     }
     if (noteData.played && gameStatus !== GameStatus.Ended) {
       return (
-        <div className="pitchle_header">
-          <button className="button button--secondary button--small" onClick={repeatPlaying}>
-            Repeat the melody
-          </button>
-        </div>
+        <button className="button button--secondary button--small" onClick={repeatPlaying}>
+          Repeat the melody
+        </button>
       );
     }
     if (!noteData.played && gameStatus === GameStatus.NotStarted) {
       return (
-        <div className="pitchle_header">
-          <button className="button button--small" onClick={playMelody}>
-            Play the melody
-          </button>
-        </div>
+        <button className="button button--small" onClick={playMelody}>
+          Play the melody
+        </button>
       );
     }
     if (!noteData.played && gameStatus === GameStatus.InProgress) {
       return (
-        <div className="pitchle_header">
-          <div className="sine-wave-wrapper">
-            <AudioWave width={28} />
-          </div>
+        <div className="sine-wave-wrapper">
+          <AudioWave width={28} />
         </div>
       );
     }
@@ -250,7 +249,7 @@ const Pitchle = (): ReactElement => {
           "pitchle--ended": gameStatus === GameStatus.Ended,
         })}
       >
-        {getPitchleHeader()}
+        <div className="pitchle_header">{getPitchleHeader()}</div>
         <div className="pitchle_content">
           <div style={{ marginBottom: gameStatus === GameStatus.Ended ? 0 : 40 }}>
             <div className="pitchle-input-group">{renderInputs()}</div>

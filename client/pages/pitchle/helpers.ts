@@ -32,7 +32,7 @@ export const generateFinalMessage = (solution: Note[], input: { [key: number]: N
   message += lineBreak;
   message += "Can you guess this melody?";
   message += lineBreak;
-  message += "test .com";
+  message += "https://checkyourpitch.com/";
 
   console.log(message);
 

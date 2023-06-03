@@ -61,8 +61,8 @@
       right: 11%;
       bottom: -5%;
       @media only screen and (max-width: 767px) {
-        height: 100px;
-        width: 200px;
+        height: 77px;
+        width: 110px;
         right: 2%;
       }
     }
@@ -90,7 +90,7 @@
   position: relative;
   svg {
     @media only screen and (max-width: 767px) {
-      height: 120px !important;
+      height: 90px !important;
     }
   }
 }
@@ -98,7 +98,7 @@
 .home-content_block--small-down {
   svg {
     @media only screen and (max-width: 767px) {
-      height: 110px !important;
+      height: 93px !important;
     }
   }
 }

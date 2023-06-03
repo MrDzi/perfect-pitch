@@ -1,6 +1,8 @@
 import React, { ReactElement, lazy, Suspense, createContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { PulseLoader } from "react-spinners";
 import Home from "./pages/home";
+import PageWrapper from "./components/page-wrapper";
 import "./app.scss";
 
 const Listening = lazy(() => import("./pages/listening"));
@@ -22,10 +24,18 @@ export const AppContext = createContext<AppContextType>({
   date: dateFormatted,
 });
 
+const getFallbackElement = () => (
+  <PageWrapper>
+    <div className="flex flex-center full-size">
+      <PulseLoader color="#678e3e" />
+    </div>
+  </PageWrapper>
+);
+
 const App = (): ReactElement => {
   return (
     <Router>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={getFallbackElement()}>
         <AppContext.Provider
           value={{
             date: dateFormatted,
@@ -33,8 +43,8 @@ const App = (): ReactElement => {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/listening" element={<Listening />} />
-            <Route path="/singing" element={<Singing />} />
+            <Route path="/listen" element={<Listening />} />
+            <Route path="/sing" element={<Singing />} />
             <Route path="/pitchle" element={<Pitchle />} />
           </Routes>
         </AppContext.Provider>

@@ -53,6 +53,12 @@
   }
 }
 
+.pitchle_note-buttons {
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+  }
+}
+
 .pitchle_controls {
   margin-bottom: 20px;
   @media only screen and (max-width: 767px) {
@@ -68,8 +74,12 @@
   width: 54px;
   height: 54px;
   @media only screen and (max-width: 767px) {
-    width: calc(20vw - 15px);
-    height: calc(20vw - 15px);
+    width: 58px;
+    height: 58px;
+    margin-right: 3px;
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
   &_inner {
     width: 100%;
@@ -149,6 +159,7 @@
   justify-content: space-between;
   @media only screen and (max-width: 767px) {
     width: auto;
+    justify-content: center;
   }
   &--small {
     width: 173px;
@@ -205,6 +216,7 @@
     width: 42px;
     font-size: 24px;
     color: white;
+    padding: 0;
     @media only screen and (max-width: 767px) {
       font-size: 18px;
     }
@@ -216,10 +228,12 @@
     }
   }
   &--back {
+    color: var(--black);
     font-weight: bold;
     background: transparent;
     border: 2px solid var(--dark-black);
     padding: 0 15px;
+    border-radius: 50px;
   }
   &--submit {
     color: var(--dark-black);
@@ -229,6 +243,7 @@
     background-color: var(--dark-yellow);
     &:disabled {
       opacity: 0.5;
+      border-radius: 50px;
     }
   }
   &:hover:not(:disabled) {
