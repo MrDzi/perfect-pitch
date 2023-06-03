@@ -99,7 +99,7 @@ const Pitchle = (): ReactElement => {
     url: `${API_URL}/melody`,
     method: HttpMethods.GET,
   });
-  const melodyDecoded = useRef<undefined | Note[]>(undefined);
+  const [melodyDecoded, setMelodyDecoded] = useState<undefined | Note[]>(undefined);
   const [noteData, playNotes, repeatPlaying] = usePlayer(600);
 
   useEffect(() => {
@@ -118,12 +118,12 @@ const Pitchle = (): ReactElement => {
       }, 1500);
     }
     const isCurrentInputCorrect =
-      checkIfEqualArrays(melodyDecoded.current || [], currentInput[currentStep - 1]) &&
+      checkIfEqualArrays(melodyDecoded || [], currentInput[currentStep - 1]) &&
       (!currentInput[currentStep] || currentInput[currentStep].length === 0);
 
     if (isCurrentInputCorrect) {
       setTimeout(() => {
-        setMessage(generateFinalMessage(melodyDecoded.current || [], currentInput, currentStep));
+        setMessage(generateFinalMessage(melodyDecoded || [], currentInput, currentStep));
         setGameWon(true);
         statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, true);
         window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
@@ -138,7 +138,7 @@ const Pitchle = (): ReactElement => {
     if (melodyData) {
       const decoded = window.atob(melodyData.melody.slice(1));
       if (decoded) {
-        melodyDecoded.current = JSON.parse(decoded);
+        setMelodyDecoded(JSON.parse(decoded));
       }
     }
   }, [melodyData]);
@@ -147,7 +147,7 @@ const Pitchle = (): ReactElement => {
     return (
       <PageWrapper>
         <div className="full-size flex flex-center">
-          Failed to retrieve the melody for this day. Please try again by refreshing the page.
+          Failed to retrieve the melody for today. Please try again by refreshing the page.
         </div>
       </PageWrapper>
     );
@@ -157,7 +157,7 @@ const Pitchle = (): ReactElement => {
     <div>
       {attemptsArray.map((_, i) => (
         <GameStep
-          solution={melodyDecoded.current || []}
+          solution={melodyDecoded || []}
           values={currentInput[i]}
           submitted={i < currentStep || gameStatus === GameStatus.Ended}
           key={`input-row-${i}`}
@@ -168,8 +168,8 @@ const Pitchle = (): ReactElement => {
   );
 
   const playMelody = () => {
-    if (melodyData) {
-      playNotes(melodyDecoded.current);
+    if (melodyDecoded) {
+      playNotes(melodyDecoded);
       setGameStatus(GameStatus.InProgress);
     }
   };
@@ -203,7 +203,7 @@ const Pitchle = (): ReactElement => {
     if (isLoading) {
       return (
         <div className="flex flex-center" style={{ height: 40 }}>
-          <PulseLoader color="#678e3e" />
+          <PulseLoader size={10} color="#678e3e" />
         </div>
       );
     }
@@ -285,9 +285,11 @@ const Pitchle = (): ReactElement => {
             </div>
           ) : (
             <>
-              <button className="button button--pitchle-main" onClick={onShareClick}>
-                {shareButtonLabel} <Share />
-              </button>
+              {melodyDecoded ? (
+                <button className="button button--pitchle-main" onClick={onShareClick}>
+                  {shareButtonLabel} <Share />
+                </button>
+              ) : null}
               {statsData.current ? <Stats data={statsData.current} /> : null}
             </>
           )}
