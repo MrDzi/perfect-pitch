@@ -4,11 +4,13 @@ import JSConfetti from "js-confetti";
 const GameEndConfetti = (): ReactElement => {
   useEffect(() => {
     const jsConfetti = new JSConfetti();
-    jsConfetti.addConfetti({
-      emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁", "🎸", "🎼", "🎤", "🎧", "🎹", "🎺", "🎻"],
-      confettiNumber: 150,
-      emojiSize: 60,
-    });
+    setTimeout(() => {
+      jsConfetti.addConfetti({
+        emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁", "🎸", "🎼", "🎤", "🎧", "🎹", "🎺", "🎻"],
+        confettiNumber: 150,
+        emojiSize: 60,
+      });
+    }, 1500);
     return () => {
       jsConfetti.clearCanvas();
     };

@@ -111,10 +111,10 @@ const Pitchle = (): ReactElement => {
       return;
     }
     if (currentStep === NUM_OF_ATTEMPTS) {
+      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, false);
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
-        statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, false);
-        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       }, 1500);
     }
     const isCurrentInputCorrect =
@@ -122,11 +122,11 @@ const Pitchle = (): ReactElement => {
       (!currentInput[currentStep] || currentInput[currentStep].length === 0);
 
     if (isCurrentInputCorrect) {
+      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, true);
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
+      setGameWon(true);
       setTimeout(() => {
         setMessage(generateFinalMessage(melodyDecoded || [], currentInput, currentStep));
-        setGameWon(true);
-        statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, true);
-        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       }, 1500);
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
@@ -270,7 +270,12 @@ const Pitchle = (): ReactElement => {
                 ))}
               </div>
               <div className="flex flex-center">
-                <button onClick={onDelete} className="note-button note-button--back" key="note-button-back">
+                <button
+                  onClick={onDelete}
+                  className="note-button note-button--back"
+                  key="note-button-back"
+                  disabled={currentInput[currentStep] && currentInput[currentStep].length === 0}
+                >
                   Delete
                 </button>
                 <button

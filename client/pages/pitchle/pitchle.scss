@@ -23,7 +23,7 @@
   .button:not(.button--pitchle-main) {
     width: 200px;
     @media only screen and (max-width: 767px) {
-      width: 100%;
+      width: 80%;
       padding: 0.9rem 1rem;
     }
   }
@@ -46,6 +46,8 @@
   @media only screen and (max-width: 767px) {
     width: 100%;
     margin-top: 0;
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -195,14 +197,16 @@
 .note {
   font-family: "Poppins", sans-serif;
   font-weight: bold;
-  font-size: 33px;
+  font-size: 30px;
   span:last-child {
     font-size: 18px;
   }
 }
 
 .note-button {
-  font-weight: normal;
+  font-family: "Poppins", sans-serif;
+  background-color: #DDE3E0;
+  font-weight: bold;
   border: none;
   height: 42px;
   margin-right: 2px;
@@ -210,8 +214,7 @@
   text-transform: uppercase;
   text-align: center;
   cursor: pointer;
-  opacity: 0.9;
-  transition: opacity 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
   &:last-of-type {
     margin-right: 0;
   }
@@ -220,42 +223,28 @@
     min-width: 0;
   }
   &--note {
-    background: var(--black);
     width: 42px;
-    font-size: 24px;
-    color: white;
+    font-size: 20px;
     padding: 0;
     @media only screen and (max-width: 767px) {
       font-size: 18px;
     }
     span:last-child {
-      font-size: 16px;
+      font-size: 12px;
       @media only screen and (max-width: 767px) {
         font-size: 9px;
       }
     }
   }
   &--back {
-    color: var(--black);
-    font-weight: bold;
-    background: transparent;
-    border: 2px solid var(--dark-black);
     padding: 0 15px;
-    border-radius: 50px;
   }
   &--submit {
-    color: var(--dark-black);
     padding: 0 15px;
     font-weight: bold;
-    border: 2px solid var(--dark-black);
-    background-color: var(--dark-yellow);
-    border-radius: 50px;
-    &:disabled {
-      opacity: 0.5;
-    }
   }
   &:hover:not(:disabled) {
-    opacity: 1;
+    background-color: darken(#DDE3E0, 10%);
   }
   &:active, &:focus {
     outline: none;
@@ -267,7 +256,7 @@
 
 @for $i from 1 through 5 {
   .text-input-wrapper:nth-of-type(#{$i}) .text-input-wrapper_inner {
-    transition-delay: $i * 0.35s - 0.35s;
+    transition-delay: $i * 0.25s - 0.25s;
   }
 }
 

@@ -41,7 +41,6 @@
 }
 
 .back-button {
-  font-size: 0.87em;
   display: flex !important;
   position: absolute;
   top: -30px;
@@ -56,6 +55,7 @@
     top: -27px;
   }
   span {
+    font-size: 0.9rem;
     color: var(--dark-black);
     margin-left: 0.3em;
     transition: transform 0.15s ease-in-out;

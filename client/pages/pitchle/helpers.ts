@@ -8,7 +8,7 @@ const lineBreak = "\u{000A}";
 const doubleLineBreak = "\u{000A}\u{000A}";
 
 export const generateFinalMessage = (solution: Note[], input: { [key: number]: Note[] }, step: number): string => {
-  let message = `I guessed this 5-tone melody in ${step}/6 tries.${doubleLineBreak}`;
+  let message = `I guessed the tones of this melody in ${step}/6 tries.${doubleLineBreak}`;
 
   for (let i = 0; i < Object.keys(input).length; i++) {
     const results = getResults(input[i], solution);
@@ -30,7 +30,7 @@ export const generateFinalMessage = (solution: Note[], input: { [key: number]: N
     }
   }
   message += lineBreak;
-  message += "Can you guess this melody?";
+  message += "Can you beat my score?";
   message += lineBreak;
   message += "https://checkyourpitch.com/";
 
