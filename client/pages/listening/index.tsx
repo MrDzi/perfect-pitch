@@ -7,7 +7,7 @@ import PageWrapper from "../../components/page-wrapper";
 import cx from "classnames";
 import "./listening.scss";
 
-const NUM_OF_TONES_TO_PLAY = 2;
+const NUM_OF_TONES_TO_PLAY = 5;
 
 const Listening = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);

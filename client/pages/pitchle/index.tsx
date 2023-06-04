@@ -81,7 +81,6 @@ const Pitchle = (): ReactElement => {
       : GameStatus.NotStarted
   );
   const [shareButtonLabel, setShareButtonLabel] = useState("Share");
-  const [message, setMessage] = useState("");
   const [currentInput, setCurrentInput] = useState<Input>(
     statsData.current && statsData.current.lastCompletedGameDate === appContext.date
       ? statsData.current.lastGameSolution
@@ -127,9 +126,6 @@ const Pitchle = (): ReactElement => {
       setTimeout(() => {
         setGameWon(true);
       }, 1000);
-      setTimeout(() => {
-        setMessage(generateFinalMessage(melodyDecoded || [], currentInput, currentStep));
-      }, 2000);
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
       }, 3000);
@@ -234,6 +230,7 @@ const Pitchle = (): ReactElement => {
 
   const onShareClick = () => {
     const clipboard = navigator.clipboard;
+    const message = generateFinalMessage(melodyDecoded || [], currentInput, currentStep);
     if ("share" in navigator) {
       return navigator.share({
         text: message,
