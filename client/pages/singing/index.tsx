@@ -11,7 +11,7 @@ import "./singing.scss";
 const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
   Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
 
-const NUM_OF_NOTES_TO_PLAY = 3;
+const NUM_OF_NOTES_TO_PLAY = 5;
 const COUNTER_START_VALUE = 3;
 const LOCAL_STORAGE_KEY = "singing_info_seen";
 

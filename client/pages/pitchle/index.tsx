@@ -89,7 +89,11 @@ const Pitchle = (): ReactElement => {
           return acc;
         }, {})
   );
-  const [gameWon, setGameWon] = useState(false);
+  const [gameWon, setGameWon] = useState(
+    statsData.current && statsData.current.lastCompletedGameDate === appContext.date
+      ? statsData.current.streak > 0
+      : false
+  );
   const [currentStep, setCurrentStep] = useState(0);
   const [playPopSound] = useSound(popSound, {
     volume: 0.5,
@@ -289,10 +293,18 @@ const Pitchle = (): ReactElement => {
             </div>
           ) : (
             <>
-              {melodyDecoded ? (
+              {gameWon && melodyDecoded ? (
                 <button className="button button--pitchle-main" onClick={onShareClick}>
                   {shareButtonLabel} <Share />
                 </button>
+              ) : null}
+              {!gameWon && melodyDecoded ? (
+                <div>
+                  <p>
+                    You lost. The melody was: <b>{melodyDecoded.join(", ")}.</b>
+                  </p>
+                  <p>Come back tomorrow to try again!</p>
+                </div>
               ) : null}
               {statsData.current ? <Stats data={statsData.current} /> : null}
             </>
