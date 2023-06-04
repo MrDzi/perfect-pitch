@@ -124,10 +124,12 @@ const Pitchle = (): ReactElement => {
     if (isCurrentInputCorrect) {
       statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, true);
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
-      setGameWon(true);
+      setTimeout(() => {
+        setGameWon(true);
+      }, 1000);
       setTimeout(() => {
         setMessage(generateFinalMessage(melodyDecoded || [], currentInput, currentStep));
-      }, 1500);
+      }, 2000);
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
       }, 3000);

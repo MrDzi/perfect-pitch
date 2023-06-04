@@ -10,7 +10,7 @@ const GameEndConfetti = (): ReactElement => {
         confettiNumber: 150,
         emojiSize: 60,
       });
-    }, 1500);
+    }, 500);
     return () => {
       jsConfetti.clearCanvas();
     };

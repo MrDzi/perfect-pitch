@@ -30,7 +30,7 @@ const Home = (): ReactElement => {
               <p>{`Try to guess each tone in a melody for ${appContext.date}. You have 6 tries!`}</p>
             </div>
           </div>
-          <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/sing")}>
+          <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/singing")}>
             <MicIcon />
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
@@ -38,7 +38,7 @@ const Home = (): ReactElement => {
               <p>Repeat five random tones.</p>
             </div>
           </div>
-          <div className="home-content_block home-content_block--small-down" onClick={onLinkClick("/listen")}>
+          <div className="home-content_block home-content_block--small-down" onClick={onLinkClick("/listening")}>
             <HeadphonesIcon />
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
