@@ -23,7 +23,7 @@ const PitchVisualization = ({ detune, shouldVisualize, progress }: PitchVisualiz
             }}
           />
         </div>
-        <div className="pitch-visualization_progress-bar-number">{`${progress}%`}</div>
+        {/* <div className="pitch-visualization_progress-bar-number">{`${progress}%`}</div> */}
       </div>
       <div className="pitch-visualization_pitch">
         <div className="target" style={isInCenter ? { background: "#2A9D8F" } : {}} />

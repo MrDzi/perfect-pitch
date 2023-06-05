@@ -55,7 +55,7 @@ const Header = ({
       }
       return null;
     }
-    return <AudioWave width={40} />;
+    return <AudioWave width={35} />;
   };
 
   return (

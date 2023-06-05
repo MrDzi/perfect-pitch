@@ -204,7 +204,7 @@ const Pitchle = (): ReactElement => {
   const getPitchleHeader = () => {
     if (isLoading) {
       return (
-        <div className="flex flex-center" style={{ height: 40 }}>
+        <div className="flex flex-center" style={{ height: 40.8 }}>
           <PulseLoader size={10} color="#678e3e" />
         </div>
       );
