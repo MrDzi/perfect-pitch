@@ -309,7 +309,7 @@ const Pitchle = (): ReactElement => {
               {statsData.current ? <Stats data={statsData.current} /> : null}
             </>
           )}
-          {gameWon ? <GameEndConfetti /> : null}
+          <GameEndConfetti showConfetti={gameWon} />
         </div>
       </div>
     </PageWrapper>

@@ -20,7 +20,6 @@ const createContextFromStream = (audioContext: AudioContext, stream: any) => {
 };
 
 const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
-  console.log("DETUNE", detune, note, targetNote);
   if (detune) {
     return Math.max(0, Math.min(107 - Math.abs(detune), 100));
   }

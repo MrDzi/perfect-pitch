@@ -1,22 +1,24 @@
 import React, { ReactElement, useEffect } from "react";
 import JSConfetti from "js-confetti";
 
-const GameEndConfetti = (): ReactElement => {
+const GameEndConfetti = ({ showConfetti }: { showConfetti: boolean }): ReactElement => {
   useEffect(() => {
-    const jsConfetti = new JSConfetti();
-    setTimeout(() => {
-      jsConfetti.addConfetti({
-        emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁", "🎸", "🎼", "🎤", "🎧", "🎹", "🎺", "🎻"],
-        confettiNumber: 150,
-        emojiSize: 60,
-      });
-    }, 500);
-    return () => {
-      jsConfetti.clearCanvas();
-    };
-  }, []);
+    if (showConfetti) {
+      const jsConfetti = new JSConfetti();
+      setTimeout(() => {
+        jsConfetti.addConfetti({
+          emojis: ["🎵", "🎉", "🎶", "🎷", "🪗", "🥁", "🎸", "🎼", "🎤", "🎧", "🎹", "🎺", "🎻"],
+          confettiNumber: 150,
+          emojiSize: 60,
+        });
+      }, 500);
+      return () => {
+        jsConfetti.clearCanvas();
+      };
+    }
+  }, [showConfetti]);
 
-  return <div />;
+  return <></>;
 };
 
 export default GameEndConfetti;
