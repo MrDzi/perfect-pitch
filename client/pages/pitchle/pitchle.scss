@@ -277,3 +277,20 @@
     height: 47.2px;
   }
 }
+
+.header_loader {
+  height: 40.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  .loader_info {
+    width: 470px;
+    max-width: calc(100vw - 30px);
+    position: absolute;
+    top: 20px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 1.1;
+  }
+}

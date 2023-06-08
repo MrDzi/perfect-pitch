@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const useNavigateWithTransition = () => {
+const useNavigateWithTransition = (): [(route: string, isBackNavigation?: boolean) => Promise<void>] => {
   const navigate = useNavigate();
 
   const navigateWithTransition = async (route: string, isBackNavigation = false) => {

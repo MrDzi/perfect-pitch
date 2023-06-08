@@ -104,6 +104,8 @@ const Pitchle = (): ReactElement => {
   });
   const [melodyDecoded, setMelodyDecoded] = useState<undefined | Note[]>(undefined);
   const [noteData, playNotes, repeatPlaying] = usePlayer(600);
+  const showLoadingInfoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showLoadingInfo, setShowLoadingInfo] = useState(false);
 
   useEffect(() => {
     document.title = "Pitchle | CheckYourPitch";
@@ -147,6 +149,18 @@ const Pitchle = (): ReactElement => {
       }
     }
   }, [melodyData]);
+
+  useEffect(() => {
+    if (isLoading && showLoadingInfoTimer.current === null) {
+      showLoadingInfoTimer.current = setTimeout(() => {
+        setShowLoadingInfo(true);
+      }, 3500);
+      return;
+    }
+    if (!isLoading && showLoadingInfoTimer.current !== null) {
+      clearTimeout(showLoadingInfoTimer.current);
+    }
+  }, [isLoading]);
 
   if (melodyDataError) {
     return (
@@ -207,8 +221,13 @@ const Pitchle = (): ReactElement => {
   const getPitchleHeader = () => {
     if (isLoading) {
       return (
-        <div className="flex flex-center" style={{ height: 40.8 }}>
+        <div className="header_loader">
           <PulseLoader size={10} color="#678e3e" />
+          {showLoadingInfo ? (
+            <div className="loader_info">
+              <span>Please be patient, loading can take up to 20 seconds.</span>
+            </div>
+          ) : null}
         </div>
       );
     }
