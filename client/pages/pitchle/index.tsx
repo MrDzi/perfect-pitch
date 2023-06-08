@@ -23,7 +23,7 @@ const LOCAL_STORAGE_KEY = "pitchle_data";
 const attemptsArray = [...Array(NUM_OF_ATTEMPTS)];
 
 type MelodyData = {
-  date: Date;
+  dateKey: string;
   melody: string;
 };
 
@@ -139,6 +139,9 @@ const Pitchle = (): ReactElement => {
   useEffect(() => {
     if (melodyData) {
       const decoded = window.atob(melodyData.melody.slice(1));
+      if (melodyData.dateKey !== appContext.date) {
+        setGameStatus(GameStatus.Ended);
+      }
       if (decoded) {
         setMelodyDecoded(JSON.parse(decoded));
       }

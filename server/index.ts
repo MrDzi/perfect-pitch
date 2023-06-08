@@ -99,15 +99,19 @@ app.get("/api/melody", async (req: Request<Params>, res: Response<MelodyResponse
 
   const dateKey = `${date}/${month}/${year}`;
 
+  console.log("Date: ", dateKey);
+
   try {
     const data = await Melody.find({ dateKey }).exec();
 
     if (data.length) {
+      console.log("Found the melody in DB for ", dateKey, "melody: ", data[0].melody);
       return res.send({
         melody: encodeMelody(data[0].melody as Note[]),
         dateKey,
       });
     } else if (melodyFallback && melodyFallback.dateKey === dateKey) {
+      console.log("Sending melody fallback for ", dateKey, "melody: ", melodyFallback.melody);
       return res.send(melodyFallback);
     }
     return handleMissingMelody(res, dateKey);
