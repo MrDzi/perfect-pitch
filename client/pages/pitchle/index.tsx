@@ -142,7 +142,18 @@ const Pitchle = (): ReactElement => {
     if (melodyData) {
       const decoded = window.atob(melodyData.melody.slice(1));
       if (melodyData.dateKey !== appContext.date) {
-        setGameStatus(GameStatus.Ended);
+        const isCurrentInputCorrect =
+          checkIfEqualArrays(JSON.parse(decoded || "[]"), currentInput[currentStep - 1]) &&
+          (!currentInput[currentStep] || currentInput[currentStep].length === 0);
+
+        if (isCurrentInputCorrect) {
+          setTimeout(() => {
+            setGameWon(true);
+          }, 1000);
+        }
+        setTimeout(() => {
+          setGameStatus(GameStatus.Ended);
+        }, 3000);
       }
       if (decoded) {
         setMelodyDecoded(JSON.parse(decoded));
