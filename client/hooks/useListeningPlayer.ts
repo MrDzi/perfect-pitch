@@ -18,10 +18,10 @@ const getNoteFrequencies = (noteData: NoteData): [number, number] => {
   let frequency2;
   switch (noteData.relation) {
     case TonesRelation.FirstHigher:
-      frequency2 = frequency1 - Math.floor(Math.random() * 10);
+      frequency2 = frequency1 - Math.ceil(Math.random() * 10);
       break;
     case TonesRelation.SecondHigher:
-      frequency2 = frequency1 + Math.floor(Math.random() * 10);
+      frequency2 = frequency1 + Math.ceil(Math.random() * 10);
       break;
     default:
       frequency2 = frequency1;

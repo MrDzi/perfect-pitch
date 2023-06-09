@@ -15,13 +15,16 @@ const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
 const year = currentDate.getFullYear();
 
 const dateFormatted = `${date}/${month}/${year}`;
+const dateUnformatted = `${date}${month}${year}`;
 
 export type AppContextType = {
   date: string;
+  dateUnformatted: string;
 };
 
 export const AppContext = createContext<AppContextType>({
   date: dateFormatted,
+  dateUnformatted,
 });
 
 const getFallbackElement = () => (
@@ -39,6 +42,7 @@ const App = (): ReactElement => {
         <AppContext.Provider
           value={{
             date: dateFormatted,
+            dateUnformatted,
           }}
         >
           <Routes>

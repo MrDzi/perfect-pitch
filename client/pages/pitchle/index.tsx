@@ -76,13 +76,13 @@ const Pitchle = (): ReactElement => {
   const appContext = useContext(AppContext);
   const statsData = useRef<Stats | null>(savedLSDataParsed);
   const [gameStatus, setGameStatus] = useState<GameStatus>(
-    statsData.current && statsData.current.lastCompletedGameDate === appContext.date
+    statsData.current && statsData.current.lastCompletedGameDate === appContext.dateUnformatted
       ? GameStatus.Ended
       : GameStatus.NotStarted
   );
   const [shareButtonLabel, setShareButtonLabel] = useState("Share");
   const [currentInput, setCurrentInput] = useState<Input>(
-    statsData.current && statsData.current.lastCompletedGameDate === appContext.date
+    statsData.current && statsData.current.lastCompletedGameDate === appContext.dateUnformatted
       ? statsData.current.lastGameSolution
       : attemptsArray.reduce((acc, _, i) => {
           acc[i] = [];
@@ -90,7 +90,7 @@ const Pitchle = (): ReactElement => {
         }, {})
   );
   const [gameWon, setGameWon] = useState(
-    statsData.current && statsData.current.lastCompletedGameDate === appContext.date
+    statsData.current && statsData.current.lastCompletedGameDate === appContext.dateUnformatted
       ? statsData.current.streak > 0
       : false
   );
@@ -99,7 +99,7 @@ const Pitchle = (): ReactElement => {
     volume: 0.5,
   });
   const [melodyData, melodyDataError, isLoading] = useFetch<MelodyData>({
-    url: `${API_URL}/melody`,
+    url: `${API_URL}/melody/${appContext.dateUnformatted}`,
     method: HttpMethods.GET,
   });
   const [melodyDecoded, setMelodyDecoded] = useState<undefined | Note[]>(undefined);
@@ -116,7 +116,7 @@ const Pitchle = (): ReactElement => {
       return;
     }
     if (currentStep === NUM_OF_ATTEMPTS) {
-      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, false);
+      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.dateUnformatted, false);
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
@@ -127,7 +127,7 @@ const Pitchle = (): ReactElement => {
       (!currentInput[currentStep] || currentInput[currentStep].length === 0);
 
     if (isCurrentInputCorrect) {
-      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.date, true);
+      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.dateUnformatted, true);
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       setTimeout(() => {
         setGameWon(true);
@@ -141,20 +141,6 @@ const Pitchle = (): ReactElement => {
   useEffect(() => {
     if (melodyData) {
       const decoded = window.atob(melodyData.melody.slice(1));
-      if (melodyData.dateKey !== appContext.date) {
-        const isCurrentInputCorrect =
-          checkIfEqualArrays(JSON.parse(decoded || "[]"), currentInput[currentStep - 1]) &&
-          (!currentInput[currentStep] || currentInput[currentStep].length === 0);
-
-        if (isCurrentInputCorrect) {
-          setTimeout(() => {
-            setGameWon(true);
-          }, 1000);
-        }
-        setTimeout(() => {
-          setGameStatus(GameStatus.Ended);
-        }, 3000);
-      }
       if (decoded) {
         setMelodyDecoded(JSON.parse(decoded));
       }

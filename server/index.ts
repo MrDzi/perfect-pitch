@@ -58,7 +58,7 @@ db.once("open", () => {
 
 const port = process.env.PORT || 3000;
 
-type paramKeys = "gameMode";
+type paramKeys = "dateKey";
 
 type Params = { [key in paramKeys]: string };
 
@@ -91,13 +91,8 @@ const handleMissingMelody = async (res: Response<MelodyResponse>, dateKey: strin
   }
 };
 
-app.get("/api/melody", async (req: Request<Params>, res: Response<MelodyResponse>) => {
-  const currentDate = new Date();
-  const date = ("0" + currentDate.getDate()).slice(-2);
-  const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-  const year = currentDate.getFullYear();
-
-  const dateKey = `${date}/${month}/${year}`;
+app.get("/api/melody/:dateKey", async (req: Request<Params>, res: Response<MelodyResponse>) => {
+  const dateKey = req.params.dateKey;
 
   console.log("Date: ", dateKey);
 
