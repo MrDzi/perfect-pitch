@@ -6,7 +6,11 @@ import config from "./config";
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://checkyourpitch.com",
+  })
+);
 
 mongoose.connect(config.mongoDbUrl);
 
