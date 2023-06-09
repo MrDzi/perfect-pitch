@@ -15,7 +15,7 @@ const Listening = (): ReactElement => {
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [noteData, playTwoNotes, playLastNote] = useListeningPlayer();
+  const [noteData, playTwoNotes, playLastNote, initiateAudioContext] = useListeningPlayer();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [submitted, isSubmitted] = useState(false);
 
@@ -62,6 +62,7 @@ const Listening = (): ReactElement => {
   }, [gameStatus]);
 
   const startGame = () => {
+    initiateAudioContext();
     setGameStatus(GameStatus.InProgress);
   };
 

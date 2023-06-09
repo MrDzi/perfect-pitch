@@ -48,25 +48,21 @@ const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTim
   oscNode.stop(currentTime + 1);
 };
 
-const useListeningPlayer = (): [NoteData, () => void, () => void] => {
+const useListeningPlayer = (): [NoteData, () => void, () => void, () => void] => {
   const [noteData, setNoteData] = useState<NoteData>({
     note: null,
     relation: null,
     played: false,
   });
-  const ctx = useRef<AudioContext>(new AudioContext());
-  const oscNode = useRef<OscillatorNode>(ctx.current.createOscillator());
-  const gainNode = useRef<GainNode>(ctx.current.createGain());
+  const ctx = useRef<AudioContext | null>(null);
+  const oscNode = useRef<OscillatorNode | null>(null);
+  const gainNode = useRef<GainNode | null>(null);
 
   useEffect(() => {
-    oscNode.current.connect(gainNode.current);
-    gainNode.current.connect(ctx.current.destination);
-
-    gainNode.current.gain.value = 0;
-    oscNode.current.start(ctx.current.currentTime);
-
     return () => {
-      stopTonePlaying(gainNode.current, oscNode.current, ctx.current?.currentTime);
+      if (gainNode.current && oscNode.current) {
+        stopTonePlaying(gainNode.current, oscNode.current, ctx.current?.currentTime);
+      }
     };
   }, []);
 
@@ -76,6 +72,9 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
     }
 
     const playNotes = (frequencies: number[], callback: () => void, timeout = 1000) => {
+      if (!oscNode.current || !gainNode.current) {
+        return;
+      }
       oscNode.current.frequency.value = frequencies[0];
 
       gainNode.current.gain.value = 0.15;
@@ -84,6 +83,9 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
       let isPlaying = true;
 
       const interval = setInterval(() => {
+        if (!oscNode.current || !gainNode.current) {
+          return;
+        }
         if (isPlaying) {
           gainNode.current.gain.value = 0;
           isPlaying = false;
@@ -111,12 +113,24 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
     const interval = playNotes(frequencies, callback);
 
     return () => {
-      if (interval) {
+      if (interval && gainNode.current) {
         gainNode.current.gain.value = 0;
         clearTimeout(interval);
       }
     };
   }, [noteData]);
+
+  const initiateAudioContext = () => {
+    ctx.current = new AudioContext();
+    oscNode.current = ctx.current.createOscillator();
+    gainNode.current = ctx.current.createGain();
+
+    oscNode.current.connect(gainNode.current);
+    gainNode.current.connect(ctx.current.destination);
+
+    gainNode.current.gain.value = 0;
+    oscNode.current.start(ctx.current.currentTime);
+  };
 
   const playTwoNotes = () => {
     const randomNote = getRandomNote(NOTES, noteData.note);
@@ -135,7 +149,7 @@ const useListeningPlayer = (): [NoteData, () => void, () => void] => {
     }));
   };
 
-  return [noteData, playTwoNotes, playLastNote];
+  return [noteData, playTwoNotes, playLastNote, initiateAudioContext];
 };
 
 export default useListeningPlayer;
