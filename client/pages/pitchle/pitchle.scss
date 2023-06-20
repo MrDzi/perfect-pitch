@@ -24,7 +24,7 @@
     width: 200px;
     @media only screen and (max-width: 767px) {
       width: 80%;
-      padding: 0.9rem 1rem;
+      padding: 13px 20px;
     }
   }
   p {
@@ -42,14 +42,18 @@
 }
 
 .pitchle_header {
+  height: 40px;
+  min-height: 40px;
   margin-bottom: 30px;
   margin-top: 10px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   @media only screen and (max-width: 767px) {
+    height: 44px;
+    min-height: 44px;
     width: 100%;
     margin-top: 0;
-    display: flex;
-    justify-content: center;
   }
 }
 
@@ -266,21 +270,21 @@
 
 .sine-wave-wrapper {
   width: 200px;
-  height: 40.8px;
+  height: 100%;
   border: 2px solid var(--black);
   border-radius: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  flex-grow: 1;
   @media only screen and (max-width: 767px) {
     width: 80%;
-    height: 47.2px;
   }
 }
 
 .header_loader {
-  height: 40.8px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
