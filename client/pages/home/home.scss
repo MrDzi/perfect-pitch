@@ -25,6 +25,8 @@
     font-size: 1.8rem;
     text-transform: uppercase;
     @media only screen and (max-width: 999px) {
+      line-height: 1;
+      margin-bottom: 10px;
       font-size: 1.4rem;
     }
   }
