@@ -44,6 +44,7 @@
 .pitchle_header {
   margin-bottom: 30px;
   margin-top: 10px;
+  overflow: hidden;
   @media only screen and (max-width: 767px) {
     width: 100%;
     margin-top: 0;
@@ -279,7 +280,7 @@
 }
 
 .header_loader {
-  height: 40.8;
+  height: 40.8px;
   display: flex;
   justify-content: center;
   align-items: center;
