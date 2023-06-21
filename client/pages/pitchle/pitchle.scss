@@ -20,6 +20,10 @@
       }
     }
   }
+  &--ended .pitchle_header {
+    height: auto;
+    min-height: auto;
+  }
   .button:not(.button--pitchle-main) {
     width: 200px;
     @media only screen and (max-width: 767px) {
@@ -63,7 +67,6 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  max-height: 560px;
   @media only screen and (max-width: 767px) {
     display: block;
   }

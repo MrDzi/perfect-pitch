@@ -44,7 +44,7 @@
     background: #DAE2CB;
     overflow: hidden;
     position: relative;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
     @media only screen and (max-width: 767px) {
       height: 100%;
       margin: 0.3em;
@@ -52,7 +52,7 @@
       border-radius: 15px;
     }
     &:hover {
-      background: lighten(#DAE2CB, 5%);
+      background: lighten(#DAE2CB, 4%);
       svg {
         transform: translateX(-5px);
       }
