@@ -37,12 +37,19 @@ export type Stats = {
   maxStreak: number;
   lastCompletedGameDate: string;
   lastGameSolution: { [key: number]: Note[] };
+  lastGameAttempts: number;
 };
 
 const savedLSData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 const savedLSDataParsed = typeof savedLSData === "string" ? JSON.parse(savedLSData) : null;
 
-const getUpdatedStats = (currentInput: Input, currentStats: Stats | null, date: string, isWon: boolean) => {
+const getUpdatedStats = (
+  currentInput: Input,
+  currentStats: Stats | null,
+  date: string,
+  currentStep: number,
+  isWon: boolean
+) => {
   let updatedStats: Stats;
   if (currentStats) {
     const updatedStreak = isWon ? currentStats.streak + 1 : 0;
@@ -57,6 +64,7 @@ const getUpdatedStats = (currentInput: Input, currentStats: Stats | null, date: 
       maxStreak: Math.max(currentStats.maxStreak, updatedStreak),
       lastCompletedGameDate: date,
       lastGameSolution: currentInput,
+      lastGameAttempts: currentStep,
     };
   } else {
     updatedStats = {
@@ -67,6 +75,7 @@ const getUpdatedStats = (currentInput: Input, currentStats: Stats | null, date: 
       maxStreak: isWon ? 1 : 0,
       lastCompletedGameDate: date,
       lastGameSolution: currentInput,
+      lastGameAttempts: currentStep,
     };
   }
   return updatedStats;
@@ -94,7 +103,11 @@ const Pitchle = (): ReactElement => {
       ? statsData.current.streak > 0
       : false
   );
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(
+    statsData.current && statsData.current.lastCompletedGameDate === appContext.dateUnformatted
+      ? statsData.current.lastGameAttempts
+      : 0
+  );
   const [playPopSound] = useSound(popSound, {
     volume: 0.5,
   });
@@ -116,7 +129,13 @@ const Pitchle = (): ReactElement => {
       return;
     }
     if (currentStep === NUM_OF_ATTEMPTS) {
-      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.dateUnformatted, false);
+      statsData.current = getUpdatedStats(
+        currentInput,
+        statsData.current,
+        appContext.dateUnformatted,
+        currentStep,
+        false
+      );
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
@@ -127,7 +146,13 @@ const Pitchle = (): ReactElement => {
       (!currentInput[currentStep] || currentInput[currentStep].length === 0);
 
     if (isCurrentInputCorrect) {
-      statsData.current = getUpdatedStats(currentInput, statsData.current, appContext.dateUnformatted, true);
+      statsData.current = getUpdatedStats(
+        currentInput,
+        statsData.current,
+        appContext.dateUnformatted,
+        currentStep,
+        true
+      );
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(statsData.current));
       setTimeout(() => {
         setGameWon(true);
