@@ -14,21 +14,22 @@ export enum InputStatus {
 }
 
 export const getResults = (values: Note[], solution: Note[]): InputStatus[] => {
-  const sol: Array<Note | null> = [...solution];
-  const map = solution.reduce((acc: { [key in Note]: number }, v: Note) => {
+  const solutionWorkingArray: Array<Note | null> = [...solution];
+  const noteFrequencyMap = solution.reduce((acc: { [key in Note]: number }, v: Note) => {
     acc[v] = acc[v] ? acc[v] + 1 : 1;
     return acc;
   }, {} as { [key in Note]: number });
 
   return values.map((v, i) => {
-    if (v === sol[i]) {
-      map[v]--;
+    if (v === solutionWorkingArray[i]) {
+      noteFrequencyMap[v]--;
+      solutionWorkingArray[i] = null;
       return InputStatus.GUESSED;
     } else {
-      const foundIndex = sol.indexOf(v);
+      const foundIndex = solutionWorkingArray.indexOf(v);
       if (foundIndex > -1) {
-        if (values[foundIndex] !== sol[foundIndex] && map[values[i]]) {
-          map[values[i]]--;
+        if (values[foundIndex] !== solutionWorkingArray[foundIndex] && noteFrequencyMap[v]) {
+          noteFrequencyMap[values[i]]--;
           return InputStatus.GUESSED_NO_POSITION;
         }
       }

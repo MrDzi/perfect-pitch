@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/MrDzi/pitch-practice-tool#readme",
   "dependencies": {
+    "@babel/preset-typescript": "^7.22.5",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "js-confetti": "^0.11.0",
