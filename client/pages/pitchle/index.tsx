@@ -176,7 +176,7 @@ const Pitchle = (): ReactElement => {
     if (isLoading && showLoadingInfoTimer.current === null) {
       showLoadingInfoTimer.current = setTimeout(() => {
         setShowLoadingInfo(true);
-      }, 3500);
+      }, 5000);
       return;
     }
     if (!isLoading && showLoadingInfoTimer.current !== null) {
