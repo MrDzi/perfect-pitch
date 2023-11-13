@@ -247,7 +247,7 @@ const Pitchle = (): ReactElement => {
           <PulseLoader size={10} color="#678e3e" />
           {showLoadingInfo ? (
             <div className="loader_info">
-              <span>Please be patient, loading can take up to 20 seconds.</span>
+              <span>Still loading, please be patient...</span>
             </div>
           ) : null}
         </div>
