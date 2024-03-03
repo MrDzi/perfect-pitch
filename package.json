@@ -31,6 +31,9 @@
       "pre-commit": "lint-staged"
     }
   },
+  "engines": {
+    "node": "16.x"
+  },
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --fix"

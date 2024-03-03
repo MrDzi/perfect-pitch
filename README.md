@@ -1,15 +1,39 @@
-# 🚀 Welcome to your new awesome project!
+# 🎹 Check Your Pitch 🎹
 
-This project has been created using **webpack scaffold**, you can now run
+## Pre-requisites
+
+Node 16.x
+
+## Getting started
+
+- Clone the project
+
+- Install the dependencies with the following commands:
 
 ```
-npm run build
+yarn
+
+cd client && yarn
+
+cd ../server && yarn
+
+cd ..
 ```
 
-or
+- Start the project
 
 ```
-yarn build
+yarn dev
 ```
 
-to bundle your application
+To build the client app, run:
+
+```
+yarn build:client
+```
+
+To build the server app, run:
+
+```
+yarn build:server
+```
