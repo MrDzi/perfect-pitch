@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose, { Schema } from "mongoose";
-import config from "./config";
+import config from "../config";
 
 const app = express();
 app.use(bodyParser.json());
