@@ -116,7 +116,7 @@ const Pitchle = (): ReactElement => {
     method: HttpMethods.GET,
   });
   const [melodyDecoded, setMelodyDecoded] = useState<undefined | Note[]>(undefined);
-  const [noteData, playNotes, repeatNotes] = usePlayer(600);
+  const [playNotes, repeatNotes, notesPlayed] = usePlayer(600);
   const showLoadingInfoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showLoadingInfo, setShowLoadingInfo] = useState(false);
 
@@ -253,21 +253,21 @@ const Pitchle = (): ReactElement => {
         </div>
       );
     }
-    if (noteData.played && gameStatus !== GameStatus.Ended) {
+    if (notesPlayed && gameStatus !== GameStatus.Ended) {
       return (
         <button className="button button--secondary button--small" onClick={repeatNotes}>
           Repeat the melody
         </button>
       );
     }
-    if (!noteData.played && gameStatus === GameStatus.NotStarted) {
+    if (!notesPlayed && gameStatus === GameStatus.NotStarted) {
       return (
         <button className="button button--small" onClick={playMelody}>
           Play the melody
         </button>
       );
     }
-    if (!noteData.played && gameStatus === GameStatus.InProgress) {
+    if (!notesPlayed && gameStatus === GameStatus.InProgress) {
       return (
         <div className="sine-wave-wrapper">
           <AudioWave width={28} />

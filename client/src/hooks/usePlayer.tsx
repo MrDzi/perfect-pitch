@@ -1,21 +1,14 @@
 import { useState, useEffect } from "react";
+import useSound from "use-sound";
 import { NOTES, Note } from "../constants";
 import { getRandomNotes } from "../helpers";
 import scale from "../assets/tones/scale.mp3";
-import useSound from "use-sound";
-
-interface NoteData {
-  notes: Note[];
-  played: boolean;
-}
 
 const TONE_DURATION = 1403;
 
-const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number) => void, () => void] => {
-  const [noteData, setNoteData] = useState<NoteData>({
-    notes: [],
-    played: false,
-  });
+const usePlayer = (toneDuration = 1000): [(notes?: Note[], n?: number) => void, () => void, boolean, Note[]] => {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [notesPlayed, setNotesPlayed] = useState<boolean>(false);
   const [play] = useSound(scale, {
     sprite: {
       c: [0, TONE_DURATION],
@@ -34,23 +27,20 @@ const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number)
   });
 
   useEffect(() => {
-    if (!noteData.notes.length || noteData.played) {
+    if (!notes.length || notesPlayed) {
       return;
     }
     let currentIndex = 0;
-    const note = noteData.notes[currentIndex].toLowerCase();
+    const note = notes[currentIndex].toLowerCase();
     play({ id: note });
 
     const interval = setInterval(() => {
-      if (currentIndex < noteData.notes.length - 1) {
+      if (currentIndex < notes.length - 1) {
         currentIndex++;
-        const note = noteData.notes[currentIndex].toLowerCase();
+        const note = notes[currentIndex].toLowerCase();
         play({ id: note });
       } else {
-        setNoteData({
-          ...noteData,
-          played: true,
-        });
+        setNotesPlayed(true);
         clearInterval(interval);
       }
     }, toneDuration);
@@ -60,23 +50,18 @@ const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number)
         clearInterval(interval);
       }
     };
-  }, [noteData]);
+  }, [notes, notesPlayed]);
 
-  const playNotes = (notes?: Note[], count = 1) => {
-    setNoteData({
-      notes: notes || getRandomNotes(NOTES, count),
-      played: false,
-    });
+  const playNotes = (notesFromParam?: Note[], count = 1) => {
+    setNotes(notesFromParam || getRandomNotes(NOTES, count));
+    setNotesPlayed(false);
   };
 
-  const repeatNote = () => {
-    setNoteData({
-      ...noteData,
-      played: false,
-    });
+  const repeatNotes = () => {
+    setNotesPlayed(false);
   };
 
-  return [noteData, playNotes, repeatNote];
+  return [playNotes, repeatNotes, notesPlayed, notes];
 };
 
 export default usePlayer;

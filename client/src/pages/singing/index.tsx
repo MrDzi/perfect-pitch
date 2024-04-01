@@ -23,7 +23,7 @@ const Singing = (): ReactElement => {
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [noteData, playRandomNote, repeatNote] = usePlayer();
+  const [playNote, repeatNote, notePlayed, notes] = usePlayer();
   const [startPitchDetection, stopPitchDetection, reset, points, detune, progress] = useDetectPitch();
   const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
 
@@ -32,14 +32,15 @@ const Singing = (): ReactElement => {
   }, []);
 
   useEffect(() => {
-    if (noteData.notes) {
-      if (noteData.played) {
-        startPitchDetection(noteData.notes[0]);
-      } else {
-        stopPitchDetection();
-      }
+    if (!notes) {
+      return;
     }
-  }, [noteData]);
+    if (notePlayed) {
+      startPitchDetection(notes[0]);
+    } else {
+      stopPitchDetection();
+    }
+  }, [notes, notePlayed]);
 
   useEffect(() => {
     if (points !== null) {
@@ -63,7 +64,7 @@ const Singing = (): ReactElement => {
           setGameStatus(GameStatus.Ended);
           return;
         } else {
-          playRandomNote();
+          playNote();
         }
       }
     }, 1000);
@@ -117,7 +118,7 @@ const Singing = (): ReactElement => {
             counter={counter}
             points={points}
             totalPoints={totalPoints}
-            isNotePlayed={noteData.played}
+            isNotePlayed={notePlayed}
             onRepeatClick={repeatNote}
             onStartClick={startGame}
             gameStatus={gameStatus}
