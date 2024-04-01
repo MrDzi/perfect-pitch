@@ -1,5 +1,7 @@
 # 🎹 Check Your Pitch 🎹
 
+A web application for pitch-testing. Includes Pitchle, a Wordle-like game with melodies instead of words.
+
 ## Pre-requisites
 
 Node 16.x
