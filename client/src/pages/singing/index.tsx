@@ -23,7 +23,7 @@ const Singing = (): ReactElement => {
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [noteData, playRandomNote, repeatNotes] = usePlayer();
+  const [noteData, playRandomNote, repeatNote] = usePlayer();
   const [startPitchDetection, stopPitchDetection, reset, points, detune, progress] = useDetectPitch();
   const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
 
@@ -118,7 +118,7 @@ const Singing = (): ReactElement => {
             points={points}
             totalPoints={totalPoints}
             isNotePlayed={noteData.played}
-            onRepeatClick={repeatNotes}
+            onRepeatClick={repeatNote}
             onStartClick={startGame}
             gameStatus={gameStatus}
             isSingingMode

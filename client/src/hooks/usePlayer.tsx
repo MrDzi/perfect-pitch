@@ -85,14 +85,14 @@ const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number)
     });
   };
 
-  const repeatNotes = () => {
+  const repeatNote = () => {
     setNoteData({
       ...noteData,
       played: false,
     });
   };
 
-  return [noteData, playNotes, repeatNotes];
+  return [noteData, playNotes, repeatNote];
 };
 
 export default usePlayer;
