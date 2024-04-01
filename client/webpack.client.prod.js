@@ -86,7 +86,7 @@ module.exports = {
       API_URL: JSON.stringify(process.env.API_URL),
     }),
     new CopyPlugin({
-      patterns: [{ from: "static" }],
+      patterns: [{ from: "src/static" }],
     }),
   ],
 
