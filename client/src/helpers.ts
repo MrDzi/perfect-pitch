@@ -1,3 +1,5 @@
+import { Note } from "./constants";
+
 export const noteFromPitch = (frequency: number): number => {
   const noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
   return Math.round(noteNum) + 69;
@@ -84,4 +86,21 @@ export const autoCorrelate = (buf: Float32Array, sampleRate: number): number => 
   }
 
   return sampleRate / T0;
+};
+
+const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
+  const index = Math.floor(Math.random() * notes.length);
+  if (skip && notes[index] === skip) {
+    return getRandomNote(notes, skip);
+  }
+  return notes[index];
+};
+
+export const getRandomNotes = (notes: readonly Note[], count = 1): Note[] => {
+  const randomNotes: Note[] = [];
+
+  for (let i = 0; i < count; i++) {
+    randomNotes.push(getRandomNote(notes, randomNotes[i - 1]));
+  }
+  return randomNotes;
 };

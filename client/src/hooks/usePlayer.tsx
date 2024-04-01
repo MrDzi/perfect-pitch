@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { NOTES, Note } from "../constants";
+import { getRandomNotes } from "../helpers";
 import scale from "../assets/tones/scale.mp3";
 import useSound from "use-sound";
 
@@ -9,23 +10,6 @@ interface NoteData {
 }
 
 const TONE_DURATION = 1403;
-
-const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
-  const index = Math.floor(Math.random() * notes.length);
-  if (skip && notes[index] === skip) {
-    return getRandomNote(notes, skip);
-  }
-  return notes[index];
-};
-
-const getRandomNotes = (notes: readonly Note[], count = 1): Note[] => {
-  const randomNotes: Note[] = [];
-
-  for (let i = 0; i < count; i++) {
-    randomNotes.push(getRandomNote(notes, randomNotes[i - 1]));
-  }
-  return randomNotes;
-};
 
 const usePlayer = (toneDuration = 1000): [NoteData, (notes?: Note[], n?: number) => void, () => void] => {
   const [noteData, setNoteData] = useState<NoteData>({
