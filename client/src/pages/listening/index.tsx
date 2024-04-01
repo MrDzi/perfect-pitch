@@ -1,10 +1,10 @@
 import React, { useState, ReactElement, useEffect, ChangeEvent } from "react";
+import cx from "classnames";
 import Header from "../../components/game-header";
 import GameEnd from "../../components/game-end";
 import useListeningPlayer from "../../hooks/useListeningPlayer";
-import { GameStatus } from "../../types/types";
+import { GameStatus, TonesRelation } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
-import cx from "classnames";
 import "./listening.scss";
 
 const NUM_OF_TONES_TO_PLAY = 5;
@@ -15,7 +15,7 @@ const Listening = (): ReactElement => {
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [noteData, playTwoNotes, playLastNote, initiateAudioContext] = useListeningPlayer();
+  const [playTones, repeatTones, tonesRelation, tonesPlayed, initiateAudioContext] = useListeningPlayer();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [submitted, isSubmitted] = useState(false);
 
@@ -24,16 +24,17 @@ const Listening = (): ReactElement => {
   }, []);
 
   useEffect(() => {
-    if (points !== null) {
-      setTimeout(() => {
-        setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => p + points);
-        setSelectedOption(null);
-        setPoints(null);
-        setCounter(3);
-        isSubmitted(false);
-      }, 2000);
+    if (points === null) {
+      return;
     }
+    setTimeout(() => {
+      setNumOfTonesPlayed((n) => n + 1);
+      setTotalPoints((p) => p + points);
+      setSelectedOption(null);
+      setPoints(null);
+      setCounter(3);
+      isSubmitted(false);
+    }, 2000);
   }, [points]);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const Listening = (): ReactElement => {
     setTimeout(() => {
       setCounter(counter - 1);
       if (counter === 1) {
-        playTwoNotes();
+        playTones();
       }
     }, 1000);
   }, [counter]);
@@ -74,7 +75,7 @@ const Listening = (): ReactElement => {
 
   const onAnswerSubmit = () => {
     isSubmitted(true);
-    setPoints(noteData.relation === selectedOption ? 1 : 0);
+    setPoints(tonesRelation === selectedOption ? 1 : 0);
   };
 
   const handleOptionChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,8 +93,8 @@ const Listening = (): ReactElement => {
               points={points}
               totalSteps={NUM_OF_TONES_TO_PLAY}
               totalPoints={totalPoints}
-              isNotePlayed={noteData.played}
-              onRepeatClick={playLastNote}
+              isNotePlayed={tonesPlayed}
+              onRepeatClick={repeatTones}
               gameStatus={gameStatus}
               onStartClick={startGame}
             />
@@ -108,7 +109,7 @@ const Listening = (): ReactElement => {
                     onChange={handleOptionChange}
                     checked={selectedOption === 0}
                     className={cx({
-                      highlighted: submitted && noteData.relation === 0,
+                      highlighted: submitted && tonesRelation === TonesRelation.FirstHigher,
                     })}
                   />
                   <label htmlFor="0">The first tone is higher</label>
@@ -120,7 +121,7 @@ const Listening = (): ReactElement => {
                     onChange={handleOptionChange}
                     checked={selectedOption === 1}
                     className={cx({
-                      highlighted: submitted && noteData.relation === 1,
+                      highlighted: submitted && tonesRelation === TonesRelation.SecondHigher,
                     })}
                   />
                   <label htmlFor="1">The second tone is higher</label>
@@ -132,7 +133,7 @@ const Listening = (): ReactElement => {
                     onChange={handleOptionChange}
                     checked={selectedOption === 2}
                     className={cx({
-                      highlighted: submitted && noteData.relation === 2,
+                      highlighted: submitted && tonesRelation === TonesRelation.Identical,
                     })}
                   />
                   <label htmlFor="2">Two tones are identical</label>

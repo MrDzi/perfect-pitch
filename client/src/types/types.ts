@@ -3,3 +3,9 @@ export enum GameStatus {
   InProgress,
   Ended,
 }
+
+export enum TonesRelation {
+  FirstHigher,
+  SecondHigher,
+  Identical,
+}

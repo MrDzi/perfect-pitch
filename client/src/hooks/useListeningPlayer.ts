@@ -1,22 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { NOTES, getNoteFrequency, Note } from "../constants";
+import { TonesRelation } from "../types/types";
 
-interface NoteData {
-  note: Note | null;
-  relation: TonesRelation | null;
-  played: boolean;
-}
-
-enum TonesRelation {
-  FirstHigher,
-  SecondHigher,
-  Identical,
-}
-
-const getNoteFrequencies = (noteData: NoteData): [number, number] => {
-  const frequency1 = getNoteFrequency(noteData.note as Note);
+const getNoteFrequencies = (note: Note, relation: TonesRelation): [number, number] => {
+  const frequency1 = getNoteFrequency(note);
   let frequency2;
-  switch (noteData.relation) {
+  switch (relation) {
     case TonesRelation.FirstHigher:
       frequency2 = frequency1 - Math.ceil(Math.max(2, Math.random() * 5));
       break;
@@ -29,10 +18,10 @@ const getNoteFrequencies = (noteData: NoteData): [number, number] => {
   return [frequency1, frequency2];
 };
 
-const getRandomNote = (notes: readonly Note[], skip: Note | null): Note => {
+const getRandomNote = (notes: readonly Note[], skipNote: Note | null): Note => {
   const getNote = (): Note => {
     const index = Math.floor(Math.random() * notes.length);
-    if (skip && notes[index] === skip) {
+    if (skipNote && notes[index] === skipNote) {
       return getNote();
     }
     return notes[index];
@@ -48,12 +37,10 @@ const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTim
   oscNode.stop(currentTime + 1);
 };
 
-const useListeningPlayer = (): [NoteData, () => void, () => void, () => void] => {
-  const [noteData, setNoteData] = useState<NoteData>({
-    note: null,
-    relation: null,
-    played: false,
-  });
+const useListeningPlayer = (): [() => void, () => void, TonesRelation | null, boolean, () => void] => {
+  const [randomNote, setRandomNote] = useState<Note | null>(null);
+  const [tonesRelation, setTonesRelation] = useState<TonesRelation | null>(null);
+  const [tonesPlayed, setTonesPlayed] = useState<boolean>(false);
   const ctx = useRef<AudioContext | null>(null);
   const oscNode = useRef<OscillatorNode | null>(null);
   const gainNode = useRef<GainNode | null>(null);
@@ -67,16 +54,15 @@ const useListeningPlayer = (): [NoteData, () => void, () => void, () => void] =>
   }, []);
 
   useEffect(() => {
-    if (!ctx.current || noteData.note === null || noteData.relation === null || noteData.played) {
+    if (!ctx.current || randomNote === null || tonesRelation === null || tonesPlayed) {
       return;
     }
 
-    const playNotes = (frequencies: number[], callback: () => void, timeout = 1000) => {
+    const playTones = (frequencies: number[], callback: () => void, timeout = 1000) => {
       if (!oscNode.current || !gainNode.current) {
         return;
       }
       oscNode.current.frequency.value = frequencies[0];
-
       gainNode.current.gain.value = 0.15;
 
       let currentIndex = 0;
@@ -103,14 +89,10 @@ const useListeningPlayer = (): [NoteData, () => void, () => void, () => void] =>
       return interval;
     };
 
-    const frequencies = getNoteFrequencies(noteData);
-    const callback = () => {
-      setNoteData((noteData) => ({
-        ...noteData,
-        played: true,
-      }));
-    };
-    const interval = playNotes(frequencies, callback);
+    const frequencies = getNoteFrequencies(randomNote, tonesRelation);
+    const interval = playTones(frequencies, () => {
+      setTonesPlayed(true);
+    });
 
     return () => {
       if (interval && gainNode.current) {
@@ -118,7 +100,7 @@ const useListeningPlayer = (): [NoteData, () => void, () => void, () => void] =>
         clearTimeout(interval);
       }
     };
-  }, [noteData]);
+  }, [randomNote, tonesRelation, tonesPlayed]);
 
   const initiateAudioContext = () => {
     ctx.current = new AudioContext();
@@ -132,24 +114,19 @@ const useListeningPlayer = (): [NoteData, () => void, () => void, () => void] =>
     oscNode.current.start(ctx.current.currentTime);
   };
 
-  const playTwoNotes = () => {
-    const randomNote = getRandomNote(NOTES, noteData.note);
+  const playTones = () => {
+    const newRandomNote = getRandomNote(NOTES, randomNote);
     const randomRelation = getRandomRelation();
-    setNoteData({
-      note: randomNote,
-      relation: randomRelation,
-      played: false,
-    });
+    setRandomNote(newRandomNote);
+    setTonesRelation(randomRelation);
+    setTonesPlayed(false);
   };
 
-  const playLastNote = () => {
-    setNoteData((noteData) => ({
-      ...noteData,
-      played: false,
-    }));
+  const repeatTones = () => {
+    setTonesPlayed(false);
   };
 
-  return [noteData, playTwoNotes, playLastNote, initiateAudioContext];
+  return [playTones, repeatTones, tonesRelation, tonesPlayed, initiateAudioContext];
 };
 
 export default useListeningPlayer;
