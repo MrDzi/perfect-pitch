@@ -37,10 +37,10 @@ const stopTonePlaying = (gainNode: GainNode, oscNode: OscillatorNode, currentTim
   oscNode.stop(currentTime + 1);
 };
 
-const useListeningPlayer = (): [() => void, () => void, TonesRelation | null, boolean, () => void] => {
+const useListeningPlayer = (): [() => void, () => void, boolean, TonesRelation | null, () => void] => {
   const [randomNote, setRandomNote] = useState<Note | null>(null);
   const [tonesRelation, setTonesRelation] = useState<TonesRelation | null>(null);
-  const [tonesPlayed, setTonesPlayed] = useState<boolean>(false);
+  const [tonesPlayingFinished, setTonesPlayingFinished] = useState<boolean>(false);
   const ctx = useRef<AudioContext | null>(null);
   const oscNode = useRef<OscillatorNode | null>(null);
   const gainNode = useRef<GainNode | null>(null);
@@ -54,7 +54,7 @@ const useListeningPlayer = (): [() => void, () => void, TonesRelation | null, bo
   }, []);
 
   useEffect(() => {
-    if (!ctx.current || randomNote === null || tonesRelation === null || tonesPlayed) {
+    if (!ctx.current || randomNote === null || tonesRelation === null || tonesPlayingFinished) {
       return;
     }
 
@@ -91,7 +91,7 @@ const useListeningPlayer = (): [() => void, () => void, TonesRelation | null, bo
 
     const frequencies = getNoteFrequencies(randomNote, tonesRelation);
     const interval = playTones(frequencies, () => {
-      setTonesPlayed(true);
+      setTonesPlayingFinished(true);
     });
 
     return () => {
@@ -100,7 +100,7 @@ const useListeningPlayer = (): [() => void, () => void, TonesRelation | null, bo
         clearTimeout(interval);
       }
     };
-  }, [randomNote, tonesRelation, tonesPlayed]);
+  }, [randomNote, tonesRelation, tonesPlayingFinished]);
 
   const initiateAudioContext = () => {
     ctx.current = new AudioContext();
@@ -119,14 +119,14 @@ const useListeningPlayer = (): [() => void, () => void, TonesRelation | null, bo
     const randomRelation = getRandomRelation();
     setRandomNote(newRandomNote);
     setTonesRelation(randomRelation);
-    setTonesPlayed(false);
+    setTonesPlayingFinished(false);
   };
 
   const repeatTones = () => {
-    setTonesPlayed(false);
+    setTonesPlayingFinished(false);
   };
 
-  return [playTones, repeatTones, tonesRelation, tonesPlayed, initiateAudioContext];
+  return [playTones, repeatTones, tonesPlayingFinished, tonesRelation, initiateAudioContext];
 };
 
 export default useListeningPlayer;

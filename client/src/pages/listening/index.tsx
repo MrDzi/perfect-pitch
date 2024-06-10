@@ -8,6 +8,7 @@ import PageWrapper from "../../components/page-wrapper";
 import "./listening.scss";
 
 const NUM_OF_TONES_TO_PLAY = 5;
+const COUNTER_START_VALUE = 3;
 
 const Listening = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
@@ -15,7 +16,7 @@ const Listening = (): ReactElement => {
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [playTones, repeatTones, tonesRelation, tonesPlayed, initiateAudioContext] = useListeningPlayer();
+  const [playTones, repeatTones, tonesPlayingFinished, tonesRelation, initiateAudioContext] = useListeningPlayer();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [submitted, isSubmitted] = useState(false);
 
@@ -32,7 +33,7 @@ const Listening = (): ReactElement => {
       setTotalPoints((p) => p + points);
       setSelectedOption(null);
       setPoints(null);
-      setCounter(3);
+      setCounter(COUNTER_START_VALUE);
       isSubmitted(false);
     }, 2000);
   }, [points]);
@@ -58,7 +59,7 @@ const Listening = (): ReactElement => {
     if (gameStatus === GameStatus.InProgress) {
       setTotalPoints(0);
       setNumOfTonesPlayed(0);
-      setCounter(3);
+      setCounter(COUNTER_START_VALUE);
     }
   }, [gameStatus]);
 
@@ -93,7 +94,7 @@ const Listening = (): ReactElement => {
               points={points}
               totalSteps={NUM_OF_TONES_TO_PLAY}
               totalPoints={totalPoints}
-              isNotePlayed={tonesPlayed}
+              isNotePlayed={tonesPlayingFinished}
               onRepeatClick={repeatTones}
               gameStatus={gameStatus}
               onStartClick={startGame}

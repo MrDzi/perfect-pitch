@@ -26,7 +26,7 @@ const Home = (): ReactElement => {
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>Pitchle</h3>
-              <p>A musical twist of the Wordle game.</p>
+              <p>It&apos;s like Wordle. With melodies.</p>
               <p>{`Try to guess each tone in a melody for ${appContext.date}. You have 6 tries!`}</p>
             </div>
           </div>
@@ -42,7 +42,7 @@ const Home = (): ReactElement => {
             <HeadphonesIcon />
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
-              <h3>Are these tones the same?</h3>
+              <h3>How good is your ear?</h3>
               <p>Recognize subtle differences.</p>
             </div>
           </div>
