@@ -7,9 +7,10 @@ import useDetectPitch from "../../hooks/useDetectPitch";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
 import "./singing.scss";
+import { Note } from "../../constants";
 
-const getTotalPoints = (points: number, numOfTonesPlayed: number) =>
-  Math.round((points / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
+const getTotalPoints = (currentTotalPoints: number, points: number, numOfTonesPlayed: number) =>
+  Math.round(((currentTotalPoints + points) / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
 
 const NUM_OF_NOTES_TO_PLAY = 5;
 const COUNTER_START_VALUE = 3;
@@ -18,13 +19,21 @@ const LOCAL_STORAGE_KEY = "singing_info_seen";
 const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 const savedDataParsed = typeof savedData === "string" ? JSON.parse(savedData) : null;
 
+const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
+  if (detune) {
+    return Math.max(0, Math.min(107 - Math.abs(detune), 100));
+  }
+  return 0;
+};
+
 const Singing = (): ReactElement => {
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
   const [counter, setCounter] = useState<number | null>(null);
+  const [currentPoints, setCurrentPoints] = useState<number | null>(null);
   const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [playNote, repeatNote, notePlayed, notes] = usePlayer();
-  const [startPitchDetection, stopPitchDetection, reset, points, detune, progress] = useDetectPitch();
+  const [playNote, repeatNote, playingNoteFinished, notes] = usePlayer();
+  const [startPitchDetection, stopPitchDetection, singingData, progress, detune] = useDetectPitch();
   const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
 
   useEffect(() => {
@@ -32,26 +41,28 @@ const Singing = (): ReactElement => {
   }, []);
 
   useEffect(() => {
+    if (singingData) {
+      const newPoints = getPointsWon(notes[0], singingData.note, singingData.detune);
+      setCurrentPoints(newPoints);
+      setTimeout(() => {
+        setNumOfTonesPlayed((n) => n + 1);
+        setTotalPoints((p) => getTotalPoints(p, newPoints, numOfTonesPlayed));
+        setCounter(COUNTER_START_VALUE);
+        setCurrentPoints(null);
+      }, 2000);
+    }
+  }, [singingData]);
+
+  useEffect(() => {
     if (!notes) {
       return;
     }
-    if (notePlayed) {
+    if (playingNoteFinished) {
       startPitchDetection(notes[0]);
     } else {
       stopPitchDetection();
     }
-  }, [notes, notePlayed]);
-
-  useEffect(() => {
-    if (points !== null) {
-      setTimeout(() => {
-        setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => getTotalPoints(p + points, numOfTonesPlayed));
-        setCounter(COUNTER_START_VALUE);
-        reset();
-      }, 2000);
-    }
-  }, [points]);
+  }, [notes, playingNoteFinished]);
 
   useEffect(() => {
     if (!counter) {
@@ -85,55 +96,53 @@ const Singing = (): ReactElement => {
     setGameStatus(GameStatus.InProgress);
   };
 
-  const restartGame = () => {
-    setTotalPoints(0);
-    setNumOfTonesPlayed(0);
-    setGameStatus(GameStatus.InProgress);
-  };
-
   const closeInstructionsOverlay = () => {
     window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(true));
     setInstructionsSeen(true);
   };
 
+  if (gameStatus === GameStatus.Ended) {
+    return (
+      <PageWrapper>
+        <GameEnd totalPoints={totalPoints} onClick={startGame} withPercentage />
+      </PageWrapper>
+    );
+  }
+
   return (
     <PageWrapper>
-      {gameStatus !== GameStatus.Ended ? (
-        <div className="flex flex-column full-size">
-          {instructionsSeen !== true ? (
-            <div className="instructions-overlay">
-              <p>Make sure you allowed the application to use your microphone.</p>
-              <p>
-                When you click on the &quot;start&quot; button, you will hear a tone after 3 seconds. You then need to
-                repeat this tone by singing or whistling. You will hear 5 tones in total.
-              </p>
-              <button className="button button--secondary button--inverted" onClick={closeInstructionsOverlay}>
-                Ok
-              </button>
-            </div>
-          ) : null}
-          <Header
-            totalSteps={NUM_OF_NOTES_TO_PLAY}
-            currentStep={numOfTonesPlayed + 1}
-            counter={counter}
-            points={points}
-            totalPoints={totalPoints}
-            isNotePlayed={notePlayed}
-            onRepeatClick={repeatNote}
-            onStartClick={startGame}
-            gameStatus={gameStatus}
-            isSingingMode
-            withPercentage
-          />
-          <PitchVisualization
-            detune={detune}
-            shouldVisualize={counter === 0}
-            progress={points !== null ? 100 : progress}
-          />
-        </div>
-      ) : (
-        <GameEnd totalPoints={totalPoints} onClick={restartGame} withPercentage />
-      )}
+      <div className="flex flex-column full-size">
+        {instructionsSeen !== true ? (
+          <div className="instructions-overlay">
+            <p>Make sure you allowed the application to use your microphone.</p>
+            <p>
+              When you click on the &quot;start&quot; button, you will hear a tone after 3 seconds. You then need to
+              repeat this tone by singing or whistling. You will hear 5 tones in total.
+            </p>
+            <button className="button button--secondary button--inverted" onClick={closeInstructionsOverlay}>
+              Ok
+            </button>
+          </div>
+        ) : null}
+        <Header
+          totalSteps={NUM_OF_NOTES_TO_PLAY}
+          currentStep={numOfTonesPlayed + 1}
+          counter={counter}
+          points={currentPoints}
+          totalPoints={totalPoints}
+          isNotePlayed={playingNoteFinished}
+          onRepeatClick={repeatNote}
+          onStartClick={startGame}
+          gameStatus={gameStatus}
+          isSingingMode
+          withPercentage
+        />
+        <PitchVisualization
+          detune={detune}
+          shouldVisualize={counter === 0}
+          progress={currentPoints !== null ? 100 : progress}
+        />
+      </div>
     </PageWrapper>
   );
 };

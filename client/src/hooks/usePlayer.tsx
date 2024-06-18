@@ -8,7 +8,7 @@ const TONE_DURATION = 1403;
 
 const usePlayer = (toneDuration = 1000): [(notes?: Note[], n?: number) => void, () => void, boolean, Note[]] => {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [notesPlayed, setNotesPlayed] = useState<boolean>(false);
+  const [playingFinished, setPlayingFinished] = useState<boolean>(false);
   const [play] = useSound(scale, {
     sprite: {
       c: [0, TONE_DURATION],
@@ -27,7 +27,7 @@ const usePlayer = (toneDuration = 1000): [(notes?: Note[], n?: number) => void, 
   });
 
   useEffect(() => {
-    if (!notes.length || notesPlayed) {
+    if (!notes.length || playingFinished) {
       return;
     }
     let currentIndex = 0;
@@ -40,7 +40,7 @@ const usePlayer = (toneDuration = 1000): [(notes?: Note[], n?: number) => void, 
         const note = notes[currentIndex].toLowerCase();
         play({ id: note });
       } else {
-        setNotesPlayed(true);
+        setPlayingFinished(true);
         clearInterval(interval);
       }
     }, toneDuration);
@@ -50,18 +50,18 @@ const usePlayer = (toneDuration = 1000): [(notes?: Note[], n?: number) => void, 
         clearInterval(interval);
       }
     };
-  }, [notes, notesPlayed]);
+  }, [notes, playingFinished]);
 
   const playNotes = (notesFromParam?: Note[], count = 1) => {
     setNotes(notesFromParam || getRandomNotes(NOTES, count));
-    setNotesPlayed(false);
+    setPlayingFinished(false);
   };
 
   const repeatNotes = () => {
-    setNotesPlayed(false);
+    setPlayingFinished(false);
   };
 
-  return [playNotes, repeatNotes, notesPlayed, notes];
+  return [playNotes, repeatNotes, playingFinished, notes];
 };
 
 export default usePlayer;

@@ -8,25 +8,16 @@ interface ToneData {
   pitch?: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createContextFromStream = (audioContext: AudioContext, stream: any) => {
+const createContextFromStream = (audioContext: AudioContext, stream: MediaStream) => {
   const source = audioContext.createMediaStreamSource(stream);
   const analyser = audioContext.createAnalyser();
   analyser.fftSize = 2048;
-
   source.connect(analyser);
 
   return analyser;
 };
 
-const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
-  if (detune) {
-    return Math.max(0, Math.min(107 - Math.abs(detune), 100));
-  }
-  return 0;
-};
-
-const getAverageToneData = (data: ToneData[]) => {
+const getAverageSingingData = (data: ToneData[]): ToneData => {
   const toneOccurrences: { [key: string]: number } = {};
   let mostFrequentNote = data[0].note;
   let maxCount = 1;
@@ -51,20 +42,13 @@ const getAverageToneData = (data: ToneData[]) => {
   };
 };
 
-const useDetectPitch = (): [
-  (targetNote: Note | null) => void,
-  () => void,
-  () => void,
-  number | null,
-  number | null,
-  number
-] => {
+const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneData | null, number, number | null] => {
   const [status, setStatus] = useState<{ inProgress: boolean; targetNote: Note | null }>({
     inProgress: false,
     targetNote: null,
   });
   const [detune, setDetune] = useState<number | null>(null);
-  const [points, setPoints] = useState<number | null>(null);
+  const [singingData, setSingingData] = useState<ToneData | null>(null);
   const ctx = useRef<AudioContext>(new AudioContext());
   const analyser = useRef<AnalyserNode | null>(null);
   const nonSilentFrameCount = useRef<number>(0);
@@ -106,7 +90,6 @@ const useDetectPitch = (): [
       if (volume > 0.015) {
         const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
         const noteNum = noteFromPitch(pitch);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (status.targetNote) {
           const targetNoteNum = noteFromPitch(getNoteFrequency(status.targetNote));
           const currentDetune = centsOffFromPitch(pitch, targetNoteNum);
@@ -124,15 +107,17 @@ const useDetectPitch = (): [
             setDetune(null);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;
-            const averageToneData = getAverageToneData(tonesData.current);
+            const averageSingingData = getAverageSingingData(tonesData.current);
             setStatus({
               inProgress: false,
               targetNote: null,
             });
             tonesData.current = [];
             if (status.targetNote) {
-              const pointsWon = getPointsWon(status.targetNote, averageToneData.note, averageToneData.detune);
-              setPoints(pointsWon);
+              setSingingData({
+                note: averageSingingData.note,
+                detune: averageSingingData.detune,
+              });
             }
             return;
           }
@@ -146,7 +131,7 @@ const useDetectPitch = (): [
   };
 
   const startPitchDetection = (targetNote: Note) => {
-    setPoints(null);
+    setSingingData(null);
     setStatus({
       inProgress: true,
       targetNote,
@@ -160,18 +145,7 @@ const useDetectPitch = (): [
     });
   };
 
-  const reset = () => {
-    setPoints(null);
-  };
-
-  return [
-    startPitchDetection,
-    stopPitchDetection,
-    reset,
-    points,
-    detune,
-    Math.floor(nonSilentFrameCount.current / 1.2),
-  ];
+  return [startPitchDetection, stopPitchDetection, singingData, Math.floor(nonSilentFrameCount.current / 1.2), detune];
 };
 
 export default useDetectPitch;
