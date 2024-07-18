@@ -1,14 +1,12 @@
-import React, { ReactElement, useContext, useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import MicIcon from "./icons/mic";
 import HeadphonesIcon from "./icons/headphones";
 import CableIcon from "./icons/cable";
-import { AppContext } from "../../app";
 import "./home.scss";
 
 const Home = (): ReactElement => {
   const [navigate] = useNavigateWithTransition();
-  const appContext = useContext(AppContext);
 
   useEffect(() => {
     document.title = "Home | CheckYourPitch";
@@ -26,8 +24,7 @@ const Home = (): ReactElement => {
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>Pitchle</h3>
-              <p>It&apos;s like Wordle. With melodies.</p>
-              <p>{`Try to guess each tone in a melody for ${appContext.date}. You have 6 tries!`}</p>
+              <p>A musical twist on Wordle. Guess each tone in today&apos;s melody!</p>
             </div>
           </div>
           <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/sing")}>
@@ -35,7 +32,7 @@ const Home = (): ReactElement => {
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>Can you sing this tone?</h3>
-              <p>Repeat five random tones.</p>
+              <p>Test your pitch accuracy by repeating five random tones.</p>
             </div>
           </div>
           <div className="home-content_block home-content_block--small-down" onClick={onLinkClick("/listen")}>
@@ -43,7 +40,7 @@ const Home = (): ReactElement => {
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>How good is your ear?</h3>
-              <p>Recognize subtle differences.</p>
+              <p>Challenge your listening skills by recognizing small pitch differences.</p>
             </div>
           </div>
         </div>
