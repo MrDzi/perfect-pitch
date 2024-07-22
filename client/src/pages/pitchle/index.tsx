@@ -298,7 +298,7 @@ const Pitchle = (): ReactElement => {
       >
         <div className="pitchle_header">{getPitchleHeader()}</div>
         <div className="pitchle_content">
-          <div style={{ marginBottom: gameStatus === GameStatus.Ended ? 0 : 40 }}>
+          <div className="pitchle_content_inner" style={{ marginBottom: gameStatus === GameStatus.Ended ? 0 : 40 }}>
             <div className="pitchle-input-group">{renderInputs()}</div>
           </div>
           {gameStatus !== GameStatus.Ended ? (

@@ -72,6 +72,14 @@
   }
 }
 
+.pitchle_content_inner {
+  display: block;
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+    padding-bottom: 120px;
+  }
+}
+
 .pitchle_note-buttons {
   @media only screen and (max-width: 767px) {
     width: 100%;
@@ -79,12 +87,18 @@
 }
 
 .pitchle_controls {
-  margin-bottom: 20px;
+  @media only screen and (min-width: 767px) {
+    padding-bottom: 20px;
+  }
   @media only screen and (max-width: 767px) {
+    padding-bottom: 10px;
     position: fixed;
-    bottom: -3px;
+    bottom: 8px;
     left: 15px;
     right: 15px;
+    padding-top: 40px;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%);
   }
 }
 

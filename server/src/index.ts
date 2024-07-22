@@ -98,8 +98,6 @@ const handleMissingMelody = async (res: Response<MelodyResponse>, dateKey: strin
 app.get("/api/melody/:dateKey", async (req: Request<Params>, res: Response<MelodyResponse>) => {
   const dateKey = req.params.dateKey;
 
-  console.log("Date: ", dateKey);
-
   try {
     const data = await Melody.find({ dateKey }).exec();
 
