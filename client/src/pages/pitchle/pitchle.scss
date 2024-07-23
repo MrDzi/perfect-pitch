@@ -24,6 +24,9 @@
     height: auto;
     min-height: auto;
   }
+  &--ended .pitchle_content_inner {
+    padding-bottom: 0;
+  }
   .button:not(.button--pitchle-main) {
     width: 200px;
     @media only screen and (max-width: 767px) {
@@ -75,7 +78,7 @@
 .pitchle_content_inner {
   display: block;
   @media only screen and (max-width: 767px) {
-    width: 100%;
+    // width: 100%;
     padding-bottom: 120px;
   }
 }
@@ -107,8 +110,8 @@
   width: 54px;
   height: 54px;
   @media only screen and (max-width: 767px) {
-    width: 58px;
-    height: 58px;
+    width: calc((100vw - 100px)/5);
+    height: calc((100vw - 100px)/5);
     margin-right: 3px;
     &:last-of-type {
       margin-right: 0;
@@ -137,7 +140,6 @@
     backface-visibility: hidden;
   }
   &_back {
-    font-size: 36px;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
@@ -220,7 +222,7 @@
 .note {
   font-family: "Poppins", sans-serif;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 36px;
   span:last-child {
     font-size: 18px;
   }
