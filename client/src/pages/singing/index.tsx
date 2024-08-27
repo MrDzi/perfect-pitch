@@ -114,10 +114,10 @@ const Singing = (): ReactElement => {
       <div className="flex flex-column full-size">
         {instructionsSeen !== true ? (
           <div className="instructions-overlay">
-            <p>Make sure you allowed the application to use your microphone.</p>
+            <p>Please enable microphone access for the application to work.</p>
             <p>
-              When you click on the &quot;start&quot; button, you will hear a tone after 3 seconds. You then need to
-              repeat this tone by singing or whistling. You will hear 5 tones in total.
+              Once you click the &quot;start&quot; button, you will hear a tone after 3 seconds. Your task is to repeat
+              the tone by either singing or whistling. You will hear a total of 5 tones.
             </p>
             <button className="button button--secondary button--inverted" onClick={closeInstructionsOverlay}>
               Ok
