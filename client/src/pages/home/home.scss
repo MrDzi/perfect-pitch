@@ -23,7 +23,7 @@
   h3 {
     margin: 0 0 5px;
     color: #111;
-    font-size: 1.8rem;
+    font-size: 1.65em;
     text-transform: uppercase;
     @media only screen and (max-width: 999px) {
       line-height: 1;
@@ -66,11 +66,12 @@
       transition: transform 0.15s ease-in-out;
       position: absolute;
       right: 11%;
-      bottom: -3%;
+      bottom: -4%;
       @media only screen and (max-width: 767px) {
         height: 77px;
         width: 110px;
         right: 2%;
+        bottom: -3%;
       }
     }
     a {
