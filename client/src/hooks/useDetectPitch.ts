@@ -103,7 +103,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
           if (nonSilentFrameCount.current % 10 === 0) {
             setDetune(currentDetune);
           }
-          if (nonSilentFrameCount.current > 120 && requestRef.current) {
+          if (nonSilentFrameCount.current > 140 && requestRef.current) {
             setDetune(null);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;
@@ -145,7 +145,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
     });
   };
 
-  return [startPitchDetection, stopPitchDetection, singingData, Math.floor(nonSilentFrameCount.current / 1.2), detune];
+  return [startPitchDetection, stopPitchDetection, singingData, Math.floor(nonSilentFrameCount.current / 1.4), detune];
 };
 
 export default useDetectPitch;
