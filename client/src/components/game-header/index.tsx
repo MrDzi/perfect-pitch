@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react";
+import cx from "classnames";
 import Microphone from "./icons/microphone";
 import AudioWave from "./icons/sine-wave";
 import "./game-header.scss";
@@ -88,7 +89,11 @@ const Header = ({
             <span className="game-header_points">{`${totalPoints}${withPercentage ? "%" : ""}`}</span>
           </div>
           {points !== null && currentStep !== 0 ? (
-            <div className="game-header_points game-header_new-points">{`+${points}${withPercentage ? "%" : ""}`}</div>
+            <div
+              className={cx("game-header_points game-header_new-points", {
+                "game-header_new-points--positive": points > 0,
+              })}
+            >{`+${points}${withPercentage ? "%" : ""}`}</div>
           ) : null}
         </div>
       </div>
