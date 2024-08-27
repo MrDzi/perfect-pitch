@@ -26,6 +26,7 @@ const Home = (): ReactElement => {
               <h3>Pitchle</h3>
               <p>A musical twist on Wordle. Guess each tone in today&apos;s melody!</p>
             </div>
+            <span className="home-content_cta button button--small">Play Now</span>
           </div>
           <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/sing")}>
             <MicIcon />
@@ -34,6 +35,7 @@ const Home = (): ReactElement => {
               <h3>Can you sing this tone?</h3>
               <p>Test your pitch accuracy by repeating five random tones.</p>
             </div>
+            <span className="home-content_cta button button--small">Play Now</span>
           </div>
           <div className="home-content_block home-content_block--small-down" onClick={onLinkClick("/listen")}>
             <HeadphonesIcon />
@@ -42,6 +44,7 @@ const Home = (): ReactElement => {
               <h3>How good is your ear?</h3>
               <p>Challenge your listening skills by recognizing small pitch differences.</p>
             </div>
+            <span className="home-content_cta button button--small">Play Now</span>
           </div>
         </div>
       </div>
