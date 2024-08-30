@@ -67,6 +67,15 @@ a {
   text-decoration: none;
 }
 
+.coffee-button-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
 @keyframes slide-from-right {
   from {
     transform: translateX(100%);

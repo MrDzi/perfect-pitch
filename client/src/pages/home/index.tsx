@@ -48,6 +48,11 @@ const Home = (): ReactElement => {
           </div>
         </div>
       </div>
+      <div className="coffee-button-wrapper">
+        <a href="https://www.buymeacoffee.com/steam_roller" target="_blank" rel="noreferrer">
+          <img src="https://cdn.buymeacoffee.com/buttons/v2/default-black.png" alt="Buy Me A Coffee" width="110" />
+        </a>
+      </div>
     </div>
   );
 };
