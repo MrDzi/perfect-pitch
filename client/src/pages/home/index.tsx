@@ -42,7 +42,7 @@ const Home = (): ReactElement => {
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>How good is your ear?</h3>
-              <p>Challenge your listening skills by recognizing small pitch differences.</p>
+              <p>Challenge your ears - identify small pitch differences.</p>
             </div>
             <span className="home-content_cta button button--small">Play Now</span>
           </div>
