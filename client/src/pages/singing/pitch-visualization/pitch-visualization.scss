@@ -1,10 +1,10 @@
 .target {
   position: absolute;
-  left: 50%;
+  left: calc(50% - 35px);
   height: 100%;
-  width: 1px;
-  background: #dedede;
-  // transition: background 0.25s ease-in-out; 
+  width: 70px;
+  background: #DEDEDE;
+  opacity: 0.75;
 }
 
 .pitch-visualization {

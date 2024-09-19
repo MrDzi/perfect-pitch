@@ -10,7 +10,7 @@ interface PitchVisualizationProps {
 }
 
 const PitchVisualization = ({ detune, shouldVisualize, progress }: PitchVisualizationProps): ReactElement => {
-  const isInCenter = shouldVisualize && detune && detune > -10 && detune < 10;
+  const isInCenter = shouldVisualize && detune && detune > -30 && detune < 30;
 
   return (
     <div className="pitch-visualization">
@@ -26,7 +26,7 @@ const PitchVisualization = ({ detune, shouldVisualize, progress }: PitchVisualiz
         {/* <div className="pitch-visualization_progress-bar-number">{`${progress}%`}</div> */}
       </div>
       <div className="pitch-visualization_pitch">
-        <div className="target" style={isInCenter ? { background: "#2A9D8F" } : {}} />
+        <div className="target" style={isInCenter ? { background: "#6A994E" } : {}} />
         <div className="line">
           <div className="pitch-indicator-wrapper" style={{ transform: `translateX(${detune}px)` }}>
             <div

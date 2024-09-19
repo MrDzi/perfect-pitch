@@ -23,6 +23,7 @@ const getAverageSingingData = (data: ToneData[]): ToneData => {
   let maxCount = 1;
   let detuneSum = 0;
   data.forEach((d, index) => {
+    // Discard the beginning of the input
     if (index > 15) {
       if (!toneOccurrences[d.note]) {
         toneOccurrences[d.note] = 1;

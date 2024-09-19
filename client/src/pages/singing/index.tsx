@@ -21,7 +21,7 @@ const savedDataParsed = typeof savedData === "string" ? JSON.parse(savedData) : 
 
 const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
   if (detune) {
-    return Math.max(0, Math.min(107 - Math.abs(detune), 100));
+    return Math.max(0, Math.min(115 - Math.abs(detune), 100));
   }
   return 0;
 };
