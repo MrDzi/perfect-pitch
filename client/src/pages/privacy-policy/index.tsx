@@ -21,7 +21,7 @@ const PrivacyPolicy = (): ReactElement => {
           <h1>Privacy Policy</h1>
 
           <section className="privacy-section">
-            <h2>1. Introduction</h2>
+            <h2>Introduction</h2>
             <p>
               At CheckYourPitch.com, we respect your privacy and are committed to protecting it. This Privacy Policy
               explains what information we collect when you use our website and games, how we use it, and how we keep it
@@ -31,7 +31,7 @@ const PrivacyPolicy = (): ReactElement => {
           </section>
 
           <section className="privacy-section">
-            <h2>2. Information We Collect</h2>
+            <h2>Information We Collect</h2>
 
             <h3>Audio Data</h3>
             <p>
@@ -77,7 +77,7 @@ const PrivacyPolicy = (): ReactElement => {
           </section>
 
           <section className="privacy-section">
-            <h2>3. How We Use Information</h2>
+            <h2>How We Use Information</h2>
             <p>We use collected information to:</p>
             <ul>
               <li>Provide, maintain, and improve our games and website</li>
@@ -87,7 +87,7 @@ const PrivacyPolicy = (): ReactElement => {
           </section>
 
           <section className="privacy-section">
-            <h2>4. Advertising (Google AdSense)</h2>
+            <h2>Advertising (Google AdSense)</h2>
             <ul>
               <li>We use Google AdSense to serve ads.</li>
               <li>
@@ -105,7 +105,7 @@ const PrivacyPolicy = (): ReactElement => {
           </section>
 
           <section className="privacy-section">
-            <h2>5. Data Security</h2>
+            <h2>Data Security</h2>
             <p>
               We take reasonable steps to protect your information. Since we do not store personal data or audio
               recordings, the risk is minimal, but we follow industry best practices to keep our servers secure.
@@ -113,7 +113,7 @@ const PrivacyPolicy = (): ReactElement => {
           </section>
 
           <section className="privacy-section">
-            <h2>7. Changes to This Privacy Policy</h2>
+            <h2>Changes to This Privacy Policy</h2>
             <p>
               We may update this Privacy Policy from time to time. Any changes will be posted on this page with an
               updated &quot;Last updated&quot; date.
@@ -121,7 +121,7 @@ const PrivacyPolicy = (): ReactElement => {
           </section>
 
           <section className="privacy-section">
-            <h2>8. Contact Us</h2>
+            <h2>Contact Us</h2>
             <p>
               If you have any questions about this Privacy Policy, please contact us at:{" "}
               <a href="mailto:dejanhadziomerovic@gmail.com">dejanhadziomerovic@gmail.com</a>
