@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 const Pitch = (): ReactElement => (
-  <svg width="134" height="84">
+  <svg width="134" height="84" role="img" aria-label="Pitch visualization wave graphic">
     <g>
       <path
         fill="#333533"

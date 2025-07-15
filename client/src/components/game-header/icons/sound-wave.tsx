@@ -1,7 +1,13 @@
 import React, { ReactElement } from "react";
 
 const SoundWave = (): ReactElement => (
-  <svg width="56px" height="56px" viewBox="0 0 316.378 316.377">
+  <svg
+    width="56px"
+    height="56px"
+    viewBox="0 0 316.378 316.377"
+    role="img"
+    aria-label="Sound wave visualization graphic"
+  >
     <g fill="#EAAC8B">
       <path
         d="M305.773,130.393h-80.411l-17.031-33.767c-2.076-4.104-6.519-6.405-11.086-5.706c-4.541,0.701-8.114,4.248-8.854,8.782

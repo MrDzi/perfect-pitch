@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 const Microphone = (): ReactElement => (
-  <svg width="41px" height="43px" viewBox="30 0 249 314">
+  <svg width="41px" height="43px" viewBox="30 0 249 314" role="img" aria-label="Microphone icon for audio recording">
     <g fill="#242423" className="microphone-group">
       <path
         d="M260.326,21.419C246.512,7.606,228.147,0,208.612,0c-19.535,0-37.9,7.606-51.713,21.419
