@@ -29,10 +29,6 @@
 $tablet-bp: 768px;
 $desktop-bp: 999px;
 
-html, body {
-  height: 100%;
-}
-
 body {
   margin: 0;
   background-color: var(--grey-yellow);
@@ -43,14 +39,13 @@ body {
 }
 
 #app {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: auto;
 }
 
 .page {
   display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -67,13 +62,8 @@ a {
   text-decoration: none;
 }
 
-.coffee-button-wrapper {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
+strong {
+  font-weight: 600;
 }
 
 @keyframes slide-from-right {
