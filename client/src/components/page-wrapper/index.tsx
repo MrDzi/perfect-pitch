@@ -3,7 +3,13 @@ import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import BackArrow from "../../assets/icons/back-arrow";
 import "./page.scss";
 
-const PageWrapper = ({ children }: { children: ReactElement }): ReactElement => {
+const PageWrapper = ({
+  children,
+  withBackButton,
+}: {
+  children: ReactElement;
+  withBackButton?: boolean;
+}): ReactElement => {
   const [navigate] = useNavigateWithTransition();
   const goToHome = () => {
     navigate("/", true);
@@ -11,10 +17,12 @@ const PageWrapper = ({ children }: { children: ReactElement }): ReactElement => 
   return (
     <div className="page page--game">
       <div className="page--game__inner">
-        <button className="back-button button button--no-border flex flex-center" onClick={goToHome}>
-          <BackArrow />
-          <span>Back</span>
-        </button>
+        {withBackButton ? (
+          <button className="back-button button button--no-border flex flex-center" onClick={goToHome}>
+            <BackArrow />
+            <span>Back</span>
+          </button>
+        ) : null}
         <div className="content-wrapper">{children}</div>
       </div>
     </div>
