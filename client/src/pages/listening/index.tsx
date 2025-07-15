@@ -87,7 +87,7 @@ const Listening = (): ReactElement => {
     <PageWrapper withBackButton>
       <>
         {gameStatus !== GameStatus.Ended && (
-          <div className="flex flex-column full-size">
+          <div className="listening-page">
             <Header
               currentStep={numOfTonesPlayed + 1}
               counter={counter}

@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  flex-grow: 1;
   height: 100%;
   @media only screen and (max-width: 767px) {
     display: block;
