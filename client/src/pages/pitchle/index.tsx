@@ -279,7 +279,7 @@ const Pitchle = (): ReactElement => {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper withBackButton>
       <div
         className={cx("pitchle", {
           "pitchle--ended": gameStatus === GameStatus.Ended,

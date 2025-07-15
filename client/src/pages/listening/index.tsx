@@ -84,7 +84,7 @@ const Listening = (): ReactElement => {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper withBackButton>
       <>
         {gameStatus !== GameStatus.Ended && (
           <div className="flex flex-column full-size">
