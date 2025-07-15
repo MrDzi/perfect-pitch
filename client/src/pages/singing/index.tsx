@@ -110,8 +110,8 @@ const Singing = (): ReactElement => {
   }
 
   return (
-    <PageWrapper>
-      <div className="flex flex-column full-size">
+    <PageWrapper withBackButton>
+      <div className="singing">
         {instructionsSeen !== true ? (
           <div className="instructions-overlay">
             <p>Please enable microphone access for the application to work.</p>
