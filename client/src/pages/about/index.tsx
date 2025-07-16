@@ -54,14 +54,14 @@ const About = (): ReactElement => {
             <p>Our interactive games are designed to turn ear training into a fun daily habit:</p>
             <ul>
               <li>
-                <strong>Listening Game:</strong> Challenge yourself to distinguish subtle pitch differences
+                <strong>Pitchle:</strong> A daily melody‑guessing game inspired by Wordle
               </li>
               <li>
                 <strong>Singing Practice:</strong> Use your microphone to practice pitch accuracy with real-time
                 feedback
               </li>
               <li>
-                <strong>Pitchle:</strong> A daily melody‑guessing game inspired by Wordle
+                <strong>Listening Game:</strong> Challenge yourself to distinguish subtle pitch differences
               </li>
             </ul>
           </section>

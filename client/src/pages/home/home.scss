@@ -1,6 +1,9 @@
 .home-content-wrapper {
   width: 1000px;
   height: 500px;
+  @media only screen and (max-width: 1000px) {
+    width: 760px;
+  }
   @media only screen and (max-width: 767px) {
     width: auto;
     height: 100%;
@@ -60,7 +63,7 @@
       border-radius: 15px;
     }
     &:hover {
-      background: lighten(#DAE2CB, 7%);
+      background: lighten(#DAE2CB, 9%);
       svg {
         transform: translateX(-5px);
       }
@@ -71,9 +74,10 @@
       right: 11%;
       bottom: -4%;
       @media only screen and (max-width: 767px) {
-        height: 77px;
-        width: 110px;
-        right: 2%;
+        height: 68px;
+        width: 77px;
+        right: 5%;
+        bottom: -6%;
       }
     }
     a {
@@ -111,7 +115,7 @@
   position: relative;
   svg {
     @media only screen and (max-width: 767px) {
-      height: 97px !important;
+      height: 77px !important;
     }
   }
 }
@@ -119,7 +123,7 @@
 .home-content_block--small-down {
   svg {
     @media only screen and (max-width: 767px) {
-      height: 90px !important;
+      height: 80px !important;
     }
   }
 }

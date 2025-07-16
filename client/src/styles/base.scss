@@ -105,7 +105,7 @@ strong {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   transform-origin: center;
-  animation-duration: 0.6s;
+  animation-duration: 0.45s;
   animation-timing-function: cubic-bezier(.39,.47,.05,1.05);
   animation-direction: both;
 }

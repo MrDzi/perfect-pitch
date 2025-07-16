@@ -2,8 +2,8 @@ import React, { ReactElement } from "react";
 
 const MicIcon = (): ReactElement => (
   <svg
-    width="140"
-    height="105"
+    width="115"
+    height="90"
     viewBox="0 0 207 151"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
