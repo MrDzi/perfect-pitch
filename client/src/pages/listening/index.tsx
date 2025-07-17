@@ -21,7 +21,7 @@ const Listening = (): ReactElement => {
   const [submitted, isSubmitted] = useState(false);
 
   useEffect(() => {
-    document.title = "Listening | CheckYourPitch";
+    document.title = "Listening | CheckYourPitch - Free Ear Training";
   }, []);
 
   useEffect(() => {

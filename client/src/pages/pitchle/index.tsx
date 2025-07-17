@@ -104,7 +104,7 @@ const Pitchle = (): ReactElement => {
   const [showLoadingInfo, setShowLoadingInfo] = useState(false);
 
   useEffect(() => {
-    document.title = "Pitchle | CheckYourPitch";
+    document.title = "Pitchle | CheckYourPitch - Free Ear Training";
     const savedLSData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
     const savedLSDataParsed = typeof savedLSData === "string" ? JSON.parse(savedLSData) : null;
     setStatsData(savedLSDataParsed);

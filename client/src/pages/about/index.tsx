@@ -4,13 +4,13 @@ import "./about.scss";
 
 const About = (): ReactElement => {
   useEffect(() => {
-    document.title = "About | CheckYourPitch";
+    document.title = "About | CheckYourPitch - Free Ear Training";
     // Update meta description for this page
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
         "content",
-        "Learn about CheckYourPitch - the free online pitch training platform. Discover our ear training games, music theory tools, and how we help musicians develop their musical ear."
+        "Learn about CheckYourPitch - the free online pitch training platform. Discover our ear training games, and how we help musicians develop their musical ear."
       );
     }
   }, []);
