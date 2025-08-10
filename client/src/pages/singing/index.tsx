@@ -7,10 +7,9 @@ import useDetectPitch from "../../hooks/useDetectPitch";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
 import "./singing.scss";
-import { Note } from "../../constants";
 
-const getTotalPoints = (currentTotalPoints: number, points: number, numOfTonesPlayed: number) =>
-  Math.round(((currentTotalPoints + points) / (numOfTonesPlayed === 0 ? 1 : 2)) * 10) / 10;
+const getTotalPoints = (currentTotalPoints: number, numOfTonesPlayed: number) =>
+  Math.round((numOfTonesPlayed === 0 ? 0 : currentTotalPoints / numOfTonesPlayed) * 10) / 10;
 
 const NUM_OF_NOTES_TO_PLAY = 5;
 const COUNTER_START_VALUE = 3;
@@ -19,7 +18,7 @@ const LOCAL_STORAGE_KEY = "singing_info_seen";
 const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 const savedDataParsed = typeof savedData === "string" ? JSON.parse(savedData) : null;
 
-const getPointsWon = (targetNote: Note | null, note: Note | null, detune: number | null): number => {
+const getPointsWon = (detune: number | null): number => {
   if (detune) {
     return Math.max(0, Math.min(115 - Math.abs(detune), 100));
   }
@@ -42,11 +41,11 @@ const Singing = (): ReactElement => {
 
   useEffect(() => {
     if (singingData) {
-      const newPoints = getPointsWon(notes[0], singingData.note, singingData.detune);
+      const newPoints = getPointsWon(singingData.detune);
       setCurrentPoints(newPoints);
       setTimeout(() => {
         setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => getTotalPoints(p, newPoints, numOfTonesPlayed));
+        setTotalPoints((p) => p + newPoints);
         setCounter(COUNTER_START_VALUE);
         setCurrentPoints(null);
       }, 2000);
@@ -104,7 +103,7 @@ const Singing = (): ReactElement => {
   if (gameStatus === GameStatus.Ended) {
     return (
       <PageWrapper>
-        <GameEnd totalPoints={totalPoints} onClick={startGame} withPercentage />
+        <GameEnd totalPoints={getTotalPoints(totalPoints, numOfTonesPlayed)} onClick={startGame} withPercentage />
       </PageWrapper>
     );
   }
@@ -129,7 +128,7 @@ const Singing = (): ReactElement => {
           currentStep={numOfTonesPlayed + 1}
           counter={counter}
           points={currentPoints}
-          totalPoints={totalPoints}
+          totalPoints={getTotalPoints(totalPoints, numOfTonesPlayed)}
           isNotePlayed={playingNoteFinished}
           onRepeatClick={repeatNote}
           onStartClick={startGame}
