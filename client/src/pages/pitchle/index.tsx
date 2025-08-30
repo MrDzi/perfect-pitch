@@ -5,6 +5,7 @@ import cx from "classnames";
 import PageWrapper from "../../components/page-wrapper";
 import { generateFinalMessage, checkIfEqualArrays } from "./helpers";
 import usePlayer from "../../hooks/usePlayer";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import { GameStatus } from "../../types/types";
 import GameStep from "./game-step";
 import { Note, NOTES } from "../../constants";
@@ -80,7 +81,7 @@ const getUpdatedStats = (
 
 const Pitchle = (): ReactElement => {
   const appContext = useContext(AppContext);
-  const [statsData, setStatsData] = useState<Stats | null>(null);
+  const [statsData, setStatsData] = useLocalStorage<Stats | null>(LOCAL_STORAGE_KEY, null);
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [shareButtonLabel, setShareButtonLabel] = useState("Share");
   const [currentInput, setCurrentInput] = useState<Input>(
@@ -105,9 +106,6 @@ const Pitchle = (): ReactElement => {
 
   useEffect(() => {
     document.title = "Pitchle | CheckYourPitch - Free Ear Training";
-    const savedLSData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-    const savedLSDataParsed = typeof savedLSData === "string" ? JSON.parse(savedLSData) : null;
-    setStatsData(savedLSDataParsed);
   }, []);
 
   useEffect(() => {
@@ -130,7 +128,6 @@ const Pitchle = (): ReactElement => {
     if (currentStep === NUM_OF_ATTEMPTS) {
       const newStatsData = getUpdatedStats(currentInput, statsData, appContext.dateUnformatted, currentStep, false);
       setStatsData(newStatsData);
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newStatsData));
       setTimeout(() => {
         setGameStatus(GameStatus.Ended);
       }, 1500);
@@ -142,7 +139,6 @@ const Pitchle = (): ReactElement => {
     if (isCurrentInputCorrect) {
       const newStatsData = getUpdatedStats(currentInput, statsData, appContext.dateUnformatted, currentStep, true);
       setStatsData(newStatsData);
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newStatsData));
       setTimeout(() => {
         setGameWon(true);
       }, 1000);

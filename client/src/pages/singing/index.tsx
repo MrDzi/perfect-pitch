@@ -4,6 +4,7 @@ import PitchVisualization from "./pitch-visualization";
 import GameEnd from "../../components/game-end";
 import usePlayer from "../../hooks/usePlayer";
 import useDetectPitch from "../../hooks/useDetectPitch";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
 import "./singing.scss";
@@ -14,9 +15,6 @@ const getTotalPoints = (currentTotalPoints: number, numOfTonesPlayed: number) =>
 const NUM_OF_NOTES_TO_PLAY = 5;
 const COUNTER_START_VALUE = 3;
 const LOCAL_STORAGE_KEY = "singing_info_seen";
-
-const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-const savedDataParsed = typeof savedData === "string" ? JSON.parse(savedData) : null;
 
 const getPointsWon = (detune: number | null): number => {
   if (detune) {
@@ -33,7 +31,7 @@ const Singing = (): ReactElement => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [playNote, repeatNote, playingNoteFinished, notes] = usePlayer();
   const [startPitchDetection, stopPitchDetection, singingData, progress, detune] = useDetectPitch();
-  const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
+  const [instructionsSeen, setInstructionsSeen] = useLocalStorage<boolean>(LOCAL_STORAGE_KEY, false);
 
   useEffect(() => {
     document.title = "Singing | CheckYourPitch";
@@ -96,7 +94,6 @@ const Singing = (): ReactElement => {
   };
 
   const closeInstructionsOverlay = () => {
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(true));
     setInstructionsSeen(true);
   };
 
@@ -111,7 +108,7 @@ const Singing = (): ReactElement => {
   return (
     <PageWrapper withBackButton>
       <div className="singing">
-        {instructionsSeen !== true ? (
+        {!instructionsSeen ? (
           <div className="instructions-overlay">
             <p>Please enable microphone access for the application to work.</p>
             <p>
