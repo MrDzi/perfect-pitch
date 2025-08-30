@@ -1,10 +1,11 @@
-import React, { useState, ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import Header from "../../components/game-header";
 import PitchVisualization from "./pitch-visualization";
 import GameEnd from "../../components/game-end";
 import usePlayer from "../../hooks/usePlayer";
 import useDetectPitch from "../../hooks/useDetectPitch";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import useGameState from "../../hooks/useGameState";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
 import "./singing.scss";
@@ -24,14 +25,22 @@ const getPointsWon = (detune: number | null): number => {
 };
 
 const Singing = (): ReactElement => {
-  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
-  const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
-  const [counter, setCounter] = useState<number | null>(null);
-  const [currentPoints, setCurrentPoints] = useState<number | null>(null);
-  const [totalPoints, setTotalPoints] = useState<number>(0);
   const [playNote, repeatNote, playingNoteFinished, notes] = usePlayer();
   const [startPitchDetection, stopPitchDetection, singingData, progress, detune] = useDetectPitch();
   const [instructionsSeen, setInstructionsSeen] = useLocalStorage<boolean>(LOCAL_STORAGE_KEY, false);
+  const {
+    gameStatus,
+    currentStep: numOfTonesPlayed,
+    counter,
+    points: currentPoints,
+    totalPoints,
+    startGame: startGameState,
+    nextStep,
+  } = useGameState({
+    totalSteps: NUM_OF_NOTES_TO_PLAY,
+    counterStartValue: COUNTER_START_VALUE,
+    onCounterComplete: playNote,
+  });
 
   useEffect(() => {
     document.title = "Singing | CheckYourPitch";
@@ -40,15 +49,9 @@ const Singing = (): ReactElement => {
   useEffect(() => {
     if (singingData) {
       const newPoints = getPointsWon(singingData.detune);
-      setCurrentPoints(newPoints);
-      setTimeout(() => {
-        setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => p + newPoints);
-        setCounter(COUNTER_START_VALUE);
-        setCurrentPoints(null);
-      }, 2000);
+      nextStep(newPoints);
     }
-  }, [singingData]);
+  }, [singingData, nextStep]);
 
   useEffect(() => {
     if (!notes) {
@@ -61,36 +64,8 @@ const Singing = (): ReactElement => {
     }
   }, [notes, playingNoteFinished]);
 
-  useEffect(() => {
-    if (!counter) {
-      return;
-    }
-    const timeout = setTimeout(() => {
-      setCounter(counter - 1);
-      if (counter === 1) {
-        if (numOfTonesPlayed === NUM_OF_NOTES_TO_PLAY) {
-          setGameStatus(GameStatus.Ended);
-          return;
-        } else {
-          playNote();
-        }
-      }
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [counter]);
-
-  useEffect(() => {
-    if (gameStatus === GameStatus.InProgress) {
-      setTotalPoints(0);
-      setNumOfTonesPlayed(0);
-      setCounter(COUNTER_START_VALUE);
-    }
-  }, [gameStatus]);
-
   const startGame = () => {
-    setGameStatus(GameStatus.InProgress);
+    startGameState();
   };
 
   const closeInstructionsOverlay = () => {
