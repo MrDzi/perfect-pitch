@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getNoteFrequency, Note, NOTES } from "../constants";
 import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume } from "../helpers";
 import useAudio from "./useAudio";
@@ -50,6 +50,15 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
 
   const { getMicrophoneStream, createAnalyserFromStream, audioContext } = useAudio();
 
+  // Memoize target note calculations to avoid repeated expensive operations
+  const targetNoteData = useMemo(() => {
+    if (!status.targetNote) return null;
+    return {
+      frequency: getNoteFrequency(status.targetNote),
+      noteNum: noteFromPitch(getNoteFrequency(status.targetNote)),
+    };
+  }, [status.targetNote]);
+
   useEffect(() => {
     const initializeMicrophone = async () => {
       const stream = await getMicrophoneStream();
@@ -79,47 +88,67 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
 
   const updatePitch = useCallback(
     (audioContext: AudioContext, analyser: AnalyserNode) => {
+      // Use memoized target note data for better performance
+      if (!targetNoteData) return;
+
+      const volumeThreshold = 0.015;
+      const updateInterval = 10;
+      const maxFrames = 140;
+      const minPitch = 80;
+      const maxPitch = 2000;
+
       buf.current.fill(0);
+
       const update = () => {
-        if (!analyser || !audioContext) {
+        if (!analyser || !audioContext || !targetNoteData) {
           return;
         }
+
         analyser.getFloatTimeDomainData(buf.current);
         const volume = getVolume(buf.current);
-        if (volume > 0.015) {
-          const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
-          const noteNum = noteFromPitch(pitch);
-          if (status.targetNote) {
-            const targetNoteNum = noteFromPitch(getNoteFrequency(status.targetNote));
-            const currentDetune = centsOffFromPitch(pitch, targetNoteNum);
 
-            nonSilentFrameCount.current = nonSilentFrameCount.current + 1;
-            tonesData.current.push({
-              note: NOTES[noteNum % 12],
-              detune: currentDetune,
-              pitch,
+        if (volume > volumeThreshold && status.targetNote) {
+          const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
+
+          // Skip invalid pitch values early to avoid unnecessary calculations
+          if (pitch < minPitch || pitch > maxPitch || isNaN(pitch)) {
+            requestRef.current = requestAnimationFrame(update);
+            return;
+          }
+
+          const noteNum = noteFromPitch(pitch);
+          const currentDetune = centsOffFromPitch(pitch, targetNoteData.noteNum);
+
+          nonSilentFrameCount.current++;
+          tonesData.current.push({
+            note: NOTES[noteNum % 12],
+            detune: currentDetune,
+            pitch,
+          });
+
+          // Update UI less frequently to reduce render overhead
+          if (nonSilentFrameCount.current % updateInterval === 0) {
+            setDetune(currentDetune);
+          }
+
+          // Check for completion
+          if (nonSilentFrameCount.current > maxFrames && requestRef.current) {
+            setDetune(null);
+            window.cancelAnimationFrame(requestRef.current);
+            nonSilentFrameCount.current = 0;
+
+            const averageSingingData = getAverageSingingData(tonesData.current);
+            setStatus({
+              inProgress: false,
+              targetNote: null,
             });
-            if (nonSilentFrameCount.current % 10 === 0) {
-              setDetune(currentDetune);
-            }
-            if (nonSilentFrameCount.current > 140 && requestRef.current) {
-              setDetune(null);
-              window.cancelAnimationFrame(requestRef.current);
-              nonSilentFrameCount.current = 0;
-              const averageSingingData = getAverageSingingData(tonesData.current);
-              setStatus({
-                inProgress: false,
-                targetNote: null,
-              });
-              tonesData.current = [];
-              if (status.targetNote) {
-                setSingingData({
-                  note: averageSingingData.note,
-                  detune: averageSingingData.detune,
-                });
-              }
-              return;
-            }
+            tonesData.current = [];
+
+            setSingingData({
+              note: averageSingingData.note,
+              detune: averageSingingData.detune,
+            });
+            return;
           }
         }
 
@@ -128,7 +157,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
 
       update();
     },
-    [status.targetNote]
+    [targetNoteData, status.targetNote]
   );
 
   const startPitchDetection = useCallback((targetNote: Note) => {

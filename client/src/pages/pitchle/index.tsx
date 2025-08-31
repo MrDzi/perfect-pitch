@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, useEffect, useRef, lazy, useContext } from "react";
+import React, { useState, ReactElement, useEffect, useRef, lazy, useContext, useMemo, useCallback } from "react";
 import useSound from "use-sound";
 import { PulseLoader } from "react-spinners";
 import cx from "classnames";
@@ -119,12 +119,26 @@ const Pitchle = (): ReactElement => {
       setCurrentStep(statsData.lastGameAttempts);
       setGameWon(statsData.streak > 0);
     }
-  }, [statsData]);
+  }, [gameStatus, statsData, appContext.dateUnformatted]);
+
+  const isCurrentInputCorrect = useMemo(() => {
+    if (!melodyDecoded || currentStep === 0) return false;
+    return (
+      checkIfEqualArrays(melodyDecoded, currentInput[currentStep - 1]) &&
+      (!currentInput[currentStep] || currentInput[currentStep].length === 0)
+    );
+  }, [melodyDecoded, currentInput, currentStep]);
 
   useEffect(() => {
     if (currentStep === 0) {
       return;
     }
+
+    // Don't update stats if the game was already completed today
+    if (statsData && statsData.lastCompletedGameDate === appContext.dateUnformatted) {
+      return;
+    }
+
     if (currentStep === NUM_OF_ATTEMPTS) {
       const newStatsData = getUpdatedStats(currentInput, statsData, appContext.dateUnformatted, currentStep, false);
       setStatsData(newStatsData);
@@ -132,10 +146,6 @@ const Pitchle = (): ReactElement => {
         setGameStatus(GameStatus.Ended);
       }, 1500);
     }
-    const isCurrentInputCorrect =
-      checkIfEqualArrays(melodyDecoded || [], currentInput[currentStep - 1]) &&
-      (!currentInput[currentStep] || currentInput[currentStep].length === 0);
-
     if (isCurrentInputCorrect) {
       const newStatsData = getUpdatedStats(currentInput, statsData, appContext.dateUnformatted, currentStep, true);
       setStatsData(newStatsData);
@@ -146,7 +156,7 @@ const Pitchle = (): ReactElement => {
         setGameStatus(GameStatus.Ended);
       }, 3000);
     }
-  }, [currentStep]);
+  }, [currentStep, isCurrentInputCorrect, statsData, appContext.dateUnformatted]);
 
   useEffect(() => {
     if (melodyData) {
@@ -261,18 +271,22 @@ const Pitchle = (): ReactElement => {
     }
   };
 
-  const onShareClick = () => {
+  const shareMessage = useMemo(() => {
+    if (!melodyDecoded || !gameWon) return "";
+    return generateFinalMessage(melodyDecoded, currentInput, currentStep);
+  }, [melodyDecoded, currentInput, currentStep, gameWon]);
+
+  const onShareClick = useCallback(() => {
     const clipboard = navigator.clipboard;
-    const message = generateFinalMessage(melodyDecoded || [], currentInput, currentStep);
     if ("share" in navigator) {
       return navigator.share({
-        text: message,
+        text: shareMessage,
       });
     }
-    clipboard.writeText(message).then(() => {
+    clipboard.writeText(shareMessage).then(() => {
       setShareButtonLabel("Copied to clipboard!");
     });
-  };
+  }, [shareMessage]);
 
   return (
     <PageWrapper withBackButton>

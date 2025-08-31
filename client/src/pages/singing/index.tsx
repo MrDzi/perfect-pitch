@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import Header from "../../components/game-header";
 import PitchVisualization from "./pitch-visualization";
 import GameEnd from "../../components/game-end";
@@ -64,6 +64,11 @@ const Singing = (): ReactElement => {
     }
   }, [notes, playingNoteFinished]);
 
+  const displayTotalPoints = useMemo(
+    () => getTotalPoints(totalPoints, numOfTonesPlayed),
+    [totalPoints, numOfTonesPlayed]
+  );
+
   const startGame = () => {
     startGameState();
   };
@@ -75,7 +80,7 @@ const Singing = (): ReactElement => {
   if (gameStatus === GameStatus.Ended) {
     return (
       <PageWrapper>
-        <GameEnd totalPoints={getTotalPoints(totalPoints, numOfTonesPlayed)} onClick={startGame} withPercentage />
+        <GameEnd totalPoints={displayTotalPoints} onClick={startGame} withPercentage />
       </PageWrapper>
     );
   }
@@ -100,7 +105,7 @@ const Singing = (): ReactElement => {
           currentStep={numOfTonesPlayed + 1}
           counter={counter}
           points={currentPoints}
-          totalPoints={getTotalPoints(totalPoints, numOfTonesPlayed)}
+          totalPoints={displayTotalPoints}
           isNotePlayed={playingNoteFinished}
           onRepeatClick={repeatNote}
           onStartClick={startGame}

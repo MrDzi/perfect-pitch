@@ -1,8 +1,12 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, memo } from "react";
 import { Stats } from "../../pages/pitchle";
 import "./stats.scss";
 
-const Stats = ({ data }: { data: Stats }): ReactElement => {
+interface StatsProps {
+  data: Stats;
+}
+
+const Stats = memo(({ data }: StatsProps): ReactElement => {
   return (
     <div className="stats">
       <div className="stats_header">
@@ -42,6 +46,8 @@ const Stats = ({ data }: { data: Stats }): ReactElement => {
       </ul>
     </div>
   );
-};
+});
+
+Stats.displayName = "Stats";
 
 export default Stats;

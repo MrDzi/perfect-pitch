@@ -1,24 +1,73 @@
 import { Note } from "./constants";
 
+// Cache for frequently used calculations
+const frequencyCache = new Map<number, number>();
+const noteFromPitchCache = new Map<number, number>();
+
 export const noteFromPitch = (frequency: number): number => {
+  // Round frequency to avoid cache misses for very similar values
+  const roundedFreq = Math.round(frequency * 10) / 10;
+
+  if (noteFromPitchCache.has(roundedFreq)) {
+    return noteFromPitchCache.get(roundedFreq) || 0;
+  }
+
   const noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
-  return Math.round(noteNum) + 69;
+  const result = Math.round(noteNum) + 69;
+
+  // Limit cache size to prevent memory leaks
+  if (noteFromPitchCache.size < 1000) {
+    noteFromPitchCache.set(roundedFreq, result);
+  }
+
+  return result;
 };
 
 export const frequencyFromNoteNumber = (note: number): number => {
-  return 440 * Math.pow(2, (note - 69) / 12);
+  if (frequencyCache.has(note)) {
+    return frequencyCache.get(note) || 0;
+  }
+
+  const frequency = 440 * Math.pow(2, (note - 69) / 12);
+
+  // Cache common note numbers
+  if (note >= 0 && note <= 127) {
+    frequencyCache.set(note, frequency);
+  }
+
+  return frequency;
 };
 
+// Cache for cents calculations
+const centsCache = new Map<string, number>();
+
 export const centsOffFromPitch = (frequency: number, noteNumber: number): number => {
+  // Create cache key with rounded values
+  const roundedFreq = Math.round(frequency * 10) / 10;
+  const cacheKey = `${roundedFreq}-${noteNumber}`;
+
+  if (centsCache.has(cacheKey)) {
+    return centsCache.get(cacheKey) || 0;
+  }
+
   let min: number | null = null;
   const noteNumbers = [noteNumber - 24, noteNumber - 12, noteNumber, noteNumber + 12, noteNumber + 24];
-  noteNumbers.forEach((num) => {
+
+  for (const num of noteNumbers) {
     const detune = Math.floor((1200 * Math.log(frequency / frequencyFromNoteNumber(num))) / Math.log(2));
     if (min === null || Math.abs(min) > Math.abs(detune)) {
       min = detune;
     }
-  });
-  return min === null ? 0 : min;
+  }
+
+  const result = min === null ? 0 : min;
+
+  // Limit cache size
+  if (centsCache.size < 1000) {
+    centsCache.set(cacheKey, result);
+  }
+
+  return result;
 };
 
 export const getVolume = (buf: Float32Array): number => {
