@@ -27,7 +27,16 @@ const Home = (): ReactElement => {
       </div>
       <div className="home-content-wrapper">
         <div className="home-content">
-          <div className="home-content_block home-content_block--big" onClick={onLinkClick("/pitchle")}>
+          <div className="home-content_block home-content_block--big" onClick={onLinkClick("/sing")}>
+            <MicIcon />
+            <div className="home-content_block_inner" />
+            <div className="home-content_desc">
+              <h3>Can you sing this tone?</h3>
+              <p>Test your pitch accuracy by singing back five random tones. See how close you can match them!</p>
+            </div>
+            <span className="home-content_cta button button--small">Play Now</span>
+          </div>
+          <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/pitchle")}>
             <CableIcon />
             <div className="home-content_block_inner" />
             <div className="home-content_desc">
@@ -36,15 +45,6 @@ const Home = (): ReactElement => {
                 A musical twist on Wordle. Listen carefully and guess each note in today’s hidden melody. Can you get it
                 in six tries?
               </p>
-            </div>
-            <span className="home-content_cta button button--small">Play Now</span>
-          </div>
-          <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/sing")}>
-            <MicIcon />
-            <div className="home-content_block_inner" />
-            <div className="home-content_desc">
-              <h3>Can you sing this tone?</h3>
-              <p>Test your pitch accuracy by singing back five random tones. See how close you can match them!</p>
             </div>
             <span className="home-content_cta button button--small">Play Now</span>
           </div>

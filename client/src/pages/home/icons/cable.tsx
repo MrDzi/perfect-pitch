@@ -2,8 +2,8 @@ import React, { ReactElement } from "react";
 
 const Cable = (): ReactElement => (
   <svg
-    width="123"
-    height="165"
+    width="110"
+    height="112"
     viewBox="0 0 166 205"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

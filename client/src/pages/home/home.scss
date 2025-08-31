@@ -113,9 +113,12 @@
   grid-area: 1 / 1 / 3 / 2;
   transform-origin: top right;
   position: relative;
+}
+
+.home-content_block--small-up {
   svg {
     @media only screen and (max-width: 767px) {
-      height: 77px !important;
+      height: 79px !important;
     }
   }
 }
@@ -123,7 +126,7 @@
 .home-content_block--small-down {
   svg {
     @media only screen and (max-width: 767px) {
-      height: 80px !important;
+      height: 75px !important;
     }
   }
 }
