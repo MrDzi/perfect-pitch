@@ -4,7 +4,7 @@ A web application for pitch-testing. Includes Pitchle, a Wordle-like game with m
 
 ## Pre-requisites
 
-Node 16.x
+Node 20.x
 
 ## Getting started
 
