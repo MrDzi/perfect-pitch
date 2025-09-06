@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .home-content-wrapper {
   width: 1000px;
   height: 500px;
@@ -63,7 +65,7 @@
       border-radius: 15px;
     }
     &:hover {
-      background: lighten(#DAE2CB, 9%);
+      background: color.adjust(#DAE2CB, $lightness: 9%);
       svg {
         transform: translateX(-5px);
       }
