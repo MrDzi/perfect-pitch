@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .target {
   position: absolute;
   left: calc(50% - 30px);
@@ -28,7 +30,7 @@
     }
   }
   &_progress-bar-wrapper {
-    background: darken(#efefef, 5%);
+    background: color.adjust(#efefef, $lightness: -5%);
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;

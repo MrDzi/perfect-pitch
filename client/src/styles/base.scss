@@ -16,7 +16,8 @@
   --grey: #CFDBD5;
   --grey-yellow: #e8eddf;
   --yellow: #F3C33F;
-  --green: #678e3e;
+  --light-green: #B2CFA0;
+  --green: #6a994e;
   --dark-green:#517728;
   --dark-yellow: #F0B719;
   --black: #333533;
@@ -51,10 +52,10 @@ body {
   width: 100%;
   height: 100%;
   &--home {
-    background: hsla(81, 28%, 90%, 1);
-    background: linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
-    background: -moz-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, hsla(89, 39%, 40%, 1) 100%);
-    background: -webkit-linear-gradient(180deg, hsla(81, 28%, 90%, 1) 18%, rgb(103, 142, 62) 100%);
+    background: hsla(97, 33%, 72%, 1);
+    background: linear-gradient(180deg, hsla(97, 33%, 72%, 1) 18%, hsla(98, 32%, 44%, 1) 100%);
+    background: -moz-linear-gradient(180deg, hsla(97, 33%, 72%, 1) 18%, hsla(98, 32%, 44%, 1) 100%);
+    background: -webkit-linear-gradient(180deg, hsla(97, 33%, 72%, 1) 18%, rgb(103, 148, 76) 100%);
   }
 }
 

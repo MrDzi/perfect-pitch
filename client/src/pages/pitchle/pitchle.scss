@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .pitchle {
   display: flex;
   flex-direction: column;
@@ -271,7 +273,7 @@
     font-weight: bold;
   }
   &:hover:not(:disabled) {
-    background-color: darken(#DDE3E0, 10%);
+    background-color: color.adjust(#DDE3E0, $lightness: -10%);
   }
   &:active, &:focus {
     outline: none;

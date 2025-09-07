@@ -1,9 +1,11 @@
-import React, { useState, ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useMemo } from "react";
 import Header from "../../components/game-header";
 import PitchVisualization from "./pitch-visualization";
 import GameEnd from "../../components/game-end";
 import usePlayer from "../../hooks/usePlayer";
 import useDetectPitch from "../../hooks/useDetectPitch";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import useGameState from "../../hooks/useGameState";
 import { GameStatus } from "../../types/types";
 import PageWrapper from "../../components/page-wrapper";
 import "./singing.scss";
@@ -15,42 +17,60 @@ const NUM_OF_NOTES_TO_PLAY = 5;
 const COUNTER_START_VALUE = 3;
 const LOCAL_STORAGE_KEY = "singing_info_seen";
 
-const savedData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-const savedDataParsed = typeof savedData === "string" ? JSON.parse(savedData) : null;
+const getAccuracyLabel = (points: number, missType: "low" | "high" | undefined): string => {
+  if (points === 100) return "P e r f e c t !";
+  if (points >= 75) return "That was solid!";
+  if (points >= 50) return missType ? `That was a little too ${missType === "low" ? "low" : "high"}` : "A little off";
+  if (points > 0) return missType ? `That was too ${missType === "low" ? "low" : "high"}, keep trying!` : "Keep trying";
+
+  return "";
+};
 
 const getPointsWon = (detune: number | null): number => {
-  if (detune) {
-    return Math.max(0, Math.min(115 - Math.abs(detune), 100));
-  }
+  if (!detune) return 0;
+
+  const absDetune = Math.abs(detune);
+  const forgiveness = 12;
+
+  if (absDetune <= 10) return 100;
+  if (absDetune <= 100) return Math.round(100 + forgiveness - absDetune);
+
   return 0;
 };
 
 const Singing = (): ReactElement => {
-  const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
-  const [numOfTonesPlayed, setNumOfTonesPlayed] = useState<number>(0);
-  const [counter, setCounter] = useState<number | null>(null);
-  const [currentPoints, setCurrentPoints] = useState<number | null>(null);
-  const [totalPoints, setTotalPoints] = useState<number>(0);
   const [playNote, repeatNote, playingNoteFinished, notes] = usePlayer();
   const [startPitchDetection, stopPitchDetection, singingData, progress, detune] = useDetectPitch();
-  const [instructionsSeen, setInstructionsSeen] = useState<null | boolean>(savedDataParsed);
+  const [instructionsSeen, setInstructionsSeen] = useLocalStorage<boolean>(LOCAL_STORAGE_KEY, false);
+  const {
+    gameStatus,
+    currentStep: numOfTonesPlayed,
+    counter,
+    points: currentPoints,
+    totalPoints,
+    startGame: startGameState,
+    nextStep,
+  } = useGameState({
+    totalSteps: NUM_OF_NOTES_TO_PLAY,
+    counterStartValue: COUNTER_START_VALUE,
+    onCounterComplete: playNote,
+  });
 
   useEffect(() => {
     document.title = "Singing | CheckYourPitch";
   }, []);
 
+  const accuracyLabel = useMemo(
+    () => (currentPoints ? getAccuracyLabel(currentPoints, singingData?.missType) : ""),
+    [currentPoints, singingData]
+  );
+
   useEffect(() => {
     if (singingData) {
       const newPoints = getPointsWon(singingData.detune);
-      setCurrentPoints(newPoints);
-      setTimeout(() => {
-        setNumOfTonesPlayed((n) => n + 1);
-        setTotalPoints((p) => p + newPoints);
-        setCounter(COUNTER_START_VALUE);
-        setCurrentPoints(null);
-      }, 2000);
+      nextStep(newPoints);
     }
-  }, [singingData]);
+  }, [singingData, nextStep]);
 
   useEffect(() => {
     if (!notes) {
@@ -63,47 +83,23 @@ const Singing = (): ReactElement => {
     }
   }, [notes, playingNoteFinished]);
 
-  useEffect(() => {
-    if (!counter) {
-      return;
-    }
-    const timeout = setTimeout(() => {
-      setCounter(counter - 1);
-      if (counter === 1) {
-        if (numOfTonesPlayed === NUM_OF_NOTES_TO_PLAY) {
-          setGameStatus(GameStatus.Ended);
-          return;
-        } else {
-          playNote();
-        }
-      }
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [counter]);
-
-  useEffect(() => {
-    if (gameStatus === GameStatus.InProgress) {
-      setTotalPoints(0);
-      setNumOfTonesPlayed(0);
-      setCounter(COUNTER_START_VALUE);
-    }
-  }, [gameStatus]);
+  const displayTotalPoints = useMemo(
+    () => getTotalPoints(totalPoints, numOfTonesPlayed),
+    [totalPoints, numOfTonesPlayed]
+  );
 
   const startGame = () => {
-    setGameStatus(GameStatus.InProgress);
+    startGameState();
   };
 
   const closeInstructionsOverlay = () => {
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(true));
     setInstructionsSeen(true);
   };
 
   if (gameStatus === GameStatus.Ended) {
     return (
       <PageWrapper>
-        <GameEnd totalPoints={getTotalPoints(totalPoints, numOfTonesPlayed)} onClick={startGame} withPercentage />
+        <GameEnd totalPoints={displayTotalPoints} onClick={startGame} withPercentage />
       </PageWrapper>
     );
   }
@@ -111,12 +107,12 @@ const Singing = (): ReactElement => {
   return (
     <PageWrapper withBackButton>
       <div className="singing">
-        {instructionsSeen !== true ? (
+        {!instructionsSeen ? (
           <div className="instructions-overlay">
-            <p>Please enable microphone access for the application to work.</p>
+            <p>To use this application, please enable microphone access.</p>
             <p>
-              Once you click the &quot;start&quot; button, you will hear a tone after 3 seconds. Your task is to repeat
-              the tone by either singing or whistling. You will hear a total of 5 tones.
+              After you click &quot;Start&quot;, you&lsquo;ll hear a tone after 3 seconds. Your task is to repeat the
+              tone by either singing or whistling. You will hear a total of five tones.
             </p>
             <button className="button button--secondary button--inverted" onClick={closeInstructionsOverlay}>
               Ok
@@ -128,7 +124,8 @@ const Singing = (): ReactElement => {
           currentStep={numOfTonesPlayed + 1}
           counter={counter}
           points={currentPoints}
-          totalPoints={getTotalPoints(totalPoints, numOfTonesPlayed)}
+          accuracyLabel={accuracyLabel}
+          totalPoints={displayTotalPoints}
           isNotePlayed={playingNoteFinished}
           onRepeatClick={repeatNote}
           onStartClick={startGame}

@@ -1,7 +1,7 @@
-@import "./styles/base";
-@import "./styles/helpers";
-@import "./styles/typography";
-@import "./styles/button";
+@use "./styles/base";
+@use "./styles/helpers";
+@use "./styles/typography";
+@use "./styles/button";
 
 .app-container {
   min-height: 100vh;

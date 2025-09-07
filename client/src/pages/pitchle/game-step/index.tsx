@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useMemo, memo } from "react";
 import cx from "classnames";
 import { Note } from "../../../constants";
 import "../pitchle.scss";
@@ -38,43 +38,35 @@ export const getResults = (values: Note[], solution: Note[]): InputStatus[] => {
   });
 };
 
-const GameStep = ({
-  solution,
-  values,
-  submitted,
-  gameStatus,
-}: {
+interface GameStepProps {
   solution: Note[];
   values: Note[];
   submitted: boolean;
   gameStatus: GameStatus;
-}): JSX.Element => {
+}
+
+const GameStep = memo(({ solution, values, submitted, gameStatus }: GameStepProps): JSX.Element => {
   const solutionRef = React.useRef<Array<Note | null>>();
   const [results, setResults] = useState<InputStatus[]>([]);
 
+  const shouldShowResults = useMemo(() => submitted || gameStatus === GameStatus.Ended, [submitted, gameStatus]);
+
   React.useEffect(() => {
     solutionRef.current = solution;
-    if (submitted || gameStatus === GameStatus.Ended) {
+    if (shouldShowResults) {
       const res = getResults(values, solution);
       setResults(res);
     }
-  }, [solution]);
+  }, [solution, shouldShowResults, values]);
 
-  React.useEffect(() => {
-    if (submitted) {
-      const res = getResults(values, solution);
-      setResults(res);
-    }
-  }, [submitted]);
-
-  const renderInputFields = () => {
+  const inputFields = useMemo(() => {
     return [...Array(PITCHLE_LENGTH)].map((_, i) => {
       const value = values[i] || "";
       return (
         <div className="text-input-wrapper" key={`game-step-input-${i}`}>
           <div
             className={cx("text-input-wrapper_inner", {
-              ["text-input-wrapper_inner--is-submitted"]: submitted || gameStatus === GameStatus.Ended,
+              ["text-input-wrapper_inner--is-submitted"]: shouldShowResults,
             })}
           >
             <div className="text-input-wrapper_front">
@@ -104,7 +96,7 @@ const GameStep = ({
         </div>
       );
     });
-  };
+  }, [values, results, shouldShowResults, gameStatus]);
 
   return (
     <div
@@ -112,9 +104,11 @@ const GameStep = ({
         "game-step--small": gameStatus === GameStatus.Ended,
       })}
     >
-      {renderInputFields()}
+      {inputFields}
     </div>
   );
-};
+});
+
+GameStep.displayName = "GameStep";
 
 export default GameStep;

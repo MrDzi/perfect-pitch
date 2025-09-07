@@ -1,22 +1,13 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { ReactElement } from "react";
 import { useLocation } from "react-router-dom";
 import "./header.scss";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
+import useScrollDetection from "../../hooks/useScrollDetection";
 
 const Header = (): ReactElement => {
   const location = useLocation();
   const [navigate] = useNavigateWithTransition();
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const isScrolled = useScrollDetection();
 
   const onLinkClick = (route: string) => {
     return () => {

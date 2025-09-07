@@ -1,15 +1,13 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, memo } from "react";
 import "./game-end.scss";
 
-const GameEnd = ({
-  totalPoints,
-  onClick,
-  withPercentage = false,
-}: {
+interface GameEndProps {
   totalPoints: number;
   onClick: () => void;
-  withPercentage?: boolean | undefined;
-}): ReactElement => {
+  withPercentage?: boolean;
+}
+
+const GameEnd = memo(({ totalPoints, onClick, withPercentage = false }: GameEndProps): ReactElement => {
   return (
     <div className="game-end full-size flex flex-center">
       <div className="flex flex-column flex-center">
@@ -25,6 +23,8 @@ const GameEnd = ({
       </div>
     </div>
   );
-};
+});
+
+GameEnd.displayName = "GameEnd";
 
 export default GameEnd;
