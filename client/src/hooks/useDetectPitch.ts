@@ -7,6 +7,7 @@ interface ToneData {
   note: Note;
   detune: number;
   pitch?: number;
+  missType?: "low" | "high";
 }
 
 const getAverageSingingData = (data: ToneData[]): ToneData => {
@@ -14,6 +15,8 @@ const getAverageSingingData = (data: ToneData[]): ToneData => {
   let mostFrequentNote = data[0].note;
   let maxCount = 1;
   let detuneSum = 0;
+  let lowCount = 0;
+  let highCount = 0;
   data.forEach((d, index) => {
     // Discard the beginning of the input
     if (index > 15) {
@@ -26,12 +29,19 @@ const getAverageSingingData = (data: ToneData[]): ToneData => {
         maxCount = toneOccurrences[d.note];
         mostFrequentNote = d.note;
       }
+      if (d.detune < 0) {
+        lowCount++;
+      } else {
+        highCount++;
+      }
       detuneSum += Math.abs(d.detune);
     }
   });
+
   return {
     note: mostFrequentNote,
     detune: Math.ceil(detuneSum / (data.length - 15)),
+    missType: lowCount > highCount ? "low" : "high",
   };
 };
 
@@ -93,7 +103,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
 
       const volumeThreshold = 0.015;
       const updateInterval = 10;
-      const maxFrames = 140;
+      const maxFrames = 170;
       const minPitch = 80;
       const maxPitch = 2000;
 
@@ -147,6 +157,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
             setSingingData({
               note: averageSingingData.note,
               detune: averageSingingData.detune,
+              missType: averageSingingData.missType,
             });
             return;
           }
@@ -175,7 +186,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
     });
   }, []);
 
-  return [startPitchDetection, stopPitchDetection, singingData, Math.floor(nonSilentFrameCount.current / 1.4), detune];
+  return [startPitchDetection, stopPitchDetection, singingData, Math.floor(nonSilentFrameCount.current / 1.7), detune];
 };
 
 export default useDetectPitch;

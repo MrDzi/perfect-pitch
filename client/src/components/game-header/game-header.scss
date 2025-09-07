@@ -21,23 +21,39 @@
   }
 }
 
+.game-header_score {
+  flex-grow: 1;
+  align-items: flex-end;
+}
 .game-header_new-points {
   opacity: 1;
   position: absolute;
   right: 0;
   transform: translateY(80px);
-  animation: fade-out 1s ease-in-out 1s;
+  animation: fadeOut 1s ease-in-out 1s;
   animation-fill-mode: forwards;
   &--positive {
     color: var(--dark-green);
   }
 }
 
+.game-header_accuracy-label {
+  font-size: 1.1em;
+  color: var(--dark-green);
+  font-weight: light;
+  position: absolute;
+  text-transform: uppercase;
+  right: 0;
+  transform: translateY(130px);
+  animation: fadeOutText 1s ease-in-out 1.4s;
+  animation-fill-mode: forwards;
+}
+
 .microphone-group {
   animation: fadeInOut linear 1.2s infinite;
 }
 
-@keyframes fade-out {
+@keyframes fadeOut {
   0% {
     opacity: 1;
     transform: translateY(80px);
@@ -45,6 +61,20 @@
   100% {
     opacity: 0;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutText {
+  0% {
+    opacity: 1;
+    transform: translateY(130px);
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(70px);
   }
 }
 

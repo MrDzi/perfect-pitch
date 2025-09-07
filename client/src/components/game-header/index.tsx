@@ -10,6 +10,7 @@ interface GameHeaderProps {
   counter: number | null;
   totalPoints: number;
   points: number | null;
+  accuracyLabel?: string;
   isNotePlayed: boolean;
   gameStatus?: GameStatus;
   isSingingMode?: boolean;
@@ -32,6 +33,7 @@ const Header = ({
   counter,
   totalPoints,
   points,
+  accuracyLabel,
   isNotePlayed,
   onStartClick,
   onRepeatClick,
@@ -83,7 +85,7 @@ const Header = ({
         </div>
       </div>
       <div className="flex flex-right">
-        <div className="flex flex-column position-relative">
+        <div className="game-header_score flex flex-column position-relative">
           <div className="flex flex-center">
             <span>Score: </span>
             <span className="game-header_points">{`${totalPoints}${withPercentage ? "%" : ""}`}</span>
@@ -94,6 +96,9 @@ const Header = ({
                 "game-header_new-points--positive": points > 0,
               })}
             >{`+${points}${withPercentage ? "%" : ""}`}</div>
+          ) : null}
+          {accuracyLabel && points !== null && currentStep !== 0 ? (
+            <div className="game-header_accuracy-label">{accuracyLabel}</div>
           ) : null}
         </div>
       </div>
