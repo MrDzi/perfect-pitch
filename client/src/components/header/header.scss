@@ -43,11 +43,11 @@
       position: relative;
 
       &:hover {
-        color: var(--green);
+        color: var(--dark-green);
       }
 
       &.active {
-        color: var(--green);
+        color: var(--dark-green);
       }
 
       &:focus {
