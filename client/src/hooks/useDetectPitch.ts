@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getNoteFrequency, Note, NOTES } from "../constants";
-import { noteFromPitch, centsOffFromPitch, getDeviceOptimizedConfig } from "../helpers";
+import { noteFromPitch, centsOffFromPitch, getDeviceOptimizedConfig, isMobileDevice } from "../helpers";
 import useAudio from "./useAudio";
 import usePitchDetectionWorker from "./usePitchDetectionWorker";
 
@@ -124,7 +124,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
         analyser.getFloatTimeDomainData(buf.current);
 
         // Use Web Worker for pitch detection if supported, otherwise fallback to main thread
-        if (isWorkerSupported) {
+        if (isWorkerSupported && !isMobileDevice()) {
           const workerConfig = {
             bufferSize: config.bufferSize,
             volumeThreshold: config.volumeThreshold,
