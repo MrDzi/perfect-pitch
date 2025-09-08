@@ -44,7 +44,7 @@
   position: absolute;
   text-transform: uppercase;
   right: 0;
-  transform: translateY(130px);
+  transform: translateY(120px);
   animation: fadeOutText 1s ease-in-out 1.4s;
   animation-fill-mode: forwards;
 }
@@ -67,7 +67,7 @@
 @keyframes fadeOutText {
   0% {
     opacity: 1;
-    transform: translateY(130px);
+    transform: translateY(120px);
   }
   50% {
     opacity: 0;
