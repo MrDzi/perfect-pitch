@@ -9,9 +9,15 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    static: {
-      directory: path.join(__dirname, "dist"),
-    },
+    static: [
+      {
+        directory: path.join(__dirname, "dist"),
+      },
+      {
+        directory: path.join(__dirname, "public"),
+        publicPath: "/",
+      },
+    ],
     open: true,
     hot: true,
     proxy: {
