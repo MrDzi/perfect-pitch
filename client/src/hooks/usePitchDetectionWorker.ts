@@ -79,13 +79,7 @@ const usePitchDetectionWorker = () => {
         config,
       };
 
-      // Use transferable objects on mobile for better performance
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      if (isMobile) {
-        worker.postMessage(message, [message.audioData.buffer]);
-      } else {
-        worker.postMessage(message);
-      }
+      worker.postMessage(message);
     },
     [initializeWorker]
   );

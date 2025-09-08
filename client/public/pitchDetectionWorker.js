@@ -72,23 +72,10 @@ const getVolume = (buf) => {
   const SIZE = buf.length;
   let rms = 0;
 
-  // Mobile optimization: process every 4th sample for faster volume calculation
-  if (isMobileDevice()) {
-    for (let i = 0; i < SIZE; i += 4) {
-      rms += buf[i] * buf[i];
-    }
-    return Math.sqrt(rms / (SIZE / 4));
-  } else {
-    for (let i = 0; i < SIZE; i++) {
-      rms += Math.pow(buf[i], 2);
-    }
-    return Math.sqrt(rms / SIZE);
+  for (let i = 0; i < SIZE; i++) {
+    rms += Math.pow(buf[i], 2);
   }
-};
-
-// Detect if running on mobile device
-const isMobileDevice = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return Math.sqrt(rms / SIZE);
 };
 
 // Logic taken from: https://github.com/cwilso/PitchDetect/blob/4190bc705747fbb3f82eb465ea18a2dfb5873080/js/pitchdetect.js
@@ -113,12 +100,6 @@ const autoCorrelate = (buf, sampleRate) => {
 
   buf = buf.slice(r1, r2);
   SIZE = buf.length;
-
-  // Mobile optimization: reduce computation by processing only half the buffer
-  if (isMobileDevice() && SIZE > 512) {
-    SIZE = Math.floor(SIZE / 2);
-    buf = buf.slice(0, SIZE);
-  }
 
   const c = new Array(SIZE).fill(0);
   for (let i = 0; i < SIZE; i++) {

@@ -57,7 +57,6 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
   const nonSilentFrameCount = useRef<number>(0);
   const tonesData = useRef<ToneData[]>([]);
   const requestRef = useRef<number | null>(null);
-  const consecutiveSilentFrames = useRef<number>(0);
 
   // Get device-optimized configuration
   const config = useMemo(() => getDeviceOptimizedConfig(), []);
@@ -181,22 +180,8 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
         } else {
           // Fallback to main thread processing if Web Workers are not supported
           // Import functions dynamically to avoid including them when using workers
-          import("../helpers").then(({ getVolume, autoCorrelate, isMobileDevice }) => {
+          import("../helpers").then(({ getVolume, autoCorrelate }) => {
             const volume = getVolume(buf.current);
-
-            // Mobile optimization: skip processing after consecutive silent frames
-            if (volume <= config.volumeThreshold) {
-              if (isMobileDevice()) {
-                consecutiveSilentFrames.current++;
-                if (consecutiveSilentFrames.current > 10) {
-                  // Skip processing for next few frames on mobile
-                  requestRef.current = requestAnimationFrame(update);
-                  return;
-                }
-              }
-            } else {
-              consecutiveSilentFrames.current = 0;
-            }
 
             if (volume > config.volumeThreshold && status.targetNote) {
               const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
