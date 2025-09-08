@@ -168,7 +168,7 @@ export const getDeviceOptimizedConfig = () => {
     bufferSize: isMobile ? 1024 : 2048,
     volumeThreshold: isMobile ? 0.015 : 0.015,
     updateInterval: isMobile ? 25 : 10, // Update UI every N frames
-    maxFrames: isMobile ? 130 : 170, // Shorter analysis period on mobile
+    maxFrames: isMobile ? 120 : 170, // Shorter analysis period on mobile
 
     // Audio context configuration
     fftSize: isMobile ? 1024 : 2048,
