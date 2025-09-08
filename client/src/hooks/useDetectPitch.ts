@@ -124,7 +124,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
         analyser.getFloatTimeDomainData(buf.current);
 
         // Use Web Worker for pitch detection if supported, otherwise fallback to main thread
-        if (isWorkerSupported && !isMobileDevice()) {
+        if (isWorkerSupported) {
           const workerConfig = {
             bufferSize: config.bufferSize,
             volumeThreshold: config.volumeThreshold,
