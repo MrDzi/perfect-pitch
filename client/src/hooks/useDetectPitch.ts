@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getNoteFrequency, Note, NOTES } from "../constants";
-import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume } from "../helpers";
+import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume, getDeviceOptimizedConfig } from "../helpers";
 import useAudio from "./useAudio";
 
 interface ToneData {
@@ -56,7 +56,10 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
   const nonSilentFrameCount = useRef<number>(0);
   const tonesData = useRef<ToneData[]>([]);
   const requestRef = useRef<number | null>(null);
-  const buf = useRef(new Float32Array(2048));
+
+  // Get device-optimized configuration
+  const config = useMemo(() => getDeviceOptimizedConfig(), []);
+  const buf = useRef(new Float32Array(config.bufferSize));
 
   const { getMicrophoneStream, createAnalyserFromStream, audioContext } = useAudio();
 
@@ -74,11 +77,16 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
       const stream = await getMicrophoneStream();
       if (stream) {
         analyser.current = createAnalyserFromStream(stream);
+        // Apply mobile-optimized settings to analyser
+        if (analyser.current) {
+          analyser.current.fftSize = config.fftSize;
+          analyser.current.smoothingTimeConstant = config.smoothingTimeConstant;
+        }
       }
     };
 
     initializeMicrophone();
-  }, [getMicrophoneStream, createAnalyserFromStream]);
+  }, [getMicrophoneStream, createAnalyserFromStream, config]);
 
   useEffect(() => {
     if (!status.inProgress && requestRef.current) {
@@ -101,9 +109,6 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
       // Use memoized target note data for better performance
       if (!targetNoteData) return;
 
-      const volumeThreshold = 0.015;
-      const updateInterval = 10;
-      const maxFrames = 170;
       const minPitch = 80;
       const maxPitch = 2000;
 
@@ -117,7 +122,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
         analyser.getFloatTimeDomainData(buf.current);
         const volume = getVolume(buf.current);
 
-        if (volume > volumeThreshold && status.targetNote) {
+        if (volume > config.volumeThreshold && status.targetNote) {
           const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
 
           // Skip invalid pitch values early to avoid unnecessary calculations
@@ -136,13 +141,13 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
             pitch,
           });
 
-          // Update UI less frequently to reduce render overhead
-          if (nonSilentFrameCount.current % updateInterval === 0) {
+          // Update UI less frequently to reduce render overhead (mobile-optimized)
+          if (nonSilentFrameCount.current % config.updateInterval === 0) {
             setDetune(currentDetune);
           }
 
-          // Check for completion
-          if (nonSilentFrameCount.current > maxFrames && requestRef.current) {
+          // Check for completion (mobile-optimized shorter duration)
+          if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
             setDetune(null);
             window.cancelAnimationFrame(requestRef.current);
             nonSilentFrameCount.current = 0;
@@ -168,7 +173,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
 
       update();
     },
-    [targetNoteData, status.targetNote]
+    [targetNoteData, status.targetNote, config]
   );
 
   const startPitchDetection = useCallback((targetNote: Note) => {
@@ -186,7 +191,13 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
     });
   }, []);
 
-  return [startPitchDetection, stopPitchDetection, singingData, Math.floor(nonSilentFrameCount.current / 1.7), detune];
+  return [
+    startPitchDetection,
+    stopPitchDetection,
+    singingData,
+    Math.floor(nonSilentFrameCount.current / (config.maxFrames / 100)),
+    detune,
+  ];
 };
 
 export default useDetectPitch;

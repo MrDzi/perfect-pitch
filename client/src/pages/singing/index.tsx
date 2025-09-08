@@ -32,8 +32,8 @@ const getPointsWon = (detune: number | null): number => {
   const absDetune = Math.abs(detune);
   const forgiveness = 12;
 
-  if (absDetune <= 10) return 100;
-  if (absDetune <= 100) return Math.round(100 + forgiveness - absDetune);
+  if (absDetune <= forgiveness) return 100;
+  if (absDetune <= 100 + forgiveness) return Math.round(100 + forgiveness - absDetune);
 
   return 0;
 };

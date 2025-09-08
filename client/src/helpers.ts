@@ -153,3 +153,26 @@ export const getRandomNotes = (notes: readonly Note[], count = 1): Note[] => {
   }
   return randomNotes;
 };
+
+// Mobile device detection utility
+export const isMobileDevice = (): boolean => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
+// Performance configuration based on device type
+export const getDeviceOptimizedConfig = () => {
+  const isMobile = isMobileDevice();
+
+  return {
+    // Audio processing configuration
+    bufferSize: isMobile ? 1024 : 2048,
+    volumeThreshold: isMobile ? 0.025 : 0.015,
+    updateInterval: isMobile ? 25 : 10, // Update UI every N frames
+    maxFrames: isMobile ? 130 : 170, // Shorter analysis period on mobile
+    animationFrameDelay: isMobile ? 50 : 16, // Milliseconds between animation frames
+
+    // Audio context configuration
+    fftSize: isMobile ? 1024 : 2048,
+    smoothingTimeConstant: isMobile ? 0.9 : 0.8,
+  };
+};
