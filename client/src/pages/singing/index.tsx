@@ -18,10 +18,10 @@ const COUNTER_START_VALUE = 3;
 const LOCAL_STORAGE_KEY = "singing_info_seen";
 
 const getAccuracyLabel = (points: number, missType: "low" | "high" | undefined): string => {
-  if (points === 100) return "P e r f e c t !";
+  if (points === 100) return "Perfect! 🎉";
   if (points >= 75) return "That was solid!";
-  if (points >= 50) return missType ? `That was a little too ${missType === "low" ? "low" : "high"}` : "A little off";
-  if (points > 0) return missType ? `That was too ${missType === "low" ? "low" : "high"}, keep trying!` : "Keep trying";
+  if (points >= 50) return missType ? `A bit too ${missType === "low" ? "low" : "high"}!` : "A little off";
+  if (points > 0) return missType ? `Too ${missType === "low" ? "low" : "high"}, keep trying!` : "Keep trying";
 
   return "";
 };
