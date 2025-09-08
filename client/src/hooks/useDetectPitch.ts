@@ -65,8 +65,6 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
   const { getMicrophoneStream, createAnalyserFromStream, audioContext } = useAudio();
   const { detectPitch: detectPitchWithWorker, isWorkerSupported } = usePitchDetectionWorker();
 
-  console.log("isWorkerSupported", isWorkerSupported);
-
   // Memoize target note calculations to avoid repeated expensive operations
   const targetNoteData = useMemo(() => {
     if (!status.targetNote) return null;
