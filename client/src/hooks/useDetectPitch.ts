@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getNoteFrequency, Note, NOTES } from "../constants";
-import { noteFromPitch, autoCorrelate, centsOffFromPitch, getVolume, getDeviceOptimizedConfig } from "../helpers";
+import { noteFromPitch, centsOffFromPitch, getDeviceOptimizedConfig } from "../helpers";
 import useAudio from "./useAudio";
+import usePitchDetectionWorker from "./usePitchDetectionWorker";
 
 interface ToneData {
   note: Note;
@@ -62,6 +63,9 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
   const buf = useRef(new Float32Array(config.bufferSize));
 
   const { getMicrophoneStream, createAnalyserFromStream, audioContext } = useAudio();
+  const { detectPitch: detectPitchWithWorker, isWorkerSupported } = usePitchDetectionWorker();
+
+  console.log("isWorkerSupported", isWorkerSupported);
 
   // Memoize target note calculations to avoid repeated expensive operations
   const targetNoteData = useMemo(() => {
@@ -120,60 +124,121 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
         }
 
         analyser.getFloatTimeDomainData(buf.current);
-        const volume = getVolume(buf.current);
 
-        if (volume > config.volumeThreshold && status.targetNote) {
-          const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
+        // Use Web Worker for pitch detection if supported, otherwise fallback to main thread
+        if (isWorkerSupported) {
+          const workerConfig = {
+            bufferSize: config.bufferSize,
+            volumeThreshold: config.volumeThreshold,
+            minPitch,
+            maxPitch,
+          };
 
-          // Skip invalid pitch values early to avoid unnecessary calculations
-          if (pitch < minPitch || pitch > maxPitch || isNaN(pitch)) {
-            requestRef.current = requestAnimationFrame(update);
-            return;
-          }
+          detectPitchWithWorker(buf.current, audioContext.sampleRate, workerConfig, (result) => {
+            if (!status.targetNote || !targetNoteData) return;
 
-          const noteNum = noteFromPitch(pitch);
-          const currentDetune = centsOffFromPitch(pitch, targetNoteData.noteNum);
+            if (result.isValid && result.pitch) {
+              const noteNum = noteFromPitch(result.pitch);
+              const currentDetune = centsOffFromPitch(result.pitch, targetNoteData.noteNum);
 
-          nonSilentFrameCount.current++;
-          tonesData.current.push({
-            note: NOTES[noteNum % 12],
-            detune: currentDetune,
-            pitch,
+              nonSilentFrameCount.current++;
+              tonesData.current.push({
+                note: NOTES[noteNum % 12],
+                detune: currentDetune,
+                pitch: result.pitch,
+              });
+
+              // Update UI less frequently to reduce render overhead (mobile-optimized)
+              if (nonSilentFrameCount.current % config.updateInterval === 0) {
+                setDetune(currentDetune);
+              }
+
+              // Check for completion (mobile-optimized shorter duration)
+              if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+                setDetune(null);
+                window.cancelAnimationFrame(requestRef.current);
+                nonSilentFrameCount.current = 0;
+
+                const averageSingingData = getAverageSingingData(tonesData.current);
+                setStatus({
+                  inProgress: false,
+                  targetNote: null,
+                });
+                tonesData.current = [];
+
+                setSingingData({
+                  note: averageSingingData.note,
+                  detune: averageSingingData.detune,
+                  missType: averageSingingData.missType,
+                });
+                return;
+              }
+            }
+
+            if (status.inProgress) {
+              requestRef.current = requestAnimationFrame(update);
+            }
           });
+        } else {
+          // Fallback to main thread processing if Web Workers are not supported
+          // Import functions dynamically to avoid including them when using workers
+          import("../helpers").then(({ getVolume, autoCorrelate }) => {
+            const volume = getVolume(buf.current);
 
-          // Update UI less frequently to reduce render overhead (mobile-optimized)
-          if (nonSilentFrameCount.current % config.updateInterval === 0) {
-            setDetune(currentDetune);
-          }
+            if (volume > config.volumeThreshold && status.targetNote) {
+              const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
 
-          // Check for completion (mobile-optimized shorter duration)
-          if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
-            setDetune(null);
-            window.cancelAnimationFrame(requestRef.current);
-            nonSilentFrameCount.current = 0;
+              // Skip invalid pitch values early to avoid unnecessary calculations
+              if (pitch < minPitch || pitch > maxPitch || isNaN(pitch)) {
+                requestRef.current = requestAnimationFrame(update);
+                return;
+              }
 
-            const averageSingingData = getAverageSingingData(tonesData.current);
-            setStatus({
-              inProgress: false,
-              targetNote: null,
-            });
-            tonesData.current = [];
+              const noteNum = noteFromPitch(pitch);
+              const currentDetune = centsOffFromPitch(pitch, targetNoteData.noteNum);
 
-            setSingingData({
-              note: averageSingingData.note,
-              detune: averageSingingData.detune,
-              missType: averageSingingData.missType,
-            });
-            return;
-          }
+              nonSilentFrameCount.current++;
+              tonesData.current.push({
+                note: NOTES[noteNum % 12],
+                detune: currentDetune,
+                pitch,
+              });
+
+              // Update UI less frequently to reduce render overhead (mobile-optimized)
+              if (nonSilentFrameCount.current % config.updateInterval === 0) {
+                setDetune(currentDetune);
+              }
+
+              // Check for completion (mobile-optimized shorter duration)
+              if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+                setDetune(null);
+                window.cancelAnimationFrame(requestRef.current);
+                nonSilentFrameCount.current = 0;
+
+                const averageSingingData = getAverageSingingData(tonesData.current);
+                setStatus({
+                  inProgress: false,
+                  targetNote: null,
+                });
+                tonesData.current = [];
+
+                setSingingData({
+                  note: averageSingingData.note,
+                  detune: averageSingingData.detune,
+                  missType: averageSingingData.missType,
+                });
+                return;
+              }
+            }
+
+            requestRef.current = requestAnimationFrame(update);
+          });
         }
-
-        requestRef.current = requestAnimationFrame(update);
       };
 
       update();
     },
-    [targetNoteData, status.targetNote, config]
+    [targetNoteData, status.targetNote, config, isWorkerSupported, detectPitchWithWorker]
   );
 
   const startPitchDetection = useCallback((targetNote: Note) => {
