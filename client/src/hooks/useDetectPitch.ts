@@ -55,6 +55,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
   const [singingData, setSingingData] = useState<ToneData | null>(null);
   const analyser = useRef<AnalyserNode | null>(null);
   const nonSilentFrameCount = useRef<number>(0);
+  const totalFrameCount = useRef<number>(0);
   const tonesData = useRef<ToneData[]>([]);
   const requestRef = useRef<number | null>(null);
 
@@ -135,6 +136,11 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
           detectPitchWithWorker(buf.current, audioContext.sampleRate, workerConfig, (result) => {
             if (!status.targetNote || !targetNoteData) return;
 
+            // Only increment total frame count when there's sufficient volume
+            if (result.volume > config.volumeThreshold) {
+              totalFrameCount.current++;
+            }
+
             if (result.isValid && result.pitch) {
               const noteNum = noteFromPitch(result.pitch);
               const currentDetune = centsOffFromPitch(result.pitch, targetNoteData.noteNum);
@@ -152,10 +158,11 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
               }
 
               // Check for completion (mobile-optimized shorter duration)
-              if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+              if (totalFrameCount.current > config.maxFrames && requestRef.current) {
                 setDetune(null);
                 window.cancelAnimationFrame(requestRef.current);
                 nonSilentFrameCount.current = 0;
+                totalFrameCount.current = 0;
 
                 const averageSingingData = getAverageSingingData(tonesData.current);
                 setStatus({
@@ -172,15 +179,14 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
                 return;
               }
             } else {
-              // For invalid pitch but sufficient volume, still increment to ensure progress
+              // For invalid pitch but sufficient volume, still check for completion
               if (result.volume > config.volumeThreshold) {
-                nonSilentFrameCount.current++;
-
                 // Check for completion even with invalid pitch
-                if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+                if (totalFrameCount.current > config.maxFrames && requestRef.current) {
                   setDetune(null);
                   window.cancelAnimationFrame(requestRef.current);
                   nonSilentFrameCount.current = 0;
+                  totalFrameCount.current = 0;
 
                   // Use existing data if available, otherwise create default result
                   const averageSingingData =
@@ -214,18 +220,22 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
           import("../helpers").then(({ getVolume, autoCorrelate }) => {
             const volume = getVolume(buf.current);
 
+            // Only increment total frame count when there's sufficient volume
+            if (volume > config.volumeThreshold) {
+              totalFrameCount.current++;
+            }
+
             if (volume > config.volumeThreshold && status.targetNote) {
               const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
 
               // Skip invalid pitch values but still increment for volume progress
               if (pitch < minPitch || pitch > maxPitch || isNaN(pitch)) {
-                nonSilentFrameCount.current++;
-
                 // Check for completion even with invalid pitch
-                if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+                if (totalFrameCount.current > config.maxFrames && requestRef.current) {
                   setDetune(null);
                   window.cancelAnimationFrame(requestRef.current);
                   nonSilentFrameCount.current = 0;
+                  totalFrameCount.current = 0;
 
                   const averageSingingData =
                     tonesData.current.length > 15
@@ -266,10 +276,11 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
               }
 
               // Check for completion (mobile-optimized shorter duration)
-              if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+              if (totalFrameCount.current > config.maxFrames && requestRef.current) {
                 setDetune(null);
                 window.cancelAnimationFrame(requestRef.current);
                 nonSilentFrameCount.current = 0;
+                totalFrameCount.current = 0;
 
                 const averageSingingData = getAverageSingingData(tonesData.current);
                 setStatus({
@@ -299,6 +310,8 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
 
   const startPitchDetection = useCallback((targetNote: Note) => {
     setSingingData(null);
+    totalFrameCount.current = 0;
+    nonSilentFrameCount.current = 0;
     setStatus({
       inProgress: true,
       targetNote,
@@ -316,7 +329,7 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
     startPitchDetection,
     stopPitchDetection,
     singingData,
-    Math.floor(nonSilentFrameCount.current / (config.maxFrames / 100)),
+    Math.floor(totalFrameCount.current / (config.maxFrames / 100)),
     detune,
   ];
 };
