@@ -171,6 +171,37 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
                 });
                 return;
               }
+            } else {
+              // For invalid pitch but sufficient volume, still increment to ensure progress
+              if (result.volume > config.volumeThreshold) {
+                nonSilentFrameCount.current++;
+
+                // Check for completion even with invalid pitch
+                if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+                  setDetune(null);
+                  window.cancelAnimationFrame(requestRef.current);
+                  nonSilentFrameCount.current = 0;
+
+                  // Use existing data if available, otherwise create default result
+                  const averageSingingData =
+                    tonesData.current.length > 15
+                      ? getAverageSingingData(tonesData.current)
+                      : { note: (status.targetNote || "A") as Note, detune: 100, missType: "low" as const };
+
+                  setStatus({
+                    inProgress: false,
+                    targetNote: null,
+                  });
+                  tonesData.current = [];
+
+                  setSingingData({
+                    note: averageSingingData.note,
+                    detune: averageSingingData.detune,
+                    missType: averageSingingData.missType,
+                  });
+                  return;
+                }
+              }
             }
 
             if (status.inProgress) {
@@ -186,8 +217,35 @@ const useDetectPitch = (): [(targetNote: Note | null) => void, () => void, ToneD
             if (volume > config.volumeThreshold && status.targetNote) {
               const pitch = autoCorrelate(buf.current, audioContext.sampleRate);
 
-              // Skip invalid pitch values early to avoid unnecessary calculations
+              // Skip invalid pitch values but still increment for volume progress
               if (pitch < minPitch || pitch > maxPitch || isNaN(pitch)) {
+                nonSilentFrameCount.current++;
+
+                // Check for completion even with invalid pitch
+                if (nonSilentFrameCount.current > config.maxFrames && requestRef.current) {
+                  setDetune(null);
+                  window.cancelAnimationFrame(requestRef.current);
+                  nonSilentFrameCount.current = 0;
+
+                  const averageSingingData =
+                    tonesData.current.length > 15
+                      ? getAverageSingingData(tonesData.current)
+                      : { note: (status.targetNote || "A") as Note, detune: 100, missType: "low" as const };
+
+                  setStatus({
+                    inProgress: false,
+                    targetNote: null,
+                  });
+                  tonesData.current = [];
+
+                  setSingingData({
+                    note: averageSingingData.note,
+                    detune: averageSingingData.detune,
+                    missType: averageSingingData.missType,
+                  });
+                  return;
+                }
+
                 requestRef.current = requestAnimationFrame(update);
                 return;
               }
