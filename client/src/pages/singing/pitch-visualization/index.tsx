@@ -17,7 +17,8 @@ const PitchVisualization = memo(({ detune, shouldVisualize, progress }: PitchVis
 
   const progressBarStyle = useMemo(
     () => ({
-      transform: `translateX(${-200 + progress * 2}px)`,
+      transform: `translateX(${-200 + Math.min(progress, 100) * 2}px)`,
+      transition: progress === 100 ? "none" : "transform 0.1s ease-out",
     }),
     [progress]
   );
@@ -26,7 +27,8 @@ const PitchVisualization = memo(({ detune, shouldVisualize, progress }: PitchVis
 
   const pitchIndicatorStyle = useMemo(
     () => ({
-      transform: `translateX(${detune || 0}px)`,
+      transform: `translateX(${Math.max(-150, Math.min(150, detune || 0))}px)`,
+      transition: detune === null ? "none" : "transform 0.08s ease-out",
     }),
     [detune]
   );

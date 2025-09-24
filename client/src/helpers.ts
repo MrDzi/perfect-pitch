@@ -166,12 +166,12 @@ export const getDeviceOptimizedConfig = () => {
   return {
     // Audio processing configuration
     bufferSize: isMobile ? 1024 : 2048,
-    volumeThreshold: isMobile ? 0.015 : 0.015,
-    updateInterval: isMobile ? 25 : 10, // Update UI every N frames
-    maxFrames: isMobile ? 120 : 170, // Shorter analysis period on mobile
+    volumeThreshold: isMobile ? 0.012 : 0.015, // Lower threshold for mobile
+    updateInterval: isMobile ? 15 : 10, // More frequent UI updates on mobile
+    maxFrames: isMobile ? 100 : 170, // Shorter analysis period on mobile
 
     // Audio context configuration
     fftSize: isMobile ? 1024 : 2048,
-    smoothingTimeConstant: isMobile ? 0.9 : 0.8,
+    smoothingTimeConstant: isMobile ? 0.85 : 0.8, // Less smoothing for more responsiveness
   };
 };
