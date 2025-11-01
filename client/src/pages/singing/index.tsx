@@ -20,7 +20,7 @@ const LOCAL_STORAGE_KEY = "singing_info_seen";
 const getAccuracyLabel = (points: number, missType: "low" | "high" | undefined): string => {
   if (points === 100) return "Perfect! 🎯";
   if (points >= 75) return "Excellent 🔥";
-  if (points >= 50) return missType ? `A bit too ${missType === "low" ? "low 🔽" : "high 🔼"}` : "A little off";
+  if (points >= 50) return missType ? `A bit ${missType === "low" ? "low 🔽" : "high 🔼"}` : "A little off";
   if (points > 0) return missType ? `Too ${missType === "low" ? "low ⏬" : "high ⏫"}` : "Keep trying";
 
   return "";
