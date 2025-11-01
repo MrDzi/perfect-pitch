@@ -24,6 +24,12 @@ const Header = (): ReactElement => {
             HOME
           </button>
           <button
+            className={`nav-link ${location.pathname === "/blog" ? "active" : ""}`}
+            onClick={onLinkClick("/blog")}
+          >
+            BLOG
+          </button>
+          <button
             className={`nav-link ${location.pathname === "/about" ? "active" : ""}`}
             onClick={onLinkClick("/about")}
           >

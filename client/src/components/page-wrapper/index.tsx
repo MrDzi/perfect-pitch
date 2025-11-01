@@ -1,6 +1,5 @@
 import React, { ReactElement } from "react";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
-import BackArrow from "../../assets/icons/back-arrow";
 import "./page.scss";
 
 const PageWrapper = ({
@@ -19,8 +18,7 @@ const PageWrapper = ({
       <div className="page--game__inner">
         {withBackButton ? (
           <button className="back-button button button--no-border flex flex-center" onClick={goToHome}>
-            <BackArrow />
-            <span>Back</span>
+            ← <span>Back</span>
           </button>
         ) : null}
         <div className="content-wrapper">{children}</div>

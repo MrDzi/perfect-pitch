@@ -15,7 +15,7 @@ const About = (): ReactElement => {
     }
   }, []);
   return (
-    <PageWrapper>
+    <PageWrapper withBackButton>
       <div className="about-page">
         <div className="container">
           <h1>About Check Your Pitch – and Why Pitch Matters</h1>

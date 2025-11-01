@@ -4,6 +4,7 @@ import { PulseLoader } from "react-spinners";
 import Home from "./pages/home";
 import About from "./pages/about";
 import PrivacyPolicy from "./pages/privacy-policy";
+import Blog from "./pages/blog";
 import PageWrapper from "./components/page-wrapper";
 import "./app.scss";
 import Header from "./components/header";
@@ -55,6 +56,8 @@ const App = (): ReactElement => {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<Blog />} />
                 <Route path="/listen" element={<Listening />} />
                 <Route path="/sing" element={<Singing />} />
                 <Route path="/pitchle" element={<Pitchle />} />
