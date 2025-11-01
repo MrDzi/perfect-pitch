@@ -15,7 +15,7 @@ const PrivacyPolicy = (): ReactElement => {
     }
   }, []);
   return (
-    <PageWrapper>
+    <PageWrapper withBackButton>
       <div className="privacy-policy-page">
         <div className="container">
           <h1>Privacy Policy</h1>

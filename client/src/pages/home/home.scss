@@ -65,7 +65,7 @@
       border-radius: 15px;
     }
     &:hover {
-      background: color.adjust(#DAE2CB, $lightness: 9%);
+      background: #fff;
       svg {
         transform: translateX(-5px);
       }
