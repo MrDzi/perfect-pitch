@@ -1,0 +1,75 @@
+@use "sass:color";
+
+.footer {
+  width: 100%;
+  padding: 6px 0;
+  margin-top: auto;
+  background-color: var(--dark-black);
+
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      .footer-link {
+        background: none;
+        border: none;
+        color: var(--light-green);
+        font-size: 12px;
+        font-weight: 300;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        padding: 5px 10px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        &.active {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  // Mobile styles
+  @media (max-width: 768px) {
+    padding: 15px 0;
+    .footer-content {
+      padding: 0 15px;
+
+      .footer-nav {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+
+        .footer-link {
+          font-size: 11px;
+          padding: 8px 12px;
+        }
+      }
+    }
+  }
+
+  // Extra small mobile screens
+  @media (max-width: 480px) {
+    padding: 15px 0;
+    .footer-content {
+      .footer-nav {
+        gap: 10px;
+
+        .footer-link {
+          font-size: 10px;
+          padding: 6px 10px;
+        }
+      }
+    }
+  }
+}

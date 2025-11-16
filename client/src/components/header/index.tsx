@@ -24,22 +24,10 @@ const Header = (): ReactElement => {
             HOME
           </button>
           <button
-            className={`nav-link ${location.pathname === "/blog" ? "active" : ""}`}
+            className={`nav-link ${location.pathname.startsWith("/blog") ? "active" : ""}`}
             onClick={onLinkClick("/blog")}
           >
             BLOG
-          </button>
-          <button
-            className={`nav-link ${location.pathname === "/about" ? "active" : ""}`}
-            onClick={onLinkClick("/about")}
-          >
-            ABOUT
-          </button>
-          <button
-            className={`nav-link ${location.pathname === "/privacy-policy" ? "active" : ""}`}
-            onClick={onLinkClick("/privacy-policy")}
-          >
-            PRIVACY
           </button>
         </nav>
         <a href="https://www.buymeacoffee.com/steam_roller" target="_blank" rel="noreferrer">
