@@ -124,7 +124,7 @@ const PrivacyPolicy = (): ReactElement => {
             <h2>Contact Us</h2>
             <p>
               If you have any questions about this Privacy Policy, please contact us at:{" "}
-              <a href="mailto:dejanhadziomerovic@gmail.com">dejanhadziomerovic@gmail.com</a>
+              <a href="mailto:checkyourpitch@gmail.com">checkyourpitch@gmail.com</a>
             </p>
           </section>
 

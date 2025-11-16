@@ -19,7 +19,7 @@ const Home = (): ReactElement => {
     <div className="page page--home">
       <div className="home-header">
         <h1 className="home-header_title">Check Your Pitch</h1>
-        <h2 className="home-header_subtitle">🎶 Train your ear. Play and improve. 🎶</h2>
+        <h2 className="home-header_subtitle">♫ Train your ear. Play and improve. ♫</h2>
         <p className="home-header_desc">
           No downloads or sign‑ups. Just simple and fun effective ear‑training games you can enjoy instantly in your
           browser.
