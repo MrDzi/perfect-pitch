@@ -11,7 +11,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: "what-is-pitch-and-how-to-improve",
     title: "What is Pitch and How Can You Improve It?",
-    date: "2025-10-15",
+    date: "15/10/2025",
     readTime: "5 min read",
     excerpt:
       "Understanding pitch is fundamental to music. Learn what pitch is, why it matters, and practical techniques to improve your pitch accuracy.",

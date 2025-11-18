@@ -29,16 +29,14 @@ const Home = (): ReactElement => {
         <div className="home-content">
           <div className="home-content_block home-content_block--big" onClick={onLinkClick("/sing")}>
             <MicIcon />
-            <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>Can you sing this tone?</h3>
               <p>Test your pitch accuracy by singing back five random tones. See how close you can match them!</p>
             </div>
-            <span className="home-content_cta button button--small">Play Now</span>
+            <button className="home-content_cta button button--small">Play Now</button>
           </div>
           <div className="home-content_block home-content_block--small-up" onClick={onLinkClick("/pitchle")}>
             <CableIcon />
-            <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>Pitchle</h3>
               <p>
@@ -46,18 +44,17 @@ const Home = (): ReactElement => {
                 in six tries?
               </p>
             </div>
-            <span className="home-content_cta button button--small">Play Now</span>
+            <button className="home-content_cta button button--small">Play Now</button>
           </div>
           <div className="home-content_block home-content_block--small-down" onClick={onLinkClick("/listen")}>
             <HeadphonesIcon />
-            <div className="home-content_block_inner" />
             <div className="home-content_desc">
               <h3>How good is your ear?</h3>
               <p>
                 Challenge yourself to spot subtle pitch differences. Which tone is higher, lower, or exactly the same?
               </p>
             </div>
-            <span className="home-content_cta button button--small">Play Now</span>
+            <button className="home-content_cta button button--small">Play Now</button>
           </div>
         </div>
       </div>
