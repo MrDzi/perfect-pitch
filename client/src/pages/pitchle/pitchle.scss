@@ -97,12 +97,14 @@
     padding-bottom: 20px;
   }
   @media only screen and (max-width: 767px) {
-    padding-bottom: 10px;
-    position: absolute;
-    bottom: 8px;
-    left: 15px;
-    right: 15px;
-    padding-top: 40px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 15px 10px;
+    margin: 0 5px;
+    border-left: 2px solid var(--dark-black);
+    border-right: 2px solid var(--dark-black);
     background: rgb(255,255,255);
     background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,0) 100%);
   }

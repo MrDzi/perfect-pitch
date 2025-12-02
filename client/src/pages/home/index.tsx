@@ -40,8 +40,7 @@ const Home = (): ReactElement => {
             <div className="home-content_desc">
               <h3>Pitchle</h3>
               <p>
-                A musical twist on Wordle. Listen carefully and guess each note in today’s hidden melody. Can you get it
-                in six tries?
+                A musical twist on Wordle. Listen carefully and guess each note in today’s melody - you have six tries!
               </p>
             </div>
             <button className="home-content_cta button button--small">Play Now</button>

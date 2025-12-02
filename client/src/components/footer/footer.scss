@@ -41,18 +41,15 @@
 
   // Mobile styles
   @media (max-width: 768px) {
-    padding: 15px 0;
     .footer-content {
       padding: 0 15px;
 
       .footer-nav {
-        flex-direction: column;
         gap: 10px;
         text-align: center;
 
         .footer-link {
           font-size: 11px;
-          padding: 8px 12px;
         }
       }
     }

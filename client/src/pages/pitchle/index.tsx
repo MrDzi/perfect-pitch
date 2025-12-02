@@ -103,9 +103,19 @@ const Pitchle = (): ReactElement => {
   const [playNotes, repeatNotes, playingFinished] = usePlayer(600);
   const showLoadingInfoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [showLoadingInfo, setShowLoadingInfo] = useState(false);
+  const [viewportSize, setViewportSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
     document.title = "Pitchle | CheckYourPitch - Free Ear Training";
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -128,6 +138,11 @@ const Pitchle = (): ReactElement => {
       (!currentInput[currentStep] || currentInput[currentStep].length === 0)
     );
   }, [melodyDecoded, currentInput, currentStep]);
+
+  const controlsBottomStyle = useMemo(() => {
+    const aspectRatio = viewportSize.height / viewportSize.width;
+    return aspectRatio < 1.71 ? { bottom: 0 } : { bottom: 68 };
+  }, [viewportSize]);
 
   useEffect(() => {
     if (currentStep === 0) {
@@ -301,7 +316,7 @@ const Pitchle = (): ReactElement => {
             <div className="pitchle-input-group">{renderInputs()}</div>
           </div>
           {gameStatus !== GameStatus.Ended ? (
-            <div className="pitchle_controls">
+            <div className="pitchle_controls" style={controlsBottomStyle}>
               <div className="pitchle_note-buttons flex margin-bottom-half">
                 {NOTES.map((n) => (
                   <button

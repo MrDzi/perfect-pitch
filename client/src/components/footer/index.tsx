@@ -28,7 +28,7 @@ const Footer = (): ReactElement => {
             className={`footer-link ${location.pathname === "/privacy-policy" ? "active" : ""}`}
             onClick={onLinkClick("/privacy-policy")}
           >
-            privacy
+            privacy policy
           </button>
           <button
             className={`footer-link ${location.pathname === "/terms-conditions" ? "active" : ""}`}
