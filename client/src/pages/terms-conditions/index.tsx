@@ -4,14 +4,17 @@ import "./terms-conditions.scss";
 
 const TermsConditions = (): ReactElement => {
   useEffect(() => {
-    document.title = "Terms & Conditions | CheckYourPitch";
-    // Update meta description for this page
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute(
-        "content",
-        "Read CheckYourPitch's Terms & Conditions. Learn about the rules and guidelines for using our free pitch training games and educational content."
-      );
+    // Only run in browser environment
+    if (typeof document !== "undefined") {
+      document.title = "Terms & Conditions | CheckYourPitch";
+      // Update meta description for this page
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute(
+          "content",
+          "Read CheckYourPitch's Terms & Conditions. Learn about the rules and guidelines for using our free pitch training games and educational content."
+        );
+      }
     }
   }, []);
 

@@ -16,20 +16,23 @@ const Blog = (): ReactElement => {
   const selectedPost = id ? blogPosts.find((post) => post.id === id) : null;
 
   useEffect(() => {
-    if (selectedPost) {
-      document.title = `${selectedPost.title} | CheckYourPitch Blog`;
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute("content", selectedPost.excerpt);
-      }
-    } else {
-      document.title = "Blog | CheckYourPitch - Pitch Training Tips and Insights";
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute(
-          "content",
-          "Discover expert tips and insights on pitch training, ear training, and improving your musical abilities. Learn from our comprehensive guides and tutorials."
-        );
+    // Only run in browser environment
+    if (typeof document !== "undefined") {
+      if (selectedPost) {
+        document.title = `${selectedPost.title} | CheckYourPitch Blog`;
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+          metaDescription.setAttribute("content", selectedPost.excerpt);
+        }
+      } else {
+        document.title = "Blog | CheckYourPitch - Pitch Training Tips and Insights";
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+          metaDescription.setAttribute(
+            "content",
+            "Discover expert tips and insights on pitch training, ear training, and improving your musical abilities. Learn from our comprehensive guides and tutorials."
+          );
+        }
       }
     }
   }, [selectedPost]);
@@ -41,17 +44,23 @@ const Blog = (): ReactElement => {
 
   const handlePostClick = (post: BlogPost) => {
     navigate(`/blog/${post.id}`);
-    window.scrollTo(0, 0);
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
   };
 
   const handleBackToList = () => {
     navigate("/blog");
-    window.scrollTo(0, 0);
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo(0, 0);
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+    }
   };
 
   const renderPagination = () => {

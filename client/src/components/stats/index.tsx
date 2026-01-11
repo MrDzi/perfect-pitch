@@ -1,9 +1,9 @@
 import React, { ReactElement, memo } from "react";
-import { Stats } from "../../pages/pitchle";
+import { Stats as StatsType } from "../../pages/pitchle";
 import "./stats.scss";
 
 interface StatsProps {
-  data: Stats;
+  data: StatsType;
 }
 
 const Stats = memo(({ data }: StatsProps): ReactElement => {
