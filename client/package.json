@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/MrDzi/perfect-pitch"
   },
   "author": "Dejan Hadziomerovic",
   "license": "ISC",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/MrDzi/perfect-pitch/issues"
   },
-  "homepage": "",
+  "homepage": "https://checkyourpitch.com/",
   "dependencies": {
     "@babel/preset-typescript": "^7.22.5",
     "@types/react-helmet": "^6.1.11",
