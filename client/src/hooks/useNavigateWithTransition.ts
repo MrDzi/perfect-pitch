@@ -10,7 +10,7 @@ const useNavigateWithTransition = (): [(route: string, isBackNavigation?: boolea
       // Scroll to top for browsers without View Transitions
       setTimeout(() => {
         window.scrollTo(0, 0);
-      }, 0);
+      }, 200);
       return;
     }
 
@@ -26,7 +26,7 @@ const useNavigateWithTransition = (): [(route: string, isBackNavigation?: boolea
       // Scroll to top after transition completes
       setTimeout(() => {
         window.scrollTo(0, 0);
-      }, 0);
+      }, 200);
     } finally {
       document.documentElement.classList.remove("back-transition");
     }
