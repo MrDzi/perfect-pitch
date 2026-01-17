@@ -8,7 +8,9 @@ const useNavigateWithTransition = (): [(route: string, isBackNavigation?: boolea
     if (!(document as any).startViewTransition) {
       navigate(route);
       // Scroll to top for browsers without View Transitions
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
       return;
     }
 
@@ -22,7 +24,9 @@ const useNavigateWithTransition = (): [(route: string, isBackNavigation?: boolea
     try {
       await transition.finished;
       // Scroll to top after transition completes
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 0);
     } finally {
       document.documentElement.classList.remove("back-transition");
     }
