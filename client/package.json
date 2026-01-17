@@ -6,27 +6,30 @@
   "scripts": {
     "start": "webpack serve --config webpack.client.dev.js",
     "build": "webpack --config webpack.client.prod.js",
+    "postbuild": "react-snap",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MrDzi/pitch-practice-tool.git"
+    "url": "https://github.com/MrDzi/perfect-pitch"
   },
   "author": "Dejan Hadziomerovic",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MrDzi/pitch-practice-tool/issues"
+    "url": "https://github.com/MrDzi/perfect-pitch/issues"
   },
-  "homepage": "https://github.com/MrDzi/pitch-practice-tool#readme",
+  "homepage": "https://checkyourpitch.com/",
   "dependencies": {
     "@babel/preset-typescript": "^7.22.5",
+    "@types/react-helmet": "^6.1.11",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "js-confetti": "^0.11.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-helmet": "^6.1.0",
     "react-router-dom": "^6.3.0",
     "react-spinners": "^0.13.8",
     "use-sound": "5.0.0"
@@ -56,6 +59,7 @@
     "jest-environment-jsdom": "^30.1.1",
     "mini-css-extract-plugin": "^2.6.0",
     "prettier": "^2.6.2",
+    "react-snap": "^1.23.0",
     "sass": "^1.52.1",
     "sass-loader": "^13.0.0",
     "style-loader": "^3.3.1",
@@ -72,5 +76,48 @@
   "resolutions": {
     "glob-parent": "6.0.2",
     "ejs": "3.1.8"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "crawlFrom": "/",
+    "include": [
+      "/",
+      "/about",
+      "/privacy-policy",
+      "/terms-conditions",
+      "/blog",
+      "/blog/history-of-12-tone-western-scale",
+      "/blog/what-is-pitch-and-how-to-improve"
+    ],
+    "skipThirdPartyRequests": true,
+    "cacheAjaxRequests": false,
+    "preconnectThirdParty": false,
+    "fixWebpackChunksIssue": "CRA2",
+    "removeBlobs": true,
+    "fixInsertRule": true,
+    "asyncScriptTags": true,
+    "waitForStyles": true,
+    "delay": 500,
+    "waitUntil": "load",
+    "publicPath": "/",
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-extensions"
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "puppeteerExecutablePath": false,
+    "puppeteerHeadless": true,
+    "minifyOptions": {
+      "collapseBooleanAttributes": true,
+      "collapseWhitespace": true,
+      "decodeEntities": true,
+      "keepClosingSlash": true,
+      "sortAttributes": true
+    }
   }
 }

@@ -18,9 +18,29 @@ module.exports = {
     rules: [
       {
         test: /\.(tsx|ts)?$/,
-        loader: "ts-loader",
         include: path.resolve(__dirname),
         exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                [
+                  "@babel/preset-env",
+                  {
+                    targets: {
+                      chrome: "70", // Compatible with react-snap's Puppeteer
+                      firefox: "60",
+                      safari: "12",
+                    },
+                  },
+                ],
+                "@babel/preset-react",
+                "@babel/preset-typescript",
+              ],
+            },
+          },
+        ],
       },
       {
         test: /\.(jsx|js)$/,
@@ -34,7 +54,11 @@ module.exports = {
                 [
                   "@babel/preset-env",
                   {
-                    targets: "defaults",
+                    targets: {
+                      chrome: "70", // Compatible with react-snap's Puppeteer
+                      firefox: "60",
+                      safari: "12",
+                    },
                   },
                 ],
                 "@babel/preset-react",
@@ -99,7 +123,16 @@ module.exports = {
   },
 
   optimization: {
-    minimizer: [new TerserPlugin()],
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          ecma: 2017, // Use ES2017 syntax for compatibility
+          compress: {
+            drop_console: true,
+          },
+        },
+      }),
+    ],
     splitChunks: {
       cacheGroups: {
         vendors: {
