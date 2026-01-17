@@ -141,7 +141,7 @@ const Pitchle = (): ReactElement => {
 
   const controlsBottomStyle = useMemo(() => {
     const aspectRatio = viewportSize.height / viewportSize.width;
-    return aspectRatio < 1.71 ? { bottom: 0 } : { bottom: 68 };
+    return aspectRatio < 2.1 ? { bottom: 0 } : { bottom: 95 };
   }, [viewportSize]);
 
   useEffect(() => {
