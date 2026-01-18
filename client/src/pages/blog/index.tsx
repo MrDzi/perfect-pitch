@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import { Helmet } from "react-helmet";
 import PageWrapper from "../../components/page-wrapper";
@@ -11,7 +11,8 @@ const POSTS_PER_PAGE = 5;
 
 const Blog = (): ReactElement => {
   const { id } = useParams<{ id: string }>();
-  const [navigate] = useNavigateWithTransition();
+  const [navigateWithTransition] = useNavigateWithTransition();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Find the selected post based on URL parameter
@@ -36,7 +37,7 @@ const Blog = (): ReactElement => {
   };
 
   const handlePostClick = (post: BlogPost) => {
-    navigate(`/blog/${post.id}`);
+    navigateWithTransition(`/blog/${post.id}`);
   };
 
   const handleBackToList = () => {
