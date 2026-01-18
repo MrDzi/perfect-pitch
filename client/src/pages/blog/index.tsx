@@ -1,5 +1,6 @@
 import React, { ReactElement, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import useNavigateWithTransition from "../../hooks/useNavigateWithTransition";
 import { Helmet } from "react-helmet";
 import PageWrapper from "../../components/page-wrapper";
 import "./blog.scss";
@@ -10,7 +11,7 @@ const POSTS_PER_PAGE = 5;
 
 const Blog = (): ReactElement => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const [navigate] = useNavigateWithTransition();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Find the selected post based on URL parameter
@@ -21,25 +22,30 @@ const Blog = (): ReactElement => {
   const endIndex = startIndex + POSTS_PER_PAGE;
   const currentPosts = blogPosts.slice(startIndex, endIndex);
 
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      // Use requestAnimationFrame for better timing with DOM updates
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        // Double requestAnimationFrame for better reliability on slow devices
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+        });
+      });
+    }
+  };
+
   const handlePostClick = (post: BlogPost) => {
     navigate(`/blog/${post.id}`);
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
-    }
   };
 
   const handleBackToList = () => {
     navigate("/blog");
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
-    }
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
-    }
+    scrollToTop();
   };
 
   const renderPagination = () => {
