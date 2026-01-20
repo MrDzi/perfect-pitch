@@ -112,12 +112,6 @@
     },
     "puppeteerExecutablePath": false,
     "puppeteerHeadless": true,
-    "minifyOptions": {
-      "collapseBooleanAttributes": true,
-      "collapseWhitespace": true,
-      "decodeEntities": true,
-      "keepClosingSlash": true,
-      "sortAttributes": true
-    }
+    "minifyHtml": false
   }
 }
